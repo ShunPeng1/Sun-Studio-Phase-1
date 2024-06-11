@@ -67,8 +67,18 @@ class WebGLManager {
         gl.frontFace(gl.CCW);
         gl.cullFace(gl.BACK);
 
+        // Enable blending
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        
+
         // Create a box
-        let box = new Box(gl, program, [0.5, 0.5, 0.5], [0.5, 0.5, 0.5]);
+        let box = new Box(gl, program);
+        let image = new Image();
+        image.src = 'assets/textures/steel.png';
+        image.onload = () => {
+            box.addTexture(image);
+        };
         this.shapes.push(box);
         
         // Set matrices

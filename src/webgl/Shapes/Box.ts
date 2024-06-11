@@ -1,7 +1,7 @@
 import Shape from "./Shape";
 
 class Box extends Shape {
-    constructor(gl: WebGLRenderingContext, program: WebGLProgram, color: number[] = [], normal: number[] = []) {
+    constructor(gl: WebGLRenderingContext, program: WebGLProgram, color: number[] = [], normal: number[] = [], texCoords : number[] = []) {
         
         var boxVertices = 
         [ // X, Y, Z 
@@ -152,8 +152,50 @@ class Box extends Shape {
                 0, -1, 0
             ];
         }
+
+        if (texCoords.length !== 16) {
+            console.log("Texture coordinates array must have 16 elements, used default texture coordinates instead");
+
+            texCoords = [
+                // Top
+                0, 0,
+                0, 1,
+                1, 1,
+                1, 0,
+
+                // Left
+                0, 0,
+                0, 1,
+                1, 1,
+                1, 0,
+
+                // Right
+                0, 0,
+                0, 1,
+                1, 1,
+                1, 0,
+
+                // Front
+                0, 0,
+                0, 1,
+                1, 1,
+                1, 0,
+
+                // Back
+                0, 0,
+                0, 1,
+                1, 1,
+                1, 0,
+
+                // Bottom
+                0, 0,
+                0, 1,
+                1, 1,
+                1, 0
+            ];
+        }
         
-        super(gl, program, boxVertices, boxIndices, color, normal);
+        super(gl, program, boxVertices, boxIndices, color, normal, texCoords);
     }
 
     public draw(): void {
@@ -162,6 +204,11 @@ class Box extends Shape {
         // Bind the buffers
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.ebo);
+
+        // Texture
+        gl.bindTexture(gl.TEXTURE_2D, this.texture);
+        gl.activeTexture(gl.TEXTURE0);
+
         
         // Draw the box
         gl.drawElements(gl.TRIANGLES, this.indices.length, gl.UNSIGNED_SHORT, 0);
