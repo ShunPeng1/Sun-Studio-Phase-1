@@ -1,10 +1,10 @@
-import BaseShader from './Shader/BaseShader';
-import VertexShader from './Shader/VertexShader';
-import FragmentShader from './Shader/FragmentShader';
+import BaseShader from './shaders/BaseShader';
+import VertexShader from './shaders/VertexShader';
+import FragmentShader from './shaders/FragmentShader';
 
 
-import Shape from './Shapes/Shape';
-import Box from './Shapes/Box';
+import Shape from './shapes/Shape';
+import Box from './shapes/Box';
 
 import Canvas from './Canvas';
 import * as GLM from 'gl-matrix'
