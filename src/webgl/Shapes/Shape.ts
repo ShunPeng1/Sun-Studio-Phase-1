@@ -4,13 +4,13 @@ abstract class Shape{
     protected gl: WebGLRenderingContext;
     protected program: WebGLProgram;
 
-    protected data: number[]; // Vertices 3, colors 3, normals 3
+    protected data: number[]; // Vertices 3, colors 4, normals 3, texCoords 2
     protected indices: number[];
     
     protected vbo: WebGLBuffer; // Vertex Buffer Object (Vertices)
     protected ebo: WebGLBuffer; // Element Buffer Object (Indices)
 
-    constructor(gl: WebGLRenderingContext, program: WebGLProgram, vertices: number[], indices: number[], color: number[], normal: number[]) {
+    constructor(gl: WebGLRenderingContext, program: WebGLProgram, vertices: number[], indices: number[], color: number[], normal: number[], texCoords: number[] = []) {
         this.gl = gl;
         this.program = program;
         this.data = [];
@@ -19,7 +19,7 @@ abstract class Shape{
         
         for (let i = 0; i < vertices.length / 3; i++) {
             this.data.push(vertices[i * 3], vertices[i * 3 + 1], vertices[i * 3 + 2]); // Position
-            this.data.push(color[i * 3], color[i * 3 + 1], color[i * 3 + 2]); // Color
+            this.data.push(color[i * 4], color[i * 4 + 1], color[i * 4 + 2], color[i * 4 + 3]); // Color
             this.data.push(normal[i * 3], normal[i * 3 + 1], normal[i * 3 + 2]); // Normal
         }
 
@@ -36,7 +36,7 @@ abstract class Shape{
             3,
             this.gl.FLOAT,
             false,
-            9 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex (position + color + normal)
+            10 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex (position + color + normal)
             0
         );
 
@@ -45,10 +45,10 @@ abstract class Shape{
         this.gl.enableVertexAttribArray(colorAttributeLocation);
         this.gl.vertexAttribPointer(
             colorAttributeLocation,
-            3,
+            4,
             this.gl.FLOAT,
             false,
-            9 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex (position + color + normal)
+            10 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex (position + color + normal)
             3 * Float32Array.BYTES_PER_ELEMENT // Offset from the beginning of a single vertex to this attribute
         );
 
@@ -60,8 +60,8 @@ abstract class Shape{
             3,
             this.gl.FLOAT,
             false,
-            9 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex (position + color + normal)
-            6 * Float32Array.BYTES_PER_ELEMENT // Offset from the beginning of a single vertex to this attribute
+            10 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex (position + color + normal)
+            7 * Float32Array.BYTES_PER_ELEMENT // Offset from the beginning of a single vertex to this attribute
         );
 
         // Create and bind the index buffer

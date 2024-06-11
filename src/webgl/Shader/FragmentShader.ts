@@ -5,11 +5,16 @@ class FragmentShader extends BaseShader {
     private fragmentShaderText = [
         'precision mediump float;',
         '',
-        'varying vec3 fragColor;',
+        'varying vec4 fragColor;',
         'varying vec3 fragNormal;',
+        'varying vec2 fragTexCoord;',
+
+        'uniform sampler2D sampler;', // Texture sampler
+
         'void main()',
         '{',
-        '  gl_FragColor = vec4(fragColor, 1.0);',
+        '  vec4 texColor = texture2D(sampler, fragTexCoord);',
+        '  gl_FragColor = fragColor * texColor;',
         '}'
     ].join('\n');
 
