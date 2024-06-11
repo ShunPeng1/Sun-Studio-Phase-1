@@ -1,6 +1,9 @@
-import {BaseShader} from './BaseShader';
-import VertexShader from './VertexShader';
-import FragmentShader from './FragmentShader';
+import BaseShader from './Shader/BaseShader';
+import VertexShader from './Shader/VertexShader';
+import FragmentShader from './Shader/FragmentShader';
+
+import Box from './Shapes/Box';
+
 import Canvas from './Canvas';
 import * as GLM from 'gl-matrix'
 
@@ -8,6 +11,10 @@ class WebGLManager {
     private gl: WebGLRenderingContext;
     private canvas: HTMLCanvasElement;
     private program: WebGLProgram;
+
+    private worldMatrix: GLM.mat4;
+    private viewMatrix: GLM.mat4;
+    private projMatrix: GLM.mat4;
 
     constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
@@ -50,120 +57,9 @@ class WebGLManager {
         this.validateProgram(program);
         this.program = program;
 
-        // Create buffer
-        let positionBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-        var boxVertices = 
-        [ // X, Y, Z           R, G, B
-            // Top
-            -1.0, 1.0, -1.0,   0.5, 0.5, 0.5,
-            -1.0, 1.0, 1.0,    0.5, 0.5, 0.5,
-            1.0, 1.0, 1.0,     0.5, 0.5, 0.5,
-            1.0, 1.0, -1.0,    0.5, 0.5, 0.5,
-    
-            // Left
-            -1.0, 1.0, 1.0,    0.75, 0.25, 0.5,
-            -1.0, -1.0, 1.0,   0.75, 0.25, 0.5,
-            -1.0, -1.0, -1.0,  0.75, 0.25, 0.5,
-            -1.0, 1.0, -1.0,   0.75, 0.25, 0.5,
-    
-            // Right
-            1.0, 1.0, 1.0,    0.25, 0.25, 0.75,
-            1.0, -1.0, 1.0,   0.25, 0.25, 0.75,
-            1.0, -1.0, -1.0,  0.25, 0.25, 0.75,
-            1.0, 1.0, -1.0,   0.25, 0.25, 0.75,
-    
-            // Front
-            1.0, 1.0, 1.0,    1.0, 0.0, 0.15,
-            1.0, -1.0, 1.0,    1.0, 0.0, 0.15,
-            -1.0, -1.0, 1.0,    1.0, 0.0, 0.15,
-            -1.0, 1.0, 1.0,    1.0, 0.0, 0.15,
-    
-            // Back
-            1.0, 1.0, -1.0,    0.0, 1.0, 0.15,
-            1.0, -1.0, -1.0,    0.0, 1.0, 0.15,
-            -1.0, -1.0, -1.0,    0.0, 1.0, 0.15,
-            -1.0, 1.0, -1.0,    0.0, 1.0, 0.15,
-    
-            // Bottom
-            -1.0, -1.0, -1.0,   0.5, 0.5, 1.0,
-            -1.0, -1.0, 1.0,    0.5, 0.5, 1.0,
-            1.0, -1.0, 1.0,     0.5, 0.5, 1.0,
-            1.0, -1.0, -1.0,    0.5, 0.5, 1.0,
-        ];
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(boxVertices), gl.STATIC_DRAW);
-
-        // Create index buffer
-        var boxIndexBufferObject = gl.createBuffer();
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, boxIndexBufferObject);    
-        var boxIndices =
-        [
-            // Top
-            0, 1, 2,
-            0, 2, 3,
-    
-            // Left
-            5, 4, 6,
-            6, 4, 7,
-    
-            // Right
-            8, 9, 10,
-            8, 10, 11,
-    
-            // Front
-            13, 12, 14,
-            15, 14, 12,
-    
-            // Back
-            16, 17, 18,
-            16, 18, 19,
-    
-            // Bottom
-            21, 20, 22,
-            22, 20, 23
-        ];
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(boxIndices), gl.STATIC_DRAW);
-
-        // Create color buffer
-        let colorBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-        let colors = [
-            1, 0, 0,
-            0, 1, 0,
-            0, 0, 1
-        ];
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-
-        // Create position attribute
-        let positionAttributeLocation = gl.getAttribLocation(program, 'vertPosition');
-
-        // Enable position attribute
-        gl.enableVertexAttribArray(positionAttributeLocation);
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-        gl.vertexAttribPointer(
-            positionAttributeLocation, // Attribute location
-            3, // Number of elements per attribute
-            gl.FLOAT, // Type of elements
-            false, // Normalization
-            3 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
-            0 // Offset from the beginning of a single vertex to this attribute
-        );
-
-        // Create color attribute
-        let colorAttributeLocation = gl.getAttribLocation(program, 'vertColor');
-
-        // Enable color attribute
-        gl.enableVertexAttribArray(colorAttributeLocation);
-        gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-        gl.vertexAttribPointer(
-            colorAttributeLocation, 
-            3, // Number of elements per attribute
-            gl.FLOAT, // Type of elements
-            false, // Normalization
-            0, // Size of an individual vertex
-            0 // Offset from the beginning of a single vertex to this attribute
-        );
-
+        // Create a box
+        let box = new Box(gl, program, [0.5, 0.5, 0.5], [0.5, 0.5, 0.5]);
+        
         // Set matrices
         let matWorldUniformLocation = gl.getUniformLocation(program, 'mWorld');
         let matViewUniformLocation = gl.getUniformLocation(program, 'mView');
