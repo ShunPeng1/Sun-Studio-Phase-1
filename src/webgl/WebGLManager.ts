@@ -2,6 +2,8 @@ import BaseShader from './Shader/BaseShader';
 import VertexShader from './Shader/VertexShader';
 import FragmentShader from './Shader/FragmentShader';
 
+
+import Shape from './Shapes/Shape';
 import Box from './Shapes/Box';
 
 import Canvas from './Canvas';
@@ -15,6 +17,8 @@ class WebGLManager {
     private worldMatrix: GLM.mat4;
     private viewMatrix: GLM.mat4;
     private projMatrix: GLM.mat4;
+
+    private shapes: Shape[] = [];
 
     constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
@@ -57,8 +61,15 @@ class WebGLManager {
         this.validateProgram(program);
         this.program = program;
 
+        // Enable depth testing
+        gl.enable(gl.DEPTH_TEST);
+        gl.enable(gl.CULL_FACE);
+        gl.frontFace(gl.CCW);
+        gl.cullFace(gl.BACK);
+
         // Create a box
         let box = new Box(gl, program, [0.5, 0.5, 0.5], [0.5, 0.5, 0.5]);
+        this.shapes.push(box);
         
         // Set matrices
         let matWorldUniformLocation = gl.getUniformLocation(program, 'mWorld');
@@ -91,15 +102,18 @@ class WebGLManager {
         var angle = deltaTime / 1000 * Math.PI;
 
         let identityMatrix = GLM.mat4.create();
-        GLM.mat4.rotate(this.worldMatrix, identityMatrix , angle, [0, 1, 0]);
+        GLM.mat4.rotate(this.worldMatrix, identityMatrix , angle, [0.5, 1, 1/3]);
         gl.uniformMatrix4fv(gl.getUniformLocation(this.program, 'mWorld'), false, this.worldMatrix);
+
 
         // Clear screen
         gl.clearColor(0.58, 0.45, 0.65, 1);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         // Draw
-        gl.drawArrays(gl.TRIANGLES, 0, 3);
+        this.shapes.forEach(shape => {
+            shape.draw();
+        });
     }
 
     public getGL(): WebGLRenderingContext {

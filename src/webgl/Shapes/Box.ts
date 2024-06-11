@@ -1,7 +1,7 @@
 import Shape from "./Shape";
 
 class Box extends Shape {
-    constructor(gl: WebGLRenderingContext, program: WebGLProgram, color: number[], normal: number[]) {
+    constructor(gl: WebGLRenderingContext, program: WebGLProgram, color: number[] = [], normal: number[] = []) {
         
         var boxVertices = 
         [ // X, Y, Z 
@@ -70,7 +70,7 @@ class Box extends Shape {
         ];
 
         if (color.length !== 24) {
-            console.error("Color array must have 24 elements, used default color instead");
+            console.log("Color array must have 24 elements, used default color instead");
 
             color = [
                 // Top
@@ -112,7 +112,7 @@ class Box extends Shape {
         }
 
         if (normal.length !== 24) {
-            console.error("Normal array must have 24 elements, used default normal instead");
+            console.log("Normal array must have 24 elements, used default normal instead");
 
             normal = [
                 // Top

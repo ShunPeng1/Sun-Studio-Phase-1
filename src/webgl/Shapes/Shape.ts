@@ -13,9 +13,10 @@ abstract class Shape{
     constructor(gl: WebGLRenderingContext, program: WebGLProgram, vertices: number[], indices: number[], color: number[], normal: number[]) {
         this.gl = gl;
         this.program = program;
+        this.data = [];
+        this.indices = indices;
 
         
-        this.data = [];
         for (let i = 0; i < vertices.length / 3; i++) {
             this.data.push(vertices[i * 3], vertices[i * 3 + 1], vertices[i * 3 + 2]); // Position
             this.data.push(color[i * 3], color[i * 3 + 1], color[i * 3 + 2]); // Color
