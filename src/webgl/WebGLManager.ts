@@ -2,7 +2,7 @@ import {BaseShader} from './BaseShader';
 import VertexShader from './VertexShader';
 import FragmentShader from './FragmentShader';
 import Canvas from './Canvas';
-
+import * as GLM from 'gl-matrix'
 
 class WebGLManager {
     private gl: WebGLRenderingContext;
@@ -27,8 +27,8 @@ class WebGLManager {
         let gl = this.gl;
 
         // Set clear color
-        gl.clearColor(150 / 256, 115 / 256, 166 / 256, 1);
-        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.clearColor(0.58, 0.45, 0.65, 1);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         // Create shaders
         let vertexShader = new VertexShader(gl);
@@ -58,9 +58,9 @@ class WebGLManager {
         let positionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         let positions = [
-            0, 0,
-            0, 0.5,
-            0.7, 0
+            0, 0, 0,
+            0, 0.5, 0,
+            0.7, 0, 0
         ];
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
@@ -82,10 +82,10 @@ class WebGLManager {
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         gl.vertexAttribPointer(
             positionAttributeLocation, // Attribute location
-            2, // Number of elements per attribute
+            3, // Number of elements per attribute
             gl.FLOAT, // Type of elements
             false, // Normalization
-            2 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
+            3 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
             0 // Offset from the beginning of a single vertex to this attribute
         );
 
@@ -95,7 +95,37 @@ class WebGLManager {
         // Enable color attribute
         gl.enableVertexAttribArray(colorAttributeLocation);
         gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-        gl.vertexAttribPointer(colorAttributeLocation, 3, gl.FLOAT, false, 0, 0);
+        gl.vertexAttribPointer(
+            colorAttributeLocation, 
+            3, // Number of elements per attribute
+            gl.FLOAT, // Type of elements
+            false, // Normalization
+            0, // Size of an individual vertex
+            0 // Offset from the beginning of a single vertex to this attribute
+        );
+
+        // Set matrices
+        let matWorldUniformLocation = gl.getUniformLocation(program, 'mWorld');
+        let matViewUniformLocation = gl.getUniformLocation(program, 'mView');
+        let matProjUniformLocation = gl.getUniformLocation(program, 'mProj');
+
+        let worldMatrix = GLM.mat4.create();
+        let viewMatrix = GLM.mat4.create();
+        let projMatrix = GLM.mat4.create();
+        
+        GLM.mat4.identity(worldMatrix);
+        GLM.mat4.lookAt(viewMatrix, [0, 0, -5], [0, 0, 0], [0, 1, 0]);
+        GLM.mat4.perspective(projMatrix, GLM.glMatrix.toRadian(45), canvas.width / canvas.height, 0.1, 1000.0);
+        
+        console.log(typeof worldMatrix); // This will print "object" if worldMat4 is an array or typed array
+        console.log(worldMatrix instanceof Float32Array); // This will print "true" if worldMat4 is a Float32Array
+        console.log(worldMatrix.constructor.name); // This will print the name of the constructor function that was used to create worldMat4
+        
+    
+        gl.uniformMatrix4fv(matWorldUniformLocation, false, worldMatrix);
+        gl.uniformMatrix4fv(matViewUniformLocation, false, viewMatrix);
+        gl.uniformMatrix4fv(matProjUniformLocation, false, projMatrix);
+
 
         // Draw
         gl.clearColor(0, 0, 0, 0);
