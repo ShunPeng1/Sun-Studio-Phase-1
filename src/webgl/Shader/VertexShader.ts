@@ -1,4 +1,5 @@
-import {BaseShader, ShaderType} from './BaseShader';
+import BaseShader from './BaseShader';
+import ShaderType from "./ShaderType";
 
 class VertexShader extends BaseShader {
     private vertexShaderText = [
@@ -6,7 +7,9 @@ class VertexShader extends BaseShader {
         '',
         'attribute vec3 vertPosition;',
         'attribute vec3 vertColor;',
+        'attribute vec3 vertNormal;',
         'varying vec3 fragColor;',
+        'varying vec3 fragNormal;',
         'uniform mat4 mWorld;',
         'uniform mat4 mView;',
         'uniform mat4 mProj;',

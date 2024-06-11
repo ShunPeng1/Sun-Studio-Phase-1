@@ -1,8 +1,4 @@
-enum ShaderType {
-    Vertex = WebGLRenderingContext.VERTEX_SHADER,
-    Fragment = WebGLRenderingContext.FRAGMENT_SHADER
-}
-
+import ShaderType from "./ShaderType";
 
 abstract class BaseShader {
     public webGlShader: WebGLShader;
@@ -26,4 +22,4 @@ abstract class BaseShader {
 
 }
 
-export { BaseShader, ShaderType };
+export default BaseShader;
