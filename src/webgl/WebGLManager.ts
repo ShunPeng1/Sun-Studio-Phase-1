@@ -7,7 +7,6 @@ import Shape from './shapes/Shape';
 import Box from './shapes/Box';
 import Polyhedron from './shapes/Polyhedron';
 
-import Canvas from './Canvas';
 import * as GLM from 'gl-matrix'
 
 import {ObjReader, Vertex, VertexNormal, Face, TextureCoordinate} from './shapes/readers/OjbReader';
