@@ -9,13 +9,13 @@ abstract class Component {
     public start() {
     }
 
-    public update(){
+    public update(time: number, deltaTime : number){
     }
 
     public fixedUpdate(){
     }
     
-    public render() {
+    public render(time: number, deltaTime : number) {
     }
 
     public destroy() {

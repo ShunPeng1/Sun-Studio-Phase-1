@@ -1,6 +1,7 @@
 import { mat4, vec3 } from "gl-matrix";
+import Component from "./Component";
 
-class Transform {
+class Transform extends Component{
 
     public readonly position: vec3;
     public readonly rotation: vec3;
@@ -10,6 +11,7 @@ class Transform {
     private readonly children: Transform[] = [];
 
     constructor() {
+        super();
         this.position = vec3.create();
         this.rotation = vec3.create();
         this.scale = vec3.fromValues(1, 1, 1);

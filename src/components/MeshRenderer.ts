@@ -65,7 +65,7 @@ class MeshRenderer extends Component {
         // Add your implementation here
     }
 
-    update() {
+    update(time: number, deltaTime : number) {
         // Add your implementation here
     }
 
@@ -74,9 +74,13 @@ class MeshRenderer extends Component {
     }
 
 
-    render() {
+    render(time: number, deltaTime : number) {
+        if (this.shape === undefined) {
+            return;
+        }
+
         this.shape.draw();
-        return; // Add a return statement
+        
     }
     
     public clone(): Component {

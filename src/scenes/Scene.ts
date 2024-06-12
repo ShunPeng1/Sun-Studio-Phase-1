@@ -1,6 +1,7 @@
 import GameObject from "./GameObject";
 
 class Scene{
+    
     private name: string;
     private gameObjects: GameObject[] = []; 
 
@@ -19,8 +20,12 @@ class Scene{
         }
     }
 
-    public getName() {
+    public getName(): string {
         return this.name;
+    }
+
+    public getGameObjects(): GameObject[]{
+        return this.gameObjects;
     }
 
     public load() {

@@ -70,12 +70,32 @@ class Game {
 
     private update(time: number, deltaTime : number) : void {
         // Update game objects
+        let currentSceneGameObjects = this.sceneManager.getCurrentScene()?.getGameObjects();
+        
+        if (currentSceneGameObjects) {
+            currentSceneGameObjects.forEach(gameObject => {
+                gameObject.update(time, deltaTime);
+            });
+        }
+
         return;
     }
 
     private render(time: number, deltaTime : number) : void {
-        this.webGLManager.render(time,deltaTime);
-    
+        // Clear the screen
+        this.webGLManager.clearScreen();
+
+        // Render game objects
+        let currentSceneGameObjects = this.sceneManager.getCurrentScene()?.getGameObjects();
+        
+        if (currentSceneGameObjects) {
+            currentSceneGameObjects.forEach(gameObject => {
+                gameObject.render(time, deltaTime);
+            });
+        }
+
+        return;
+        
     }
 
 }

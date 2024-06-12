@@ -13,6 +13,7 @@ import * as GLM from 'gl-matrix'
 import {JsonModelReader, JsonModelResult } from './shapes/readers/JsonReader';
 
 class WebGLManager {
+    
     private gl: WebGLRenderingContext;
     private canvas: HTMLCanvasElement;
     private program: WebGLProgram;
@@ -20,8 +21,6 @@ class WebGLManager {
     private worldMatrix: GLM.mat4;
     private viewMatrix: GLM.mat4;
     private projMatrix: GLM.mat4;
-
-    private shapes: Shape[] = [];
 
     constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
@@ -96,35 +95,10 @@ class WebGLManager {
         gl.uniformMatrix4fv(matProjUniformLocation, false, projMatrix);
 
         
-        this.testLoadObjFile();
     }
 
-    private testLoadObjFile() {
-        // Create a box
-        // let box = new Box(this.gl, this.program);
-        // let image = new Image();
-        // image.src = 'assets/textures/steel.png';
-        // image.onload = () => {
-        //     box.addTexture(image);
-        // };
-        //this.shapes.push(box);
-        let jsonReader = new JsonModelReader();
-        jsonReader.load('assets/models/Susan.json', (result : JsonModelResult) => {
-            console.log(result);
     
 
-            let polyhedron = new Polyhedron(this.gl, this.program, result.meshes[0]);
-            let image = new Image();
-            image.src = 'assets/models/SusanTexture.png';
-            image.onload = () => {
-                polyhedron.addTexture(image, true);
-                
-            };
-            this.shapes.push(polyhedron);
-            console.log(polyhedron);
-        });
-        
-    }
 
     public render(time: number, deltaTime: number): void {
         var gl = this.gl;
@@ -135,15 +109,13 @@ class WebGLManager {
         GLM.mat4.rotate(this.worldMatrix, identityMatrix , angle, [0.5, 1, 1/3]);
         gl.uniformMatrix4fv(gl.getUniformLocation(this.program, 'mWorld'), false, this.worldMatrix);
 
+    }
 
+    public clearScreen() {
+        let gl = this.gl;
         // Clear screen
         gl.clearColor(0.58, 0.45, 0.65, 1);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-        // Draw
-        this.shapes.forEach(shape => {
-            shape.draw();
-        });
     }
 
     public getGL(): WebGLRenderingContext {

@@ -28,15 +28,15 @@ class GameObject {
         }
     }
 
-    public update() {
+    public update(time: number, deltaTime : number) {
         for (let i = 0; i < this.components.length; i++) {
-            this.components[i].update();
+            this.components[i].update(time, deltaTime);
         }
     }
 
-    public render() {
+    public render(time: number, deltaTime : number) {
         for (let i = 0; i < this.components.length; i++) {
-            this.components[i].render();
+            this.components[i].render(time, deltaTime);
         }
     }
 

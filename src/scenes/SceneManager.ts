@@ -10,59 +10,55 @@ class SceneManager {
         this.currentScene = null;
     }
 
-    addScene(scene: Scene) {
+    public addScene(scene: Scene) {
         this.scenes.push(scene);
     }
 
-    setCurrentScene(scene: Scene) {
-        this.currentScene = scene;
-    }
-
-    getCurrentScene() {
+    public getCurrentScene() {
         return this.currentScene;
     }
 
-    getScenes() {
+    public getScenes() {
         return this.scenes;
     }
 
-    getSceneByName(name: string) {
+    public getSceneByName(name: string) {
         return this.scenes.find(scene => scene.getName() === name);
     }
 
-    getSceneIndex(scene: Scene) {
+    public getSceneIndex(scene: Scene) {
         return this.scenes.indexOf(scene);
     }
 
-    getSceneIndexByName(name: string) {
+    public getSceneIndexByName(name: string) {
         return this.scenes.findIndex(scene => scene.getName() === name);
     }
 
-    loadSceneByName(sceneName: string) {
+    public loadSceneByName(sceneName: string) {
         const scene = this.getSceneByName(sceneName);
         if (scene) {
             this.loadScene(scene);
         }
     }
 
-    loadScene(scene: Scene) {
+    public loadScene(scene: Scene) {
         if (this.currentScene){
             this.currentScene.unload();
         }
 
         scene.load();
         
-        this.setCurrentScene(scene);
+        this.currentScene = scene;
     }
 
-    removeScene(scene: Scene) {
+    public removeScene(scene: Scene) {
         const index = this.getSceneIndex(scene);
         if (index !== -1) {
             this.scenes.splice(index, 1);
         }
     }
 
-    removeSceneByName(name: string) {
+    public removeSceneByName(name: string) {
         const index = this.getSceneIndexByName(name);
         if (index !== -1) {
             this.scenes.splice(index, 1);
