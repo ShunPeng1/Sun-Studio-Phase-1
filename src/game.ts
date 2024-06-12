@@ -35,7 +35,7 @@ class Game {
         let mainScene = new Scene('main');
 
         let testGameObject = new GameObject('Test Object');
-        testGameObject.addComponent(new MeshRenderer(this.webGLManager, 'assets/models/Susan.json', 'assets/models/SusanTexture.png'));
+        testGameObject.addComponent(new MeshRenderer(this.webGLManager, 'assets/models/chicken/chicken.json', 'assets/models/chicken/chicken.png'));
         mainScene.addGameObject(testGameObject);
 
         this.sceneManager.addScene(mainScene);
@@ -60,7 +60,7 @@ class Game {
         let time = performance.now();
         this.deltaTime = time - this.lastTime;
         
-            
+
         this.update(time, this.deltaTime);
         this.render(time, this.deltaTime);
         

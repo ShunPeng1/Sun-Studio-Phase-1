@@ -24,8 +24,9 @@ class JsonModelReader {
             let result = new JsonModelResult();
             try {
                 let obj = JSON.parse(data);
-    
-                result.meshes.push(new Mesh(obj.meshes[0].vertices, [].concat.apply([], obj.meshes[0].faces), obj.meshes[0].colors[0], obj.meshes[0].normals, obj.meshes[0].texturecoords[0]));
+                let colors = this.getColor(obj, obj.meshes[0].vertices.length);
+                console.log(colors);
+                result.meshes.push(new Mesh(obj.meshes[0].vertices, [].concat.apply([], obj.meshes[0].faces), colors, obj.meshes[0].normals, obj.meshes[0].texturecoords[0]));
                 
                 resolve();
 
@@ -36,6 +37,15 @@ class JsonModelReader {
     
             callback(result);
         });
+    }
+
+    private getColor(obj : any, defaultLength : number)  {
+        if (obj.meshes && obj.meshes[0] && obj.meshes[0].colors && obj.meshes[0].colors.length > 0) {
+            let color = obj.meshes[0].colors[0];
+            return color;
+        } else {
+            return new Array(defaultLength * 4).fill(1);
+        }
     }
 }
 

@@ -65,7 +65,7 @@ class WebGLManager {
 
         // Enable depth testing
         gl.enable(gl.DEPTH_TEST);
-        gl.enable(gl.CULL_FACE);
+        //gl.enable(gl.CULL_FACE);
         gl.frontFace(gl.CCW);
         gl.cullFace(gl.BACK);
 
@@ -87,7 +87,7 @@ class WebGLManager {
         this.projMatrix = projMatrix;
         
         GLM.mat4.identity(worldMatrix);
-        GLM.mat4.lookAt(viewMatrix, [0, 0, -5], [0, 0, 0], [0, 1, 0]);
+        GLM.mat4.lookAt(viewMatrix, [0, 0, -30], [0, 0, 0], [0, 1, 0]);
         GLM.mat4.perspective(projMatrix, GLM.glMatrix.toRadian(45), canvas.width / canvas.height, 0.1, 1000.0);
     
         gl.uniformMatrix4fv(matWorldUniformLocation, false, worldMatrix);
