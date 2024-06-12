@@ -14,7 +14,6 @@ class Game {
     private deltaTime : number = 0;
 
 
-    
     constructor() {
         // Create canvas  
         let canvas = new Canvas('game', 1600, 900);
@@ -35,14 +34,20 @@ class Game {
         // TOOO: Add your implementation here
         let mainScene = new Scene('main');
 
-        let testGameObject = new GameObject('Test Object');
-        testGameObject.addComponent(new MeshRenderer(this.webGLManager, 'assets/models/chicken/chicken.json', 'assets/models/chicken/chicken.png',
+        let chickenGameObject = new GameObject('Test Object');
+        chickenGameObject.transform.rotation[1] = Math.PI / 2;
+        
+        chickenGameObject.addComponent(new MeshRenderer(this.webGLManager, 'assets/models/chicken/chicken.json', 'assets/models/chicken/chicken.png',
             true, WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.CLAMP_TO_EDGE, WebGLRenderingContext.CLAMP_TO_EDGE,
             WebGLRenderingContext.NEAREST, WebGLRenderingContext.NEAREST
         ));
-        testGameObject.addComponent(new Movement(1));
-        mainScene.addGameObject(testGameObject);
 
+        chickenGameObject.addComponent(new Movement(1));
+
+    
+        mainScene.addGameObject(chickenGameObject);
+        
+        
         this.sceneManager.addScene(mainScene);
         
     }
@@ -50,10 +55,6 @@ class Game {
     private startGameLoop() {
         // Load the main scene
         this.sceneManager.loadSceneByName('main');
-
-        window.addEventListener('keydown', (event) => {
-            this.processInput(event.key);
-        });
 
         // Start the game loop
         this.lastTime = performance.now()/1000;
@@ -73,12 +74,6 @@ class Game {
         requestAnimationFrame(this.gameLoop);
     }
 
-    private processInput(key: string) {
-        // Get input
-        
-        console.log(key);
-        
-    }
 
     private update(time: number, deltaTime : number) : void {
         // Update game objects
