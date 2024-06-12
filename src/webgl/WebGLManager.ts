@@ -9,7 +9,7 @@ import Polyhedron from './shapes/Polyhedron';
 
 import * as GLM from 'gl-matrix'
 
-import {ObjReader, Vertex, VertexNormal, Face, TextureCoordinate} from './shapes/readers/OjbReader';
+
 import {JsonModelReader, JsonModelResult } from './shapes/readers/JsonReader';
 
 class WebGLManager {
@@ -148,6 +148,10 @@ class WebGLManager {
 
     public getGL(): WebGLRenderingContext {
         return this.gl;
+    }
+
+    public getProgram(): WebGLProgram {
+        return this.program;
     }
 
     public createShader(shader: BaseShader): WebGLShader | null {
