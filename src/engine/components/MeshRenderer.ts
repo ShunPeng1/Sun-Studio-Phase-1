@@ -93,7 +93,14 @@ class MeshRenderer extends Component {
         if (this.shape === undefined) {
             return;
         }
+        let gl = this.webgl.getGL();
 
+        // Get the location of the transformation matrix uniform
+        let modelMatrixUniformLocation = gl.getUniformLocation(this.webgl.getProgram(), 'mWorld');
+
+        gl.uniformMatrix4fv(modelMatrixUniformLocation, false, this.transform.getWorldMatrix());
+    
+        // Set the transformation matrix
         this.shape.draw();
         
     }

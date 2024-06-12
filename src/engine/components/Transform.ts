@@ -2,6 +2,7 @@ import { mat4, vec3 } from "gl-matrix";
 import Component from "./Component";
 
 class Transform extends Component{
+    
 
     public readonly position: vec3;
     public readonly rotation: vec3;

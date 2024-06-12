@@ -48,6 +48,7 @@ class GameObject {
 
 
     public addComponent(component: Component) {
+        component.setGameObject(this);
         this.components.push(component);
     }
 

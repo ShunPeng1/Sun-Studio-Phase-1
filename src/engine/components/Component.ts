@@ -1,6 +1,14 @@
+import GameObject from "../scenes/GameObject";
+import Transform from "./Transform";
+
 abstract class Component {
-    
-    constructor() {
+    public gameObject: GameObject;
+    public transform: Transform;
+
+
+    public setGameObject(gameObject: GameObject) {
+        this.gameObject = gameObject;
+        this.transform = gameObject.transform;
     }
 
     public awake() {

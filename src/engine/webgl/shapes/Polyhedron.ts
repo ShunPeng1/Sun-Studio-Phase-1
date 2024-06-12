@@ -17,7 +17,6 @@ class Polyhedron extends Shape {
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
         gl.activeTexture(gl.TEXTURE0);
 
-        
         // Draw the box
         gl.drawElements(gl.TRIANGLES, this.mesh.getIndicesLength(), gl.UNSIGNED_SHORT, 0);
 

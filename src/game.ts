@@ -4,6 +4,7 @@ import SceneManager from "./engine/scenes/SceneManager";
 import Scene from "./engine/scenes/Scene";
 import GameObject from "./engine/scenes/GameObject";
 import MeshRenderer from "./engine/components/MeshRenderer";
+import Movement from "./scripts/Movement";
 
 class Game {
     private canvas: HTMLCanvasElement | null ;
@@ -39,6 +40,7 @@ class Game {
             true, WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.CLAMP_TO_EDGE, WebGLRenderingContext.CLAMP_TO_EDGE,
             WebGLRenderingContext.NEAREST, WebGLRenderingContext.NEAREST
         ));
+        testGameObject.addComponent(new Movement(1));
         mainScene.addGameObject(testGameObject);
 
         this.sceneManager.addScene(mainScene);
@@ -54,14 +56,15 @@ class Game {
         });
 
         // Start the game loop
-        this.lastTime = performance.now();
+        this.lastTime = performance.now()/1000;
         requestAnimationFrame(this.gameLoop);
     }
 
 
     private gameLoop = () : void => {
-        let time = performance.now();
+        let time = performance.now()/1000;
         this.deltaTime = time - this.lastTime;
+        this.lastTime = time;
         
 
         this.update(time, this.deltaTime);

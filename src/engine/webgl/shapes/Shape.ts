@@ -102,9 +102,6 @@ abstract class Shape{
 
     }
 
-    
-
-
     public addTexture(
         image : ImageBitmap | ImageData | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement | OffscreenCanvas, 
         isFlipY : boolean = false,
