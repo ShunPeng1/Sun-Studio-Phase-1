@@ -1,5 +1,21 @@
 import Mesh from "./Mesh";
 
+enum TextureType {
+    TEXTURE_2D = WebGLRenderingContext.TEXTURE_2D,
+    TEXTURE_CUBE_MAP = WebGLRenderingContext.TEXTURE_CUBE_MAP
+}
+
+enum TextureWrap {
+    CLAMP_TO_EDGE = WebGLRenderingContext.CLAMP_TO_EDGE,
+    MIRRORED_REPEAT = WebGLRenderingContext.MIRRORED_REPEAT,
+    REPEAT = WebGLRenderingContext.REPEAT
+}
+
+enum TextureFilter {
+    LINEAR = WebGLRenderingContext.LINEAR,
+    NEAREST = WebGLRenderingContext.NEAREST
+}
+
 
 abstract class Shape{
     protected gl: WebGLRenderingContext;
@@ -86,23 +102,32 @@ abstract class Shape{
 
     }
 
+    
+
+
     public addTexture(
         image : ImageBitmap | ImageData | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement | OffscreenCanvas, 
-        isFlipY : boolean = false) : void {
+        isFlipY : boolean = false,
+        textureType : TextureType = TextureType.TEXTURE_2D,
+        textureWrapS : TextureWrap = TextureWrap.CLAMP_TO_EDGE,
+        textureWrapT : TextureWrap = textureWrapS,
+        textureMinFilter : TextureFilter = TextureFilter.LINEAR,
+        textureMagFilter : TextureFilter = TextureFilter.LINEAR
+    ) : void {
         let gl = this.gl;
 
         var texture = gl.createTexture()!;
         this.texture = texture;
 
-        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.bindTexture(textureType, texture);
 
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, isFlipY); 
         
         // Set the parameters so we can render any size image
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, textureWrapS);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, textureWrapT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, textureMinFilter);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, textureMagFilter);
        
         if (image instanceof ImageData) {
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, image.width, image.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, image.data);
@@ -119,4 +144,5 @@ abstract class Shape{
     public abstract draw(): void;
 }
 
+export {TextureType, TextureWrap, TextureFilter};
 export default Shape;

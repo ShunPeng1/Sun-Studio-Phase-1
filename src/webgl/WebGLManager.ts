@@ -105,9 +105,9 @@ class WebGLManager {
 
         var angle = deltaTime / 1000 * Math.PI;
 
-        let identityMatrix = GLM.mat4.create();
-        GLM.mat4.rotate(this.worldMatrix, identityMatrix , angle, [0.5, 1, 1/3]);
-        gl.uniformMatrix4fv(gl.getUniformLocation(this.program, 'mWorld'), false, this.worldMatrix);
+        //let identityMatrix = GLM.mat4.create();
+        //GLM.mat4.rotate(this.worldMatrix, identityMatrix , angle, [0.5, 1, 1/3]);
+        //gl.uniformMatrix4fv(gl.getUniformLocation(this.program, 'mWorld'), false, this.worldMatrix);
 
     }
 

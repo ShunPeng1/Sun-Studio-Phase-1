@@ -35,7 +35,10 @@ class Game {
         let mainScene = new Scene('main');
 
         let testGameObject = new GameObject('Test Object');
-        testGameObject.addComponent(new MeshRenderer(this.webGLManager, 'assets/models/chicken/chicken.json', 'assets/models/chicken/chicken.png'));
+        testGameObject.addComponent(new MeshRenderer(this.webGLManager, 'assets/models/chicken/chicken.json', 'assets/models/chicken/chicken.png',
+            true, WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.CLAMP_TO_EDGE, WebGLRenderingContext.CLAMP_TO_EDGE,
+            WebGLRenderingContext.NEAREST, WebGLRenderingContext.NEAREST
+        ));
         mainScene.addGameObject(testGameObject);
 
         this.sceneManager.addScene(mainScene);
