@@ -5,9 +5,13 @@ import FragmentShader from './shaders/FragmentShader';
 
 import Shape from './shapes/Shape';
 import Box from './shapes/Box';
+import Polyhedron from './shapes/Polyhedron';
 
 import Canvas from './Canvas';
 import * as GLM from 'gl-matrix'
+
+import {ObjReader, Vertex, VertexNormal, Face, TextureCoordinate} from './shapes/readers/OjbReader';
+import {JsonModelReader, JsonModelResult } from './shapes/readers/JsonReader';
 
 class WebGLManager {
     private gl: WebGLRenderingContext;
@@ -71,16 +75,6 @@ class WebGLManager {
         gl.enable(gl.BLEND);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
         
-
-        // Create a box
-        let box = new Box(gl, program);
-        let image = new Image();
-        image.src = 'assets/textures/steel.png';
-        image.onload = () => {
-            box.addTexture(image);
-        };
-        this.shapes.push(box);
-        
         // Set matrices
         let matWorldUniformLocation = gl.getUniformLocation(program, 'mWorld');
         let matViewUniformLocation = gl.getUniformLocation(program, 'mView');
@@ -103,7 +97,34 @@ class WebGLManager {
         gl.uniformMatrix4fv(matProjUniformLocation, false, projMatrix);
 
         
+        this.testLoadObjFile();
+    }
 
+    private testLoadObjFile() {
+        // Create a box
+        // let box = new Box(this.gl, this.program);
+        // let image = new Image();
+        // image.src = 'assets/textures/steel.png';
+        // image.onload = () => {
+        //     box.addTexture(image);
+        // };
+        //this.shapes.push(box);
+        let jsonReader = new JsonModelReader();
+        jsonReader.load('assets/models/Susan.json', (result : JsonModelResult) => {
+            console.log(result);
+    
+
+            let polyhedron = new Polyhedron(this.gl, this.program, result.meshes[0]);
+            let image = new Image();
+            image.src = 'assets/models/SusanTexture.png';
+            image.onload = () => {
+                polyhedron.addTexture(image);
+                
+            };
+            this.shapes.push(polyhedron);
+            console.log(polyhedron);
+        });
+        
     }
 
     public render(time: number, deltaTime: number): void {

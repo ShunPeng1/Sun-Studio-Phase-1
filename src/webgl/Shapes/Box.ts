@@ -1,3 +1,4 @@
+import Mesh from "./Mesh";
 import Shape from "./Shape";
 
 class Box extends Shape {
@@ -195,7 +196,8 @@ class Box extends Shape {
             ];
         }
         
-        super(gl, program, boxVertices, boxIndices, color, normal, texCoords);
+        let mesh = new Mesh(boxVertices, boxIndices, color, normal, texCoords);
+        super(gl, program, mesh);
     }
 
     public draw(): void {
@@ -211,7 +213,7 @@ class Box extends Shape {
 
         
         // Draw the box
-        gl.drawElements(gl.TRIANGLES, this.indices.length, gl.UNSIGNED_SHORT, 0);
+        gl.drawElements(gl.TRIANGLES, this.mesh.getIndicesLength() , gl.UNSIGNED_SHORT, 0);
 
         // Unbind the buffers
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
