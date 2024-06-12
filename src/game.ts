@@ -43,8 +43,14 @@ class Game {
     }
 
     private startGameLoop() {
+        // Load the main scene
         this.sceneManager.loadSceneByName('main');
 
+        window.addEventListener('keydown', (event) => {
+            this.processInput(event.key);
+        });
+
+        // Start the game loop
         this.lastTime = performance.now();
         requestAnimationFrame(this.gameLoop);
     }
@@ -54,18 +60,18 @@ class Game {
         let time = performance.now();
         this.deltaTime = time - this.lastTime;
         
-        this.processInput();
+            
         this.update(time, this.deltaTime);
         this.render(time, this.deltaTime);
         
         requestAnimationFrame(this.gameLoop);
     }
 
-    private processInput() {
+    private processInput(key: string) {
         // Get input
-        window.addEventListener('keydown', (event) => {
-            console.log(event.key);
-        });
+        
+        console.log(key);
+        
     }
 
     private update(time: number, deltaTime : number) : void {
@@ -84,6 +90,8 @@ class Game {
     private render(time: number, deltaTime : number) : void {
         // Clear the screen
         this.webGLManager.clearScreen();
+
+        this.webGLManager.render(time, deltaTime);
 
         // Render game objects
         let currentSceneGameObjects = this.sceneManager.getCurrentScene()?.getGameObjects();
