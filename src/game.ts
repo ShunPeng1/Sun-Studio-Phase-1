@@ -1,9 +1,9 @@
-import Canvas from "./webgl/Canvas";
-import WebGLManager from "./webgl/WebGLManager";
-import SceneManager from "./scenes/SceneManager";
-import Scene from "./scenes/Scene";
-import GameObject from "./scenes/GameObject";
-import MeshRenderer from "./components/MeshRenderer";
+import Canvas from "./engine/webgl/Canvas";
+import WebGLManager from "./engine/webgl/WebGLManager";
+import SceneManager from "./engine/scenes/SceneManager";
+import Scene from "./engine/scenes/Scene";
+import GameObject from "./engine/scenes/GameObject";
+import MeshRenderer from "./engine/components/MeshRenderer";
 
 class Game {
     private canvas: HTMLCanvasElement | null ;
@@ -16,7 +16,7 @@ class Game {
     
     constructor() {
         // Create canvas  
-        let canvas = new Canvas('game', 800, 600);
+        let canvas = new Canvas('game', 1600, 900);
         this.canvas = canvas.createCanvas();
         
         // Create Managers
