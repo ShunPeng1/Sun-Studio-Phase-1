@@ -118,7 +118,7 @@ class WebGLManager {
             let image = new Image();
             image.src = 'assets/models/SusanTexture.png';
             image.onload = () => {
-                polyhedron.addTexture(image);
+                polyhedron.addTexture(image, true);
                 
             };
             this.shapes.push(polyhedron);
