@@ -10,6 +10,7 @@ class Scene{
     }
 
     public addGameObject(gameObject: GameObject) {
+        gameObject.setScene(this);
         this.gameObjects.push(gameObject);
     }
 

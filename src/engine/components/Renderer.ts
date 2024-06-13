@@ -8,7 +8,8 @@ class Renderer extends Component {
     protected webglTexture : WebGLTexture;
     protected shape : Shape;
     protected texture : ImageBitmap | ImageData | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement | OffscreenCanvas;
-
+    protected textureUrl : string;
+    protected textureInfo: TextureInfo;
     constructor(webgl : WebGLManager){
         super();
         this.webgl = webgl;
@@ -18,8 +19,9 @@ class Renderer extends Component {
         this.shape = shape;
     }
     
-    protected initializeTexture( textureUrl : string,
-        textureInfo : TextureInfo) {
+    protected initializeTexture( textureUrl : string, textureInfo : TextureInfo) {
+        this.textureUrl = textureUrl;
+        this.textureInfo = textureInfo;
        
         this.texture = new Image();
         this.texture.src = textureUrl;

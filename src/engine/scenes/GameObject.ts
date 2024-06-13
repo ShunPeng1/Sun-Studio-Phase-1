@@ -1,8 +1,10 @@
 import Component from "../components/Component";
 import Transform from "../components/Transform";
+import Scene from "./Scene";
 
 
 class GameObject {
+    
     public name: string = 'GameObject';
     public readonly transform: Transform;
 
@@ -10,6 +12,7 @@ class GameObject {
     
     private isDestroyed: boolean = false;
     private isMarkedForDestruction: boolean = false;
+    private scene: Scene;
 
     constructor(name: string = 'New GameObject') {
         this.name = name;
@@ -46,13 +49,16 @@ class GameObject {
         }
     }
 
+    public setScene(scene: Scene) {
+        this.scene = scene;
+    }
 
     public addComponent(component: Component) {
         component.setGameObject(this);
         this.components.push(component);
     }
 
-    public getComponent<T extends Component>(type: {new(): T}): T | null {
+    public getComponent<T extends Component>(type: {new(...args: any[]): T}): T | null {
         for (let i = 0; i < this.components.length; i++) {
             if (this.components[i] instanceof type) {
                 return this.components[i] as T;
@@ -68,6 +74,7 @@ class GameObject {
             gameObject.addComponent(this.components[i].clone());
         }
 
+        this.scene.addGameObject(gameObject);
         gameObject.awake(); // Awake the new game object similar to Unity
         return gameObject;
     }
@@ -77,7 +84,7 @@ class GameObject {
         for (let i = 0; i < this.components.length; i++) {
             this.components[i].destroy();
         }
-
+        this.scene.removeGameObject(this);
         this.isDestroyed = true;
     }
 

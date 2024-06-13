@@ -9,18 +9,11 @@ import Mesh from "../webgl/shapes/Mesh";
 
 
 class MeshRenderer extends Renderer {
-
     private mesh : Mesh;
-    private textureUrl : string;
-    private textureInfo: TextureInfo;
 
     constructor(webgl : WebGLManager, mesh : Mesh, textureUrl : string, textureInfo : TextureInfo ) {
         super(webgl);
-        
         this.mesh = mesh;
-        this.textureUrl = textureUrl;
-        this.textureInfo = textureInfo;
-
         
         let shape = new Polyhedron(this.webgl.getGL(), this.webgl.getProgram(), mesh);
         this.initializeShape(shape);

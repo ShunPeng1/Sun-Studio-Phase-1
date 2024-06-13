@@ -13,6 +13,10 @@ import { vec3 } from "gl-matrix";
 import PrimativeRenderer from "./engine/components/PremadeRenderer";
 import ShapeType from "./engine/webgl/shapes/ShapeType";
 import ParalaxMovement from "./scripts/ParalaxMovement";
+import InputManager from "./inputs/InputManager";
+import PlayerBehavior from "./scripts/PlayerBehavior";
+import CubeSpawner from "./scripts/CubeSpawner";
+import CubeBehavior from "./scripts/CubeBehavior";
 
 class Game {
     private canvas: HTMLCanvasElement | null ;
@@ -20,6 +24,7 @@ class Game {
     private sceneManager: SceneManager;
     private lastTime : number = 0;
     private deltaTime : number = 0;
+    inputManager: any;
 
 
     constructor() {
@@ -53,13 +58,14 @@ class Game {
         let pixelatedTextureInfo = new TextureInfo(true, WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.CLAMP_TO_EDGE, WebGLRenderingContext.CLAMP_TO_EDGE,
             WebGLRenderingContext.NEAREST, WebGLRenderingContext.NEAREST);
 
-        
 
         // Create factory
         let objectFactory = new ModelReaderFactory();
         let shapeFactory = new ShapeFactory(this.webGLManager);
         
-
+        // Create quad
+        let quad = shapeFactory.createShape(ShapeType.Quad);
+        
 
         // Add Background
         let skyBackgroundGameObject = new GameObject('Sky Background');
@@ -67,14 +73,13 @@ class Game {
         vec3.set(skyBackgroundGameObject.transform.rotation, 0, 0, Math.PI/2);
         vec3.set(skyBackgroundGameObject.transform.scale, 40, 40, 1);
 
-        let quad = shapeFactory.createShape(ShapeType.Quad);
 
         skyBackgroundGameObject.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/super mountain/sky.png', pixelatedTextureInfo));
         
         mainScene.addGameObject(skyBackgroundGameObject);
 
-
-        let mountainBackgroundGameObject1 = new GameObject(' Mountain Background');
+        // Add Mountain Background Paralax
+        let mountainBackgroundGameObject1 = new GameObject('Mountain Background 1');
         vec3.set(mountainBackgroundGameObject1.transform.position, 0, 0, -10);
         vec3.set(mountainBackgroundGameObject1.transform.rotation, 0, 0, Math.PI/2);
         vec3.set(mountainBackgroundGameObject1.transform.scale, 40, 40, 1);
@@ -83,8 +88,7 @@ class Game {
         
         mainScene.addGameObject(mountainBackgroundGameObject1);
 
-        
-        let mountainBackgroundGameObject2 = new GameObject(' Mountain Background');
+        let mountainBackgroundGameObject2 = new GameObject('Mountain Background 2');
         vec3.set(mountainBackgroundGameObject2.transform.position, 80, 0, -10);
         vec3.set(mountainBackgroundGameObject2.transform.rotation, 0, 0, Math.PI/2);
         vec3.set(mountainBackgroundGameObject2.transform.scale, 40, 40, 1);
@@ -94,12 +98,44 @@ class Game {
         mainScene.addGameObject(mountainBackgroundGameObject2);
 
         let mountainParentParalax = new GameObject('Mountain Paralax');
-        mountainParentParalax.addComponent(new ParalaxMovement(mountainBackgroundGameObject2, mountainBackgroundGameObject1, -15, 80, 80 ));
+        mountainParentParalax.addComponent(new ParalaxMovement(mountainBackgroundGameObject2, mountainBackgroundGameObject1, -15, 80, 79 ));
         mainScene.addGameObject(mountainParentParalax);
 
         mountainBackgroundGameObject1.transform.setParent(mountainParentParalax.transform);
         mountainBackgroundGameObject2.transform.setParent(mountainParentParalax.transform);
         
+        // Add Box
+        let boxGameObjectPrefab = new GameObject("Box");
+        vec3.set(boxGameObjectPrefab.transform.position, 0, -3, 0);
+        vec3.set(boxGameObjectPrefab.transform.scale, 1, 1, 1);
+        boxGameObjectPrefab.addComponent(new CubeBehavior());
+        boxGameObjectPrefab.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/cube/box.png', pixelatedTextureInfo));
+        boxGameObjectPrefab.setScene(mainScene);
+        //mainScene.addGameObject(boxGameObjectPrefab);
+
+        //let box1 = boxGameObjectPrefab.clone();
+        //vec3.set(box1.transform.position, 2, -3, 0);
+        //mainScene.addGameObject(box1);
+
+        // Add Man
+        let manGameObject = new GameObject("Man");
+        vec3.set(manGameObject.transform.position, 0, 2, 1);
+        vec3.set(manGameObject.transform.rotation, 0, 0, Math.PI/2);
+        vec3.set(manGameObject.transform.scale, 2, 1, 1);
+        manGameObject.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/man/idle0.png', pixelatedTextureInfo));
+        manGameObject.addComponent(new PlayerBehavior());
+        mainScene.addGameObject(manGameObject);
+
+        // Spawn Place
+        let spawnPlace = new GameObject("Spawn Place");
+        vec3.set(spawnPlace.transform.position, 0, 0, 0);
+        spawnPlace.transform.setParent(manGameObject.transform);
+        mainScene.addGameObject(spawnPlace);
+
+        manGameObject.addComponent(new CubeSpawner(boxGameObjectPrefab, spawnPlace, 10));
+
+        
+
         
         this.sceneManager.addScene(mainScene);
         

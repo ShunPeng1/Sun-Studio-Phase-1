@@ -69,7 +69,9 @@ class WebGLManager {
 
         // Enable blending
         gl.enable(gl.BLEND);
+        gl.blendEquation(gl.FUNC_ADD);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
         
         // Set matrices
         let matWorldUniformLocation = gl.getUniformLocation(program, 'mWorld');
@@ -85,7 +87,7 @@ class WebGLManager {
         this.projMatrix = projMatrix;
         
         GLM.mat4.identity(worldMatrix);
-        GLM.mat4.lookAt(viewMatrix, [0, 0, 60], [0, 0, 0], [0, 1, 0]);
+        GLM.mat4.lookAt(viewMatrix, [0, 0, 100], [0, 0, 0], [0, 1, 0]);
         GLM.mat4.perspective(projMatrix, GLM.glMatrix.toRadian(60), canvas.width / canvas.height, 0.1, 1000.0);
     
         gl.uniformMatrix4fv(matWorldUniformLocation, false, worldMatrix);

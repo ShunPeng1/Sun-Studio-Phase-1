@@ -7,14 +7,11 @@ import Renderer from "./Renderer";
 
 class PrimativeRenderer extends Renderer {
 
-    private textureUrl : string;
-    private textureInfo: TextureInfo;
 
 
     public constructor(webgl : WebGLManager, shape: Shape, textureUrl : string, textureInfo : TextureInfo) {
         super(webgl);
-
-
+    
         this.initializeShape(shape);
 
         this.initializeTexture(textureUrl, textureInfo);

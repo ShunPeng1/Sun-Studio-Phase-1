@@ -9,6 +9,8 @@ class InputManager{
             if (callbacks) {
                 callbacks.forEach(callback => callback());
             }
+            
+            console.log('Key pressed: ' + event.key);
         });
     }
 
