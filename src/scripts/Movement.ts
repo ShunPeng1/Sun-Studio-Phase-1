@@ -15,7 +15,7 @@ class Movement extends Component {
     update(time: number, deltaTime : number) {
         this.gameObject.transform.position[0] += this.speed * deltaTime;
         
-        console.log(this.gameObject.name, this.gameObject.transform.position[0]);
+        //console.log(this.gameObject.name, this.gameObject.transform.position[0]);
     }
 
     public clone(): Component {

@@ -12,6 +12,7 @@ import ShapeFactory from "./engine/webgl/factories/ShapeFactory";
 import { vec3 } from "gl-matrix";
 import PrimativeRenderer from "./engine/components/PremadeRenderer";
 import ShapeType from "./engine/webgl/shapes/ShapeType";
+import ParalaxMovement from "./scripts/ParalaxMovement";
 
 class Game {
     private canvas: HTMLCanvasElement | null ;
@@ -52,46 +53,54 @@ class Game {
         let pixelatedTextureInfo = new TextureInfo(true, WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.CLAMP_TO_EDGE, WebGLRenderingContext.CLAMP_TO_EDGE,
             WebGLRenderingContext.NEAREST, WebGLRenderingContext.NEAREST);
 
+        
+
         // Create factory
         let objectFactory = new ModelReaderFactory();
         let shapeFactory = new ShapeFactory(this.webGLManager);
         
-        // Create the chicken game object
-        let result = await objectFactory.createModel('assets/models/chicken/chicken.json');
-
-        let chickenGameObject = new GameObject('Chicken Player');
-        chickenGameObject.transform.rotation[1] = Math.PI / 2;
-
-        chickenGameObject.addComponent(new MeshRenderer(this.webGLManager, result.meshes[0], 
-            'assets/models/chicken/chicken.png', pixelatedTextureInfo));
-
-        mainScene.addGameObject(chickenGameObject);
 
 
         // Add Background
         let skyBackgroundGameObject = new GameObject('Sky Background');
-        vec3.set(skyBackgroundGameObject.transform.position, -50, 0, -10);
-        vec3.set(skyBackgroundGameObject.transform.scale, 10, 10, 10);
+        vec3.set(skyBackgroundGameObject.transform.position, 0, 0, -11);
+        vec3.set(skyBackgroundGameObject.transform.rotation, 0, 0, Math.PI/2);
+        vec3.set(skyBackgroundGameObject.transform.scale, 40, 40, 1);
 
-        let skyquad = shapeFactory.createShape(ShapeType.Quad);
+        let quad = shapeFactory.createShape(ShapeType.Quad);
 
-        skyBackgroundGameObject.addComponent(new PrimativeRenderer(this.webGLManager, skyquad,
-            'assets/images/super mountain/sky.png', pixelatedTextureInfo));
-
+        skyBackgroundGameObject.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/super mountain/sky.png', pixelatedTextureInfo));
+        
         mainScene.addGameObject(skyBackgroundGameObject);
 
-        let mountainBackgroundGameObject = new GameObject(' Mountain Background');
-        vec3.set(mountainBackgroundGameObject.transform.position, 50, 0, -10);
-        vec3.set(mountainBackgroundGameObject.transform.scale, 10, 10, 10);
 
-        let mountainQuad = shapeFactory.createShape(ShapeType.Quad);
+        let mountainBackgroundGameObject1 = new GameObject(' Mountain Background');
+        vec3.set(mountainBackgroundGameObject1.transform.position, 0, 0, -10);
+        vec3.set(mountainBackgroundGameObject1.transform.rotation, 0, 0, Math.PI/2);
+        vec3.set(mountainBackgroundGameObject1.transform.scale, 40, 40, 1);
 
-        mountainBackgroundGameObject.addComponent(new PrimativeRenderer(this.webGLManager, mountainQuad,
-            'assets/images/super mountain/mountains.png', pixelatedTextureInfo));
+        mountainBackgroundGameObject1.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/super mountain/mountains.png', pixelatedTextureInfo));
+        
+        mainScene.addGameObject(mountainBackgroundGameObject1);
 
-        mainScene.addGameObject(mountainBackgroundGameObject);
+        
+        let mountainBackgroundGameObject2 = new GameObject(' Mountain Background');
+        vec3.set(mountainBackgroundGameObject2.transform.position, 80, 0, -10);
+        vec3.set(mountainBackgroundGameObject2.transform.rotation, 0, 0, Math.PI/2);
+        vec3.set(mountainBackgroundGameObject2.transform.scale, 40, 40, 1);
 
+        mountainBackgroundGameObject2.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/super mountain/mountains.png', pixelatedTextureInfo));
+        
+        mainScene.addGameObject(mountainBackgroundGameObject2);
 
+        let mountainParentParalax = new GameObject('Mountain Paralax');
+        mountainParentParalax.addComponent(new ParalaxMovement(mountainBackgroundGameObject2, mountainBackgroundGameObject1, -15, 80, 80 ));
+        mainScene.addGameObject(mountainParentParalax);
+
+        mountainBackgroundGameObject1.transform.setParent(mountainParentParalax.transform);
+        mountainBackgroundGameObject2.transform.setParent(mountainParentParalax.transform);
+        
+        
         this.sceneManager.addScene(mainScene);
         
     }

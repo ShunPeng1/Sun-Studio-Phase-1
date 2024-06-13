@@ -88,54 +88,19 @@ abstract class Shape{
         
     }
 
-    public addTexture(
-        image : ImageBitmap | ImageData | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement | OffscreenCanvas, 
-        textureInfo : TextureInfo
-    ) : void {
-        let gl = this.gl;
-
-        var texture = gl.createTexture()!;
-        this.texture = texture;
-
-        gl.bindTexture(textureInfo.textureType, texture);
-
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, textureInfo.isFlipY); 
-        
-        // Set the parameters so we can render any size image
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, textureInfo.textureWrapS);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, textureInfo.textureWrapT);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, textureInfo.textureMinFilter);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, textureInfo.textureMagFilter);
-       
-        if (image instanceof ImageData) {
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, image.width, image.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, image.data);
-        } else {
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-        }
-
-        // Unbind the texture
-        gl.bindTexture(gl.TEXTURE_2D, null);
-
-    }
 
 
     public draw(): void {
         
         let gl = this.gl;
         // Use the correct program
-        gl.useProgram(this.program);
-        
+        //gl.useProgram(this.program);
+
         // Bind the buffers
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.ebo);
-
-        // Texture
-        // Texture
-        if (this.texture) {
-            gl.activeTexture(gl.TEXTURE0);
-            gl.bindTexture(gl.TEXTURE_2D, this.texture);
-        }
-
+        
+        
         // Draw the box
         gl.drawElements(gl.TRIANGLES, this.mesh.getIndicesLength(), gl.UNSIGNED_SHORT, 0);
 
@@ -143,10 +108,7 @@ abstract class Shape{
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 
-        // Unbind the texture
-        if (this.texture) {
-            gl.bindTexture(gl.TEXTURE_2D, null);
-        }
+       
     }
 }
 

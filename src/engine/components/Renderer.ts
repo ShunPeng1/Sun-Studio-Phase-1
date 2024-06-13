@@ -5,7 +5,7 @@ import Component from "./Component";
 
 class Renderer extends Component {
     protected webgl : WebGLManager;
-    
+    protected webglTexture : WebGLTexture;
     protected shape : Shape;
     protected texture : ImageBitmap | ImageData | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement | OffscreenCanvas;
 
@@ -24,7 +24,7 @@ class Renderer extends Component {
         this.texture = new Image();
         this.texture.src = textureUrl;
         this.texture.onload = () => {
-            this.shape.addTexture(this.texture, textureInfo);
+            this.addTexture(this.texture, textureInfo);
             
         };
     }
@@ -40,17 +40,67 @@ class Renderer extends Component {
         let modelMatrixUniformLocation = gl.getUniformLocation(this.webgl.getProgram(), 'mWorld');
 
         gl.uniformMatrix4fv(modelMatrixUniformLocation, false, this.transform.getWorldMatrix());
-    
+
+        // Unbind any previously bound texture
+        gl.bindTexture(gl.TEXTURE_2D, null);
+
+        // Texture
+        if (this.webglTexture) {
+            let modelMatrixUniformLocation = gl.getUniformLocation(this.webgl.getProgram(), 'mTexScale');
+
+            gl.uniform2fv(modelMatrixUniformLocation, this.transform.getXYScale());
+
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, this.webglTexture);
+            
+        }
+
+
         // Set the transformation matrix
         this.shape.draw();
         
+
+        // Unbind the texture
+        if (this.webglTexture) {
+            gl.bindTexture(gl.TEXTURE_2D, null);
+        }
     }
 
     public clone(): Component {
         throw new Error("Method not implemented.");
     }
 
+    
+    public addTexture(
+        texture : ImageBitmap | ImageData | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement | OffscreenCanvas, 
+        textureInfo : TextureInfo
+    ) : void {
+        this.texture = texture;
+        let gl = this.webgl.getGL();
 
+        var webglTexture = gl.createTexture()!;
+        this.webglTexture = webglTexture;
+
+        gl.bindTexture(textureInfo.textureType, webglTexture);
+
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, textureInfo.isFlipY); 
+        
+        // Set the parameters so we can render any size image
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, textureInfo.textureWrapS);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, textureInfo.textureWrapT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, textureInfo.textureMinFilter);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, textureInfo.textureMagFilter);
+       
+        if (texture instanceof ImageData) {
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, texture.width, texture.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, texture.data);
+        } else {
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture);
+        }
+
+        // Unbind the texture
+        gl.bindTexture(gl.TEXTURE_2D, null);
+
+    }
 }
 
 export default Renderer;

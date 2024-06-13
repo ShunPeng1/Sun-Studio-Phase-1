@@ -1,4 +1,4 @@
-import { mat4, vec3 } from "gl-matrix";
+import { mat4, vec2, vec3 } from "gl-matrix";
 import Component from "./Component";
 
 class Transform extends Component{
@@ -80,6 +80,10 @@ class Transform extends Component{
 
     public getScale(): vec3 {
         return this.scale;
+    }
+
+    public getXYScale(): vec2{
+        return vec2.fromValues(this.scale[0], this.scale[1]);
     }
 
     public setTranslation(x: number, y: number, z: number) {

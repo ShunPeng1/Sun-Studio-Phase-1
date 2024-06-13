@@ -85,7 +85,7 @@ class WebGLManager {
         this.projMatrix = projMatrix;
         
         GLM.mat4.identity(worldMatrix);
-        GLM.mat4.lookAt(viewMatrix, [0, 0, 200], [0, 0, 0], [0, 1, 0]);
+        GLM.mat4.lookAt(viewMatrix, [0, 0, 60], [0, 0, 0], [0, 1, 0]);
         GLM.mat4.perspective(projMatrix, GLM.glMatrix.toRadian(60), canvas.width / canvas.height, 0.1, 1000.0);
     
         gl.uniformMatrix4fv(matWorldUniformLocation, false, worldMatrix);

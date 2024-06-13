@@ -10,10 +10,10 @@ class FragmentShader extends BaseShader {
         'varying vec2 fragTexCoord;',
 
         'uniform sampler2D sampler;', // Texture sampler
-
+        'uniform vec2 mTexScale;',
         'void main()',
         '{',
-        '  vec4 texColor = texture2D(sampler, fragTexCoord);',
+        '  vec4 texColor = texture2D(sampler, fragTexCoord * vec2(1,1));',
         '  gl_FragColor = fragColor * texColor;',
         '}'
     ].join('\n');
