@@ -5,6 +5,7 @@ import Scene from "./engine/scenes/Scene";
 import GameObject from "./engine/scenes/GameObject";
 import MeshRenderer from "./engine/components/MeshRenderer";
 import Movement from "./scripts/Movement";
+import TextureInfo from "./engine/webgl/textures/TextureInfo";
 
 class Game {
     private canvas: HTMLCanvasElement | null ;
@@ -16,7 +17,7 @@ class Game {
 
     constructor() {
         // Create canvas  
-        let canvas = new Canvas('game', 1600, 900);
+        let canvas = new Canvas('game', 600, 800);
         this.canvas = canvas.createCanvas();
         
         // Create Managers
@@ -34,15 +35,16 @@ class Game {
         // TOOO: Add your implementation here
         let mainScene = new Scene('main');
 
+        let pixelatedTextureInfo = new TextureInfo(true, WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.CLAMP_TO_EDGE, WebGLRenderingContext.CLAMP_TO_EDGE,
+            WebGLRenderingContext.NEAREST, WebGLRenderingContext.NEAREST);
+
         let chickenGameObject = new GameObject('Test Object');
         chickenGameObject.transform.rotation[1] = Math.PI / 2;
         
-        chickenGameObject.addComponent(new MeshRenderer(this.webGLManager, 'assets/models/chicken/chicken.json', 'assets/models/chicken/chicken.png',
-            true, WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.CLAMP_TO_EDGE, WebGLRenderingContext.CLAMP_TO_EDGE,
-            WebGLRenderingContext.NEAREST, WebGLRenderingContext.NEAREST
-        ));
+        chickenGameObject.addComponent(new MeshRenderer(this.webGLManager, 'assets/models/chicken/chicken.json', 
+            'assets/models/chicken/chicken.png', pixelatedTextureInfo));
 
-        chickenGameObject.addComponent(new Movement(1));
+        chickenGameObject.addComponent(new Movement(0));
 
     
         mainScene.addGameObject(chickenGameObject);

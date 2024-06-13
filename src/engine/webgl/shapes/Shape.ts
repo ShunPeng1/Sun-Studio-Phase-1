@@ -1,20 +1,6 @@
+import { TextureFilter, TextureType, TextureWrap } from "../textures/TextureEnum";
+import TextureInfo from "../textures/TextureInfo";
 import Mesh from "./Mesh";
-
-enum TextureType {
-    TEXTURE_2D = WebGLRenderingContext.TEXTURE_2D,
-    TEXTURE_CUBE_MAP = WebGLRenderingContext.TEXTURE_CUBE_MAP
-}
-
-enum TextureWrap {
-    CLAMP_TO_EDGE = WebGLRenderingContext.CLAMP_TO_EDGE,
-    MIRRORED_REPEAT = WebGLRenderingContext.MIRRORED_REPEAT,
-    REPEAT = WebGLRenderingContext.REPEAT
-}
-
-enum TextureFilter {
-    LINEAR = WebGLRenderingContext.LINEAR,
-    NEAREST = WebGLRenderingContext.NEAREST
-}
 
 
 abstract class Shape{
@@ -28,6 +14,7 @@ abstract class Shape{
     protected ebo: WebGLBuffer; // Element Buffer Object (Indices)
 
     constructor(gl: WebGLRenderingContext, program: WebGLProgram, mesh : Mesh) {
+        console.log("shape");
         this.gl = gl;
         this.program = program;
         this.mesh = mesh;
@@ -104,27 +91,22 @@ abstract class Shape{
 
     public addTexture(
         image : ImageBitmap | ImageData | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement | OffscreenCanvas, 
-        isFlipY : boolean = false,
-        textureType : TextureType = TextureType.TEXTURE_2D,
-        textureWrapS : TextureWrap = TextureWrap.CLAMP_TO_EDGE,
-        textureWrapT : TextureWrap = textureWrapS,
-        textureMinFilter : TextureFilter = TextureFilter.LINEAR,
-        textureMagFilter : TextureFilter = TextureFilter.LINEAR
+        textureInfo : TextureInfo
     ) : void {
         let gl = this.gl;
 
         var texture = gl.createTexture()!;
         this.texture = texture;
 
-        gl.bindTexture(textureType, texture);
+        gl.bindTexture(textureInfo.textureType, texture);
 
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, isFlipY); 
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, textureInfo.isFlipY); 
         
         // Set the parameters so we can render any size image
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, textureWrapS);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, textureWrapT);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, textureMinFilter);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, textureMagFilter);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, textureInfo.textureWrapS);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, textureInfo.textureWrapT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, textureInfo.textureMinFilter);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, textureInfo.textureMagFilter);
        
         if (image instanceof ImageData) {
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, image.width, image.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, image.data);
