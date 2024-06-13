@@ -1,6 +1,7 @@
 import Canvas from "./engine/webgl/Canvas";
 import WebGLManager from "./engine/webgl/WebGLManager";
 import SceneManager from "./engine/scenes/SceneManager";
+import PhysicsManager from "./engine/physics/PhysicManager";
 import Scene from "./engine/scenes/Scene";
 import GameObject from "./engine/scenes/GameObject";
 import MeshRenderer from "./engine/components/MeshRenderer";
@@ -14,9 +15,11 @@ import PrimativeRenderer from "./engine/components/PremadeRenderer";
 import ShapeType from "./engine/webgl/shapes/ShapeType";
 import ParalaxMovement from "./scripts/ParalaxMovement";
 import InputManager from "./inputs/InputManager";
-import PlayerBehavior from "./scripts/PlayerBehavior";
+import LeftRightMovement from "./scripts/LeftRightMovement";
 import CubeSpawner from "./scripts/CubeSpawner";
 import CubeBehavior from "./scripts/CubeBehavior";
+import Collider from "./engine/components/Collider";
+import BoxCollider from "./engine/components/BoxCollider";
 
 class Game {
     private canvas: HTMLCanvasElement | null ;
@@ -24,7 +27,7 @@ class Game {
     private sceneManager: SceneManager;
     private lastTime : number = 0;
     private deltaTime : number = 0;
-    inputManager: any;
+    private physicsManager: PhysicsManager;
 
 
     constructor() {
@@ -35,6 +38,7 @@ class Game {
         // Create Managers
         this.webGLManager = new WebGLManager(this.canvas);
         this.sceneManager = new SceneManager();
+        this.physicsManager = PhysicsManager.getInstance();
 
         this.initialize();
     }
@@ -56,7 +60,7 @@ class Game {
         let mainScene = new Scene('main');
 
         let pixelatedTextureInfo = new TextureInfo(true, WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.CLAMP_TO_EDGE, WebGLRenderingContext.CLAMP_TO_EDGE,
-            WebGLRenderingContext.NEAREST, WebGLRenderingContext.NEAREST);
+            WebGLRenderingContext.LINEAR, WebGLRenderingContext.LINEAR);
 
 
         // Create factory
@@ -104,35 +108,18 @@ class Game {
         mountainBackgroundGameObject1.transform.setParent(mountainParentParalax.transform);
         mountainBackgroundGameObject2.transform.setParent(mountainParentParalax.transform);
         
-        // Add Box
-        let boxGameObjectPrefab = new GameObject("Box");
-        vec3.set(boxGameObjectPrefab.transform.position, 0, -3, 0);
-        vec3.set(boxGameObjectPrefab.transform.scale, 1, 1, 1);
-        boxGameObjectPrefab.addComponent(new CubeBehavior());
-        boxGameObjectPrefab.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/cube/box.png', pixelatedTextureInfo));
-        boxGameObjectPrefab.setScene(mainScene);
-        //mainScene.addGameObject(boxGameObjectPrefab);
-
-        //let box1 = boxGameObjectPrefab.clone();
-        //vec3.set(box1.transform.position, 2, -3, 0);
-        //mainScene.addGameObject(box1);
-
-        // Add Man
-        let manGameObject = new GameObject("Man");
+        
+        
+        // Add Player
+        let manGameObject = new GameObject("Player");
         vec3.set(manGameObject.transform.position, 0, 2, 1);
         vec3.set(manGameObject.transform.rotation, 0, 0, Math.PI/2);
-        vec3.set(manGameObject.transform.scale, 2, 1, 1);
-        manGameObject.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/man/idle0.png', pixelatedTextureInfo));
-        manGameObject.addComponent(new PlayerBehavior());
+        vec3.set(manGameObject.transform.scale, 4, 4, 1);
+        manGameObject.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/doodle/player/tile000.png', pixelatedTextureInfo));
+        
+        manGameObject.addComponent(new LeftRightMovement(100));
         mainScene.addGameObject(manGameObject);
 
-        // Spawn Place
-        let spawnPlace = new GameObject("Spawn Place");
-        vec3.set(spawnPlace.transform.position, 0, 0, 0);
-        spawnPlace.transform.setParent(manGameObject.transform);
-        mainScene.addGameObject(spawnPlace);
-
-        manGameObject.addComponent(new CubeSpawner(boxGameObjectPrefab, spawnPlace, 10));
 
         
 
@@ -173,6 +160,8 @@ class Game {
                 gameObject.update(time, deltaTime);
             });
         }
+
+        this.physicsManager.checkCollisions();
 
         return;
     }
