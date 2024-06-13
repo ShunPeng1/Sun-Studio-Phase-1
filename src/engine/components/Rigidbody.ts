@@ -3,17 +3,19 @@ import Component from "./Component";
 
 class Rigidbody extends Component {
     
-    private velocity: vec3;
-    private acceleration: vec3;
+    public velocity: vec3;
+    public acceleration: vec3;
     private mass: number;
     private gravity: number;
+    public isKinematic : boolean = false;
 
-    constructor(mass: number, gravity: number) {
+    constructor(mass: number, gravity: number, isKinematic : boolean = false) {
         super();
 
         this.mass = mass;
         this.gravity = gravity;
-        
+        this.isKinematic = isKinematic;
+
         this.velocity = vec3.create();
         this.acceleration = vec3.create();
     }
@@ -30,7 +32,7 @@ class Rigidbody extends Component {
         vec3.add(this.velocity, this.velocity, deltaVelocity);
 
         vec3.add(this.acceleration, this.acceleration, [0, -this.gravity * deltaTime, 0]);
-        console.log(deltaTime,this.gameObject.transform.position,deltaPosition, this.velocity, deltaVelocity, this.acceleration);
+        //console.log(deltaTime,this.gameObject.transform.position,deltaPosition, this.velocity, deltaVelocity, this.acceleration);
     }
 
     public addForce(force: vec3) {

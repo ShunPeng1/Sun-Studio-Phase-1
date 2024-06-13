@@ -24,10 +24,10 @@ class Quad extends Shape {
 
         if (texCoords.length == 0) {
             texCoords = [
+                0.0, 1.0, 
                 0.0, 0.0, 
                 1.0, 0.0, 
-                1.0, 1.0, 
-                0.0, 1.0
+                1.0, 1.0
             ];
 
             console.log("Default texture coordinates")

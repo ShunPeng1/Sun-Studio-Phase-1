@@ -17,6 +17,7 @@ class GameObject {
     constructor(name: string = 'New GameObject') {
         this.name = name;
         this.transform = new Transform();
+        this.transform.setGameObject(this);
     }
 
     public awake() {
