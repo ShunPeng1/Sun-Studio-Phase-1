@@ -8,6 +8,10 @@ import Movement from "./scripts/Movement";
 import TextureInfo from "./engine/webgl/textures/TextureInfo";
 import ModelReaderFactory from "./engine/webgl/factories/ModelReaderFactory";
 import ReaderResult from "./engine/webgl/readers/ReaderResult";
+import ShapeFactory from "./engine/webgl/factories/ShapeFactory";
+import { vec3 } from "gl-matrix";
+import PrimativeRenderer from "./engine/components/PremadeRenderer";
+import ShapeType from "./engine/webgl/shapes/ShapeType";
 
 class Game {
     private canvas: HTMLCanvasElement | null ;
@@ -48,19 +52,46 @@ class Game {
         let pixelatedTextureInfo = new TextureInfo(true, WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.CLAMP_TO_EDGE, WebGLRenderingContext.CLAMP_TO_EDGE,
             WebGLRenderingContext.NEAREST, WebGLRenderingContext.NEAREST);
 
+        // Create factory
         let objectFactory = new ModelReaderFactory();
+        let shapeFactory = new ShapeFactory(this.webGLManager);
+        
+        // Create the chicken game object
         let result = await objectFactory.createModel('assets/models/chicken/chicken.json');
-        let chickenGameObject = new GameObject('Test Object');
+
+        let chickenGameObject = new GameObject('Chicken Player');
         chickenGameObject.transform.rotation[1] = Math.PI / 2;
 
         chickenGameObject.addComponent(new MeshRenderer(this.webGLManager, result.meshes[0], 
             'assets/models/chicken/chicken.png', pixelatedTextureInfo));
 
-        chickenGameObject.addComponent(new Movement(0));
-
         mainScene.addGameObject(chickenGameObject);
 
-        
+
+        // Add Background
+        let skyBackgroundGameObject = new GameObject('Sky Background');
+        vec3.set(skyBackgroundGameObject.transform.position, -50, 0, -10);
+        vec3.set(skyBackgroundGameObject.transform.scale, 10, 10, 10);
+
+        let skyquad = shapeFactory.createShape(ShapeType.Quad);
+
+        skyBackgroundGameObject.addComponent(new PrimativeRenderer(this.webGLManager, skyquad,
+            'assets/images/super mountain/sky.png', pixelatedTextureInfo));
+
+        mainScene.addGameObject(skyBackgroundGameObject);
+
+        let mountainBackgroundGameObject = new GameObject(' Mountain Background');
+        vec3.set(mountainBackgroundGameObject.transform.position, 50, 0, -10);
+        vec3.set(mountainBackgroundGameObject.transform.scale, 10, 10, 10);
+
+        let mountainQuad = shapeFactory.createShape(ShapeType.Quad);
+
+        mountainBackgroundGameObject.addComponent(new PrimativeRenderer(this.webGLManager, mountainQuad,
+            'assets/images/super mountain/mountains.png', pixelatedTextureInfo));
+
+        mainScene.addGameObject(mountainBackgroundGameObject);
+
+
         this.sceneManager.addScene(mainScene);
         
     }

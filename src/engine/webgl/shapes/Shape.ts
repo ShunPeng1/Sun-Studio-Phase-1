@@ -14,7 +14,6 @@ abstract class Shape{
     protected ebo: WebGLBuffer; // Element Buffer Object (Indices)
 
     constructor(gl: WebGLRenderingContext, program: WebGLProgram, mesh : Mesh) {
-        console.log("shape");
         this.gl = gl;
         this.program = program;
         this.mesh = mesh;
@@ -86,7 +85,7 @@ abstract class Shape{
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, null);
     
-
+        
     }
 
     public addTexture(
@@ -120,7 +119,35 @@ abstract class Shape{
     }
 
 
-    public abstract draw(): void;
+    public draw(): void {
+        
+        let gl = this.gl;
+        // Use the correct program
+        gl.useProgram(this.program);
+        
+        // Bind the buffers
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.ebo);
+
+        // Texture
+        // Texture
+        if (this.texture) {
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, this.texture);
+        }
+
+        // Draw the box
+        gl.drawElements(gl.TRIANGLES, this.mesh.getIndicesLength(), gl.UNSIGNED_SHORT, 0);
+
+        // Unbind the buffers
+        gl.bindBuffer(gl.ARRAY_BUFFER, null);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+
+        // Unbind the texture
+        if (this.texture) {
+            gl.bindTexture(gl.TEXTURE_2D, null);
+        }
+    }
 }
 
 export {TextureType, TextureWrap, TextureFilter};
