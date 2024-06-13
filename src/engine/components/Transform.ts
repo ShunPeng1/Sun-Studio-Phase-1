@@ -37,6 +37,15 @@ class Transform extends Component{
         mat4.rotateY(worldMatrix, worldMatrix, this.rotation[1]);
         mat4.rotateZ(worldMatrix, worldMatrix, this.rotation[2]);
         mat4.scale(worldMatrix, worldMatrix, this.scale);
+
+        // If this transform has a parent, multiply the worldMatrix by the parent's worldMatrix
+        let parent = this.parent;
+
+        while (parent) {
+            worldMatrix = mat4.multiply(mat4.create(), parent.getWorldMatrix(), worldMatrix);
+            parent = parent.getParent();
+        }
+        
         return worldMatrix;
     }
 
