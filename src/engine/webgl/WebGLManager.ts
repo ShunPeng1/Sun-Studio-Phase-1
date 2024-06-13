@@ -10,8 +10,6 @@ import Polyhedron from './shapes/Polyhedron';
 import * as GLM from 'gl-matrix'
 
 
-import {JsonModelReader, JsonModelResult } from './shapes/readers/JsonReader';
-
 class WebGLManager {
     
     private gl: WebGLRenderingContext;

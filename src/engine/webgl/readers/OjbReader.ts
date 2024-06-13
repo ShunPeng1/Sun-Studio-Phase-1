@@ -1,14 +1,10 @@
-import Mesh from "../Mesh";
-
-class ObjReaderResult {
-    public mesh : Mesh;
-
-}
+import Mesh from "../shapes/Mesh";
+import ReaderResult from "./ReaderResult";
 
 class ObjReader {
     
 
-    public load(url: string, callback : (objReader: ObjReaderResult) => void) {
+    public load(url: string, callback : (objReader: ReaderResult) => void) {
         let xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
         xhr.onreadystatechange = async () => {
@@ -19,10 +15,10 @@ class ObjReader {
         xhr.send();
     }
 
-    private async read(data: string, callback : (objReader: ObjReaderResult) => void): Promise<void> {
+    private async read(data: string, callback : (objReader: ReaderResult) => void): Promise<void> {
         return new Promise((resolve, reject) => {
             // Split the input into lines
-            let objReaderResult = new ObjReaderResult();
+            let result : ReaderResult;
 
             try {
                 let lines = data.split('\n');
@@ -76,19 +72,21 @@ class ObjReader {
                 for (let i = 0; i < vertices.length; i++) {
                     colors.push(1.0, 1.0, 1.0, 1.0);
                 }
+                result = new ReaderResult(null);
 
                 let mesh = new Mesh(vertices, faces, colors, vertexNormals, textureCoordinates);
-                objReaderResult.mesh = mesh;
+                result.addMesh(mesh);
                 resolve();
             } catch (error) {
+                result = new ReaderResult(error);
                 console.error(error);   
                 reject(error);
             }
             
             
-            callback(objReaderResult);
+            callback(result);
         });
     }
 }
 
-export {ObjReader, ObjReaderResult} 
+export default ObjReader;

@@ -1,14 +1,12 @@
-import Mesh from "../Mesh";
+import Mesh from "../shapes/Mesh";
+import ReaderResult from "./ReaderResult";
 
-class JsonModelResult {
-    public meshes : Mesh[] = [];
 
-}
 
 class JsonModelReader {
     
 
-    public load(url: string, callback : (json : JsonModelResult) => void) {
+    public load(url: string, callback : (json : ReaderResult) => void) {
         let xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
         xhr.onreadystatechange = async () => {
@@ -19,18 +17,20 @@ class JsonModelReader {
         xhr.send();
     }
 
-    private async read(data: string, callback : (json : JsonModelResult) => void): Promise<void> {
+    private async read(data: string, callback : (json : ReaderResult) => void): Promise<void> {
         return new Promise((resolve, reject) => {
-            let result = new JsonModelResult();
+            let result : ReaderResult;
             try {
                 let obj = JSON.parse(data);
                 let colors = this.getColor(obj, obj.meshes[0].vertices.length);
-                console.log(colors);
-                result.meshes.push(new Mesh(obj.meshes[0].vertices, [].concat.apply([], obj.meshes[0].faces), colors, obj.meshes[0].normals, obj.meshes[0].texturecoords[0]));
+                
+                result = new ReaderResult(null);
+                result.addMesh(new Mesh(obj.meshes[0].vertices, [].concat.apply([], obj.meshes[0].faces), colors, obj.meshes[0].normals, obj.meshes[0].texturecoords[0]));
                 
                 resolve();
 
             } catch (error) {
+                result = new ReaderResult(error);
                 console.error(error);   
                 reject(error);
             }
@@ -49,4 +49,4 @@ class JsonModelReader {
     }
 }
 
-export { JsonModelReader, JsonModelResult};
+export default JsonModelReader;

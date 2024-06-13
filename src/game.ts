@@ -6,6 +6,8 @@ import GameObject from "./engine/scenes/GameObject";
 import MeshRenderer from "./engine/components/MeshRenderer";
 import Movement from "./scripts/Movement";
 import TextureInfo from "./engine/webgl/textures/TextureInfo";
+import ModelReaderFactory from "./engine/webgl/factories/ModelReaderFactory";
+import ReaderResult from "./engine/webgl/readers/ReaderResult";
 
 class Game {
     private canvas: HTMLCanvasElement | null ;
@@ -24,31 +26,40 @@ class Game {
         this.webGLManager = new WebGLManager(this.canvas);
         this.sceneManager = new SceneManager();
 
-        // Initialize game scene
-        this.initializeGameScene();
+        this.initialize();
+    }
 
-        
+    public async initialize() {
+        // Initialize game scene
+        try {
+            await this.initializeGameScene();
+            // existing code...
+        } catch (error) {
+            console.error('Error initializing game scene:', error);
+        }
+
         this.startGameLoop();
     }
    
-    private initializeGameScene() {
+    private async initializeGameScene() {
         // TOOO: Add your implementation here
         let mainScene = new Scene('main');
 
         let pixelatedTextureInfo = new TextureInfo(true, WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.CLAMP_TO_EDGE, WebGLRenderingContext.CLAMP_TO_EDGE,
             WebGLRenderingContext.NEAREST, WebGLRenderingContext.NEAREST);
 
+        let objectFactory = new ModelReaderFactory();
+        let result = await objectFactory.createModel('assets/models/chicken/chicken.json');
         let chickenGameObject = new GameObject('Test Object');
         chickenGameObject.transform.rotation[1] = Math.PI / 2;
-        
-        chickenGameObject.addComponent(new MeshRenderer(this.webGLManager, 'assets/models/chicken/chicken.json', 
+
+        chickenGameObject.addComponent(new MeshRenderer(this.webGLManager, result.meshes[0], 
             'assets/models/chicken/chicken.png', pixelatedTextureInfo));
 
         chickenGameObject.addComponent(new Movement(0));
 
-    
         mainScene.addGameObject(chickenGameObject);
-        
+
         
         this.sceneManager.addScene(mainScene);
         
