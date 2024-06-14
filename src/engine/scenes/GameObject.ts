@@ -54,6 +54,10 @@ class GameObject {
         this.scene = scene;
     }
 
+    public getScene() {
+        return this.scene;
+    }
+
     public addComponent(component: Component) {
         component.setGameObject(this);
         this.components.push(component);
