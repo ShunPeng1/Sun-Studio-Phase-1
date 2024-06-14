@@ -56,7 +56,7 @@ class PlatformSpawner extends Component{
         let platform = platformSpawnInfo.clonePlatform();
         platform.setScene(this.gameObject.getScene())
         
-        platform.transform.position[0] = this.accumulateY + Math.random() * (this.varianceX[1] - this.varianceX[0]) + this.varianceX[0];
+        platform.transform.position[0] = Math.random() * (this.varianceX[1] - this.varianceX[0]) + this.varianceX[0];
         platform.transform.position[1] = this.accumulateY + Math.random() * (this.varianceY[1] - this.varianceY[0]) + this.varianceY[0];
     
         if (!platformSpawnInfo.isBreakable){

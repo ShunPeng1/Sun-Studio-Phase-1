@@ -23,9 +23,10 @@ import XBoundTeleportation from "./scripts/movement/XBoundTeleportation";
 import PlatformSpawner from "./scripts/platforms/PlatformSpawner";
 import PlatformSpawnInfo from "./scripts/platforms/PlatformSpawnInfo";
 import MaxFollowerMovement from "./scripts/movement/FollowerMovement";
+import CameraRenderer from "./engine/components/CameraRenderer";
 
 class Game {
-    private canvas: HTMLCanvasElement | null ;
+    private canvas: HTMLCanvasElement;
     private webGLManager: WebGLManager;
     private sceneManager: SceneManager;
     private lastTime : number = 0;
@@ -39,7 +40,7 @@ class Game {
     constructor() {
         // Create canvas  
         let canvas = new Canvas('game', 600, 800);
-        this.canvas = canvas.createCanvas();
+        this.canvas = canvas.createCanvas()!;
         
         // Create Managers
         this.webGLManager = new WebGLManager(this.canvas);
@@ -119,10 +120,11 @@ class Game {
         
         // Add Camera
         let camera = new GameObject('Camera');
-        vec3.set(camera.transform.position, 0, 0, 0);
+        vec3.set(camera.transform.position, 0, 0, 55);
         vec3.set(camera.transform.rotation, 0, 0, 0);
         vec3.set(camera.transform.scale, 1, 1, 1);
         
+        camera.addComponent(new CameraRenderer(this.webGLManager, this.canvas));
         camera.addComponent(new XBoundTeleportation(playerGameObject, 0, 25));
         camera.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         

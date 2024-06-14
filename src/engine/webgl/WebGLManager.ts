@@ -73,27 +73,6 @@ class WebGLManager {
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
         gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
         
-        // Set matrices
-        let matWorldUniformLocation = gl.getUniformLocation(program, 'mWorld');
-        let matViewUniformLocation = gl.getUniformLocation(program, 'mView');
-        let matProjUniformLocation = gl.getUniformLocation(program, 'mProj');
-
-        let worldMatrix = GLM.mat4.create();
-        let viewMatrix = GLM.mat4.create();
-        let projMatrix = GLM.mat4.create();
-
-        this.worldMatrix = worldMatrix;
-        this.viewMatrix = viewMatrix;
-        this.projMatrix = projMatrix;
-        
-        GLM.mat4.identity(worldMatrix);
-        GLM.mat4.lookAt(viewMatrix, [0, 0, 100], [0, 0, 0], [0, 1, 0]);
-        GLM.mat4.perspective(projMatrix, GLM.glMatrix.toRadian(60), canvas.width / canvas.height, 0.1, 1000.0);
-    
-        gl.uniformMatrix4fv(matWorldUniformLocation, false, worldMatrix);
-        gl.uniformMatrix4fv(matViewUniformLocation, false, viewMatrix);
-        gl.uniformMatrix4fv(matProjUniformLocation, false, projMatrix);
-
         
     }
 
