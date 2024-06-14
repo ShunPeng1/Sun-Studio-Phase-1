@@ -5,7 +5,7 @@ import PlatformSpawnInfo from "./PlatformSpawnInfo";
 
 class PlatformSpawner extends Component{
     private platformSpawnInfos : PlatformSpawnInfo[];
-    private accumulateY : number = 0;
+    private accumulateY : number;
     private preemptiveSpawnHeight : number;
     private varianceX : vec2;
     private varianceY : vec2;
@@ -26,7 +26,7 @@ class PlatformSpawner extends Component{
     }
 
     public awake(): void {
-        this.spawnPlatform();
+        this.accumulateY = this.transform.position[1];
     }
 
     public update(time: number, deltaTime: number): void {
@@ -56,11 +56,11 @@ class PlatformSpawner extends Component{
         let platform = platformSpawnInfo.clonePlatform();
         platform.setScene(this.gameObject.getScene())
         
-        platform.transform.position[0] = this.transform.position[0] + Math.random() * (this.varianceX[1] - this.varianceX[0]) + this.varianceX[0];
-        platform.transform.position[1] = this.transform.position[1] + Math.random() * (this.varianceY[1] - this.varianceY[0]) + this.varianceY[0];
+        platform.transform.position[0] = this.accumulateY + Math.random() * (this.varianceX[1] - this.varianceX[0]) + this.varianceX[0];
+        platform.transform.position[1] = this.accumulateY + Math.random() * (this.varianceY[1] - this.varianceY[0]) + this.varianceY[0];
     
         if (!platformSpawnInfo.isBreakable){
-            this.accumulateY =  platform.transform.position[1];   
+            this.accumulateY = platform.transform.position[1];   
         }
 
     }

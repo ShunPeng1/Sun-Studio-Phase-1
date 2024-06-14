@@ -5,7 +5,7 @@ import PhysicsManager from "./engine/physics/PhysicManager";
 import Scene from "./engine/scenes/Scene";
 import GameObject from "./engine/scenes/GameObject";
 import MeshRenderer from "./engine/components/MeshRenderer";
-import Movement from "./scripts/Movement";
+import Movement from "./scripts/deprecate/Movement";
 import TextureInfo from "./engine/webgl/textures/TextureInfo";
 import ModelReaderFactory from "./engine/webgl/factories/ModelReaderFactory";
 import ReaderResult from "./engine/webgl/readers/ReaderResult";
@@ -13,16 +13,16 @@ import ShapeFactory from "./engine/webgl/factories/ShapeFactory";
 import { vec3 } from "gl-matrix";
 import PrimativeRenderer from "./engine/components/PremadeRenderer";
 import ShapeType from "./engine/webgl/shapes/ShapeType";
-import ParalaxMovement from "./scripts/ParalaxMovement";
 import InputManager from "./inputs/InputManager";
-import LeftRightMovement from "./scripts/LeftRightMovement";
-import CubeSpawner from "./scripts/CubeSpawner";
-import CubeBehavior from "./scripts/CubeBehavior";
+import LeftRightMovement from "./scripts/movement/LeftRightMovement";
 import Collider from "./engine/components/Collider";
 import BoxCollider from "./engine/components/BoxCollider";
 import Rigidbody from "./engine/components/Rigidbody";
-import BouncePlatform from "./scripts/BouncePlatform";
-import XBoundTeleportation from "./scripts/XBoundTeleportation";
+import BouncePlatform from "./scripts/platforms/BouncePlatform";
+import XBoundTeleportation from "./scripts/movement/XBoundTeleportation";
+import PlatformSpawner from "./scripts/platforms/PlatformSpawner";
+import PlatformSpawnInfo from "./scripts/platforms/PlatformSpawnInfo";
+import MaxFollowerMovement from "./scripts/movement/FollowerMovement";
 
 class Game {
     private canvas: HTMLCanvasElement | null ;
@@ -114,6 +114,7 @@ class Game {
         playerGameObject.addComponent(new LeftRightMovement(50));
         mainScene.addGameObject(playerGameObject);
         
+        
 
         
         // Add Camera
@@ -123,8 +124,20 @@ class Game {
         vec3.set(camera.transform.scale, 1, 1, 1);
         
         camera.addComponent(new XBoundTeleportation(playerGameObject, 0, 25));
+        camera.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         
         mainScene.addGameObject(camera);
+
+
+        let spawner = new GameObject('Spawner');
+        spawner.addComponent(new PlatformSpawner([
+            new PlatformSpawnInfo(platform, 1)
+        ], 40, [-20,20], [3.5,9]));
+        
+        spawner.transform.position[1] = -20;
+
+        mainScene.addGameObject(spawner);
+        
 
         
         this.sceneManager.addScene(mainScene);
