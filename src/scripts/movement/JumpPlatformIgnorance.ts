@@ -1,9 +1,10 @@
-import Collider from "../engine/components/Collider";
-import Component from "../engine/components/Component";
-import Rigidbody from "../engine/components/Rigidbody";
-import PhysicManager from "../engine/physics/PhysicManager";
+import Collider from "../../engine/components/Collider";
+import Component from "../../engine/components/Component";
+import Rigidbody from "../../engine/components/Rigidbody";
+import PhysicManager from "../../engine/physics/PhysicManager";
+import Platform from "../platforms/Platform";
 
-class JumpColliderIgnorance extends Component{
+class JumpPlatformIgnorance extends Component{
     
     
     private isFalling: boolean = true;
@@ -54,8 +55,10 @@ class JumpColliderIgnorance extends Component{
         let physicManager = PhysicManager.getInstance();
 
         physicManager.queryColliders((collider : Collider) =>{
-            return collider.isEnable == true;
-        
+            if (collider.gameObject.getComponent<Platform>) {
+                return true;
+            }
+            return false;
         }).forEach((collider) => {
             collider.isEnable = false;
         });
@@ -67,7 +70,10 @@ class JumpColliderIgnorance extends Component{
         let physicManager = PhysicManager.getInstance();
 
         physicManager.queryColliders((collider : Collider) =>{
-            return collider.isEnable == false;
+            if (collider.gameObject.getComponent<Platform>) {
+                return true;
+            }
+            return false;
         
         }).forEach((collider) => {
             collider.isEnable = true;
@@ -90,4 +96,4 @@ class JumpColliderIgnorance extends Component{
 }
 
 
-export default JumpColliderIgnorance;
+export default JumpPlatformIgnorance;
