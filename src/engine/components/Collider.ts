@@ -9,6 +9,7 @@ let idCounter = 0;
 class Collider extends Component{
     public onCollisionEvent: EventEmitter = new EventEmitter();
     public id: number;
+    public isEnable: boolean = true;
 
     private COLLISION_ENTER = "Collision Enter";
     private COLLISION_STAY = "Collision Stay";
@@ -51,6 +52,9 @@ class Collider extends Component{
     
 
     public collidesWith(other: Collider) : boolean {
+        if (this.isEnable) {
+            return false;
+        }
         return false;
     }
     

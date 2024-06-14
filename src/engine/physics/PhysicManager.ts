@@ -57,6 +57,16 @@ class PhysicManager {
 
         this.collisionStates = newCollisionStates;
     }
+
+    public actionOnAllColliders(action : (collider : Collider) => void){
+        this.colliders.forEach(action);
+    }
+
+    public queryColliders(filterFunction : (collider : Collider) => boolean) : Collider[] {
+        return this.colliders.filter(filterFunction);
+    }
+
+
 }
 
 export default PhysicManager;

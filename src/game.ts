@@ -24,6 +24,7 @@ import PlatformSpawner from "./scripts/platforms/PlatformSpawner";
 import PlatformSpawnInfo from "./scripts/platforms/PlatformSpawnInfo";
 import MaxFollowerMovement from "./scripts/movement/FollowerMovement";
 import CameraRenderer from "./engine/components/CameraRenderer";
+import JumpColliderIgnorance from "./scripts/JumpColliderIgnorance";
 
 class Game {
     private canvas: HTMLCanvasElement;
@@ -79,15 +80,6 @@ class Game {
         
         
         
-        // Add Mountain Background Paralax
-        let paperBackground = new GameObject('Background 1');
-        vec3.set(paperBackground.transform.position, 0, 40, -10);
-        vec3.set(paperBackground.transform.rotation, 0, 0, 0);
-        vec3.set(paperBackground.transform.scale, 30, 80, 1);
-
-        paperBackground.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/doodle/atlas2/background.png', pixelatedTextureInfo));
-        
-        mainScene.addGameObject(paperBackground)
             
 
 
@@ -113,6 +105,7 @@ class Game {
         playerGameObject.addComponent(new BoxCollider(0, 0, 1, 1));
         playerGameObject.addComponent(new Rigidbody(1.1, 110))
         playerGameObject.addComponent(new LeftRightMovement(50));
+        playerGameObject.addComponent(new JumpColliderIgnorance());
         mainScene.addGameObject(playerGameObject);
         
         
@@ -130,14 +123,27 @@ class Game {
         
         mainScene.addGameObject(camera);
 
+        
+        // Add Background
+        let paperBackground = new GameObject('Background 1');
+        vec3.set(paperBackground.transform.position, 0, 40, -65);
+        vec3.set(paperBackground.transform.rotation, 0, 0, 0);
+        vec3.set(paperBackground.transform.scale, 30, 80, 1);
 
+        paperBackground.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/doodle/atlas2/background.png', pixelatedTextureInfo));
+        
+        mainScene.addGameObject(paperBackground)
+        paperBackground.transform.setParent(camera.transform);
+
+        // Add Spawner
         let spawner = new GameObject('Spawner');
         spawner.addComponent(new PlatformSpawner([
             new PlatformSpawnInfo(platform, 1)
-        ], 40, [-20,20], [3.5,9]));
+        ], 80, [-20,20], [9,15]));
+        spawner.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         
         spawner.transform.position[1] = -20;
-
+        
         mainScene.addGameObject(spawner);
         
 
