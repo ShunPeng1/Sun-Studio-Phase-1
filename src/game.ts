@@ -20,6 +20,8 @@ import CubeSpawner from "./scripts/CubeSpawner";
 import CubeBehavior from "./scripts/CubeBehavior";
 import Collider from "./engine/components/Collider";
 import BoxCollider from "./engine/components/BoxCollider";
+import Rigidbody from "./engine/components/Rigidbody";
+import BouncePlatform from "./scripts/BouncePlatform";
 
 class Game {
     private canvas: HTMLCanvasElement | null ;
@@ -27,6 +29,9 @@ class Game {
     private sceneManager: SceneManager;
     private lastTime : number = 0;
     private deltaTime : number = 0;
+    private fixedDeltaTime : number = 1/60;
+    private fixedLastTime : number = 0;
+
     private physicsManager: PhysicsManager;
 
 
@@ -70,57 +75,42 @@ class Game {
         // Create quad
         let quad = shapeFactory.createShape(ShapeType.Quad);
         
-
-        // Add Background
-        let skyBackgroundGameObject = new GameObject('Sky Background');
-        vec3.set(skyBackgroundGameObject.transform.position, 0, 0, -11);
-        vec3.set(skyBackgroundGameObject.transform.rotation, 0, 0, Math.PI/2);
-        vec3.set(skyBackgroundGameObject.transform.scale, 40, 40, 1);
-
-
-        skyBackgroundGameObject.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/super mountain/sky.png', pixelatedTextureInfo));
         
-        mainScene.addGameObject(skyBackgroundGameObject);
-
+        
         // Add Mountain Background Paralax
-        let mountainBackgroundGameObject1 = new GameObject('Mountain Background 1');
-        vec3.set(mountainBackgroundGameObject1.transform.position, 0, 0, -10);
-        vec3.set(mountainBackgroundGameObject1.transform.rotation, 0, 0, Math.PI/2);
-        vec3.set(mountainBackgroundGameObject1.transform.scale, 40, 40, 1);
+        let paperBackground = new GameObject('Background 1');
+        vec3.set(paperBackground.transform.position, 0, 40, -10);
+        vec3.set(paperBackground.transform.rotation, 0, 0, 0);
+        vec3.set(paperBackground.transform.scale, 30, 80, 1);
 
-        mountainBackgroundGameObject1.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/super mountain/mountains.png', pixelatedTextureInfo));
+        paperBackground.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/doodle/atlas2/background.png', pixelatedTextureInfo));
         
-        mainScene.addGameObject(mountainBackgroundGameObject1);
-
-        let mountainBackgroundGameObject2 = new GameObject('Mountain Background 2');
-        vec3.set(mountainBackgroundGameObject2.transform.position, 80, 0, -10);
-        vec3.set(mountainBackgroundGameObject2.transform.rotation, 0, 0, Math.PI/2);
-        vec3.set(mountainBackgroundGameObject2.transform.scale, 40, 40, 1);
-
-        mountainBackgroundGameObject2.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/super mountain/mountains.png', pixelatedTextureInfo));
+        mainScene.addGameObject(paperBackground)
+            
         
-        mainScene.addGameObject(mountainBackgroundGameObject2);
 
-        let mountainParentParalax = new GameObject('Mountain Paralax');
-        mountainParentParalax.addComponent(new ParalaxMovement(mountainBackgroundGameObject2, mountainBackgroundGameObject1, -15, 80, 79 ));
-        mainScene.addGameObject(mountainParentParalax);
-
-        mountainBackgroundGameObject1.transform.setParent(mountainParentParalax.transform);
-        mountainBackgroundGameObject2.transform.setParent(mountainParentParalax.transform);
+        // Platform
+        let platform = new GameObject("Platform");
+        vec3.set(platform.transform.position, 0, -20, 0);
+        vec3.set(platform.transform.rotation, 0, 0, 0);
+        vec3.set(platform.transform.scale, 3, 2, 1);
+        platform.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/doodle/atlas/platform0.png', pixelatedTextureInfo));
+        platform.addComponent(new BoxCollider(0, 1.5, 1, 1));
+        platform.addComponent(new BouncePlatform(4000));
         
         
+        mainScene.addGameObject(platform);
         
         // Add Player
-        let manGameObject = new GameObject("Player");
-        vec3.set(manGameObject.transform.position, 0, 2, 1);
-        vec3.set(manGameObject.transform.rotation, 0, 0, Math.PI/2);
-        vec3.set(manGameObject.transform.scale, 4, 4, 1);
-        manGameObject.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/doodle/player/tile000.png', pixelatedTextureInfo));
-        
-        manGameObject.addComponent(new LeftRightMovement(100));
-        mainScene.addGameObject(manGameObject);
-
-
+        let playerGameObject = new GameObject("Player");
+        vec3.set(playerGameObject.transform.position, 0, 2, 1);
+        vec3.set(playerGameObject.transform.rotation, 0, 0, 0);
+        vec3.set(playerGameObject.transform.scale, 4, 4, 1);
+        playerGameObject.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/doodle/player/tile000.png', pixelatedTextureInfo));
+        playerGameObject.addComponent(new BoxCollider(0, 0, 1, 1));
+        playerGameObject.addComponent(new Rigidbody(1.1, 110))
+        playerGameObject.addComponent(new LeftRightMovement(30));
+        mainScene.addGameObject(playerGameObject);
         
 
         
@@ -134,20 +124,45 @@ class Game {
 
         // Start the game loop
         this.lastTime = performance.now()/1000;
+        this.fixedLastTime = this.lastTime;
         requestAnimationFrame(this.gameLoop);
     }
 
 
     private gameLoop = () : void => {
         let time = performance.now()/1000;
+        
+        let deltaFixedTime = time - this.fixedLastTime;
+        while (this.fixedDeltaTime <= deltaFixedTime) {
+            this.fixedLastTime += this.fixedDeltaTime;
+            console.log("Fixed Update")
+            this.fixedUpdate(this.fixedLastTime, this.fixedDeltaTime);
+            deltaFixedTime -= this.fixedDeltaTime;
+        }
+
+        
         this.deltaTime = time - this.lastTime;
         this.lastTime = time;
-        
-
         this.update(time, this.deltaTime);
         this.render(time, this.deltaTime);
         
         requestAnimationFrame(this.gameLoop);
+    }
+
+    private fixedUpdate(fixedLastTime: number, fixedDeltaTime : number) : void {
+        // Update game objects
+
+        let currentSceneGameObjects = this.sceneManager.getCurrentScene()?.getGameObjects();
+        
+        if (currentSceneGameObjects) {
+            currentSceneGameObjects.forEach(gameObject => {
+                gameObject.fixedUpdate(fixedLastTime, fixedDeltaTime);
+            });
+        }
+
+        this.physicsManager.checkCollisions();
+
+        return;
     }
 
 
@@ -161,7 +176,6 @@ class Game {
             });
         }
 
-        this.physicsManager.checkCollisions();
 
         return;
     }
