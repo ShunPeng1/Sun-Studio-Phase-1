@@ -1,6 +1,6 @@
 import { vec3 } from "gl-matrix";
-import Component from "../engine/components/Component";
-import GameObject from "../engine/scenes/GameObject";
+import Component from "../../engine/components/Component";
+import GameObject from "../../engine/scenes/GameObject";
 
 class ParalaxMovement extends Component{
     private gameObject1: GameObject;

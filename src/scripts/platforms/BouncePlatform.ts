@@ -1,7 +1,7 @@
-import Collider from "../engine/components/Collider";
-import Component from "../engine/components/Component";
-import Rigidbody from "../engine/components/Rigidbody";
-import Transform from "../engine/components/Transform";
+import Collider from "../../engine/components/Collider";
+import Component from "../../engine/components/Component";
+import Rigidbody from "../../engine/components/Rigidbody";
+import Transform from "../../engine/components/Transform";
 
 class BouncePlatform extends Component {
     private force : number;

@@ -1,6 +1,6 @@
-import Component from "../engine/components/Component";
-import InputManager from "../inputs/InputManager";
-import CubeSpawner from "./CubeSpawner";
+import Component from "../../engine/components/Component";
+import InputManager from "../../inputs/InputManager";
+
 
 class LeftRightMovement extends Component {
 

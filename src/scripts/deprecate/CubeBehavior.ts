@@ -1,4 +1,4 @@
-import Component from "../engine/components/Component";
+import Component from "../../engine/components/Component";
 
 class CubeBehavior extends Component {
     

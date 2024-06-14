@@ -1,5 +1,5 @@
-import Component from "../engine/components/Component";
-import GameObject from "../engine/scenes/GameObject";
+import Component from "../../engine/components/Component";
+import GameObject from "../../engine/scenes/GameObject";
 
 class XBoundTeleportation extends Component{
     private xOffset : number;

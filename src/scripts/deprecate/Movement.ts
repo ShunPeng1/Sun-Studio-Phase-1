@@ -1,6 +1,6 @@
-import Component from "../engine/components/Component";
-import Transform from "../engine/components/Transform";
-import InputManager from "../inputs/InputManager";
+import Component from "../../engine/components/Component";
+import Transform from "../../engine/components/Transform";
+import InputManager from "../../inputs/InputManager";
 
 class Movement extends Component {
     private speed: number;
