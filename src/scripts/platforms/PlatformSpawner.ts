@@ -30,9 +30,10 @@ class PlatformSpawner extends Component{
     }
 
     public update(time: number, deltaTime: number): void {
-        if (this.accumulateY - this.transform.position[2] <= this.preemptiveSpawnHeight) {
+        if (this.accumulateY - this.transform.position[1] <= this.preemptiveSpawnHeight ) {
             this.spawnPlatform();
         }
+        console.log(this.accumulateY - this.transform.position[1], this.preemptiveSpawnHeight, this.accumulateY - this.transform.position[1] <= this.preemptiveSpawnHeight);
     }
 
     private getRandomPlatformSpawnInfo() : PlatformSpawnInfo {
