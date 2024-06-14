@@ -146,6 +146,17 @@ class Game {
         spawner.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         spawner.transform.position[1] = -20;
         mainScene.addGameObject(spawner);
+
+
+        // Add Destroyer
+        let destroyer = new GameObject('Destroyer');
+        destroyer.addComponent(new BoxCollider(0,-40, 1000,20));
+        destroyer.addComponent(new PlatformDestroyer());
+        destroyer.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
+        mainScene.addGameObject(destroyer);
+
+
+        
         
 
         
