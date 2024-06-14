@@ -1,5 +1,5 @@
 import Component from "../../engine/components/Component";
-import GameObject from "../../engine/scenes/GameObject";
+import GameObject from "../../engine/gameobjects/GameObject";
 
 class MaxFollowerMovement extends Component{
     private gameObjectFollowing: GameObject;

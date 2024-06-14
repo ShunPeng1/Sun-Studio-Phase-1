@@ -1,4 +1,4 @@
-import GameObject from "../../engine/scenes/GameObject";
+import GameObject from "../../engine/gameobjects/GameObject";
 
 class PlatformSpawnInfo{
     private platformPrefab : GameObject;

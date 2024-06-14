@@ -77,17 +77,6 @@ class WebGLManager {
     }
 
 
-    public render(time: number, deltaTime: number): void {
-        var gl = this.gl;
-
-        var angle = deltaTime / 1000 * Math.PI;
-
-        //let identityMatrix = GLM.mat4.create();
-        //GLM.mat4.rotate(this.worldMatrix, identityMatrix , angle, [0.5, 1, 1/3]);
-        //gl.uniformMatrix4fv(gl.getUniformLocation(this.program, 'mWorld'), false, this.worldMatrix);
-
-    }
-
     public clearScreen() {
         let gl = this.gl;
         // Clear screen

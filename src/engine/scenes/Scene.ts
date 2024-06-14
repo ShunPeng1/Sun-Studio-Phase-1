@@ -1,4 +1,4 @@
-import GameObject from "./GameObject";
+import GameObject from "../gameobjects/GameObject";
 
 class Scene{
     

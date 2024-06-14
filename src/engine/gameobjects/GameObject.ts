@@ -1,6 +1,6 @@
 import Component from "../components/Component";
 import Transform from "../components/Transform";
-import Scene from "./Scene";
+import Scene from "../scenes/Scene";
 
 
 class GameObject {

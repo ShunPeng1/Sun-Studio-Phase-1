@@ -1,6 +1,6 @@
 import { vec3 } from "gl-matrix";
 import Component from "../../engine/components/Component";
-import GameObject from "../../engine/scenes/GameObject";
+import GameObject from "../../engine/gameobjects/GameObject";
 
 class CubeSpawner extends Component {
     private cubePrefab : GameObject; 

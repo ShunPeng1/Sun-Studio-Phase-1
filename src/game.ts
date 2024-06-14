@@ -3,7 +3,7 @@ import WebGLManager from "./engine/webgl/WebGLManager";
 import SceneManager from "./engine/scenes/SceneManager";
 import PhysicsManager from "./engine/physics/PhysicManager";
 import Scene from "./engine/scenes/Scene";
-import GameObject from "./engine/scenes/GameObject";
+import GameObject from "./engine/gameobjects/GameObject";
 import MeshRenderer from "./engine/components/MeshRenderer";
 import Movement from "./scripts/deprecate/Movement";
 import TextureInfo from "./engine/webgl/textures/TextureInfo";
@@ -24,7 +24,9 @@ import PlatformSpawner from "./scripts/platforms/PlatformSpawner";
 import PlatformSpawnInfo from "./scripts/platforms/PlatformSpawnInfo";
 import MaxFollowerMovement from "./scripts/movement/FollowerMovement";
 import CameraRenderer from "./engine/components/CameraRenderer";
-import JumpColliderIgnorance from "./scripts/JumpColliderIgnorance";
+import JumpPlatformIgnorance from "./scripts/movement/JumpPlatformIgnorance";
+import Platform from "./scripts/platforms/Platform";
+import PlatformDestroyer from "./scripts/platforms/PlatformDestroyer";
 
 class Game {
     private canvas: HTMLCanvasElement;
@@ -85,16 +87,17 @@ class Game {
 
 
         // Platform
-        let platform = new GameObject("Platform");
-        vec3.set(platform.transform.position, 0, -20, 0);
-        vec3.set(platform.transform.rotation, 0, 0, 0);
-        vec3.set(platform.transform.scale, 4, 2, 1);
-        platform.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/doodle/atlas/platform0.png', pixelatedTextureInfo));
-        platform.addComponent(new BoxCollider(0, 1, 2, 1));
-        platform.addComponent(new BouncePlatform(4000));
+        let greenPlatform = new GameObject("Green Platform");
+        vec3.set(greenPlatform.transform.position, 0, -20, 0);
+        vec3.set(greenPlatform.transform.rotation, 0, 0, 0);
+        vec3.set(greenPlatform.transform.scale, 4, 2, 1);
+        greenPlatform.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/doodle/atlas/platform0.png', pixelatedTextureInfo));
+        greenPlatform.addComponent(new BoxCollider(0, 1, 2, 1));
+        greenPlatform.addComponent(new BouncePlatform(4000));
+        greenPlatform.addComponent(new Platform())
         
         
-        mainScene.addGameObject(platform);
+        mainScene.addGameObject(greenPlatform);
         
         // Add Player
         let playerGameObject = new GameObject("Player");
@@ -105,7 +108,7 @@ class Game {
         playerGameObject.addComponent(new BoxCollider(0, 0, 1, 1));
         playerGameObject.addComponent(new Rigidbody(1.1, 110))
         playerGameObject.addComponent(new LeftRightMovement(50));
-        playerGameObject.addComponent(new JumpColliderIgnorance());
+        playerGameObject.addComponent(new JumpPlatformIgnorance());
         mainScene.addGameObject(playerGameObject);
         
         
@@ -138,12 +141,10 @@ class Game {
         // Add Spawner
         let spawner = new GameObject('Spawner');
         spawner.addComponent(new PlatformSpawner([
-            new PlatformSpawnInfo(platform, 1)
-        ], 80, [-20,20], [9,15]));
+            new PlatformSpawnInfo(greenPlatform, 1)
+        ], 80, [-20,20], [6,13]));
         spawner.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
-        
         spawner.transform.position[1] = -20;
-        
         mainScene.addGameObject(spawner);
         
 
@@ -216,8 +217,6 @@ class Game {
     private render(time: number, deltaTime : number) : void {
         // Clear the screen
         this.webGLManager.clearScreen();
-
-        this.webGLManager.render(time, deltaTime);
 
         // Render game objects
         let currentSceneGameObjects = this.sceneManager.getCurrentScene()?.getGameObjects();

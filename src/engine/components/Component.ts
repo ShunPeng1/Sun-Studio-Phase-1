@@ -1,4 +1,4 @@
-import GameObject from "../scenes/GameObject";
+import GameObject from "../gameobjects/GameObject";
 import Transform from "./Transform";
 
 abstract class Component {
