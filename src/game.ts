@@ -22,6 +22,7 @@ import Collider from "./engine/components/Collider";
 import BoxCollider from "./engine/components/BoxCollider";
 import Rigidbody from "./engine/components/Rigidbody";
 import BouncePlatform from "./scripts/BouncePlatform";
+import XBoundTeleportation from "./scripts/XBoundTeleportation";
 
 class Game {
     private canvas: HTMLCanvasElement | null ;
@@ -87,15 +88,16 @@ class Game {
         
         mainScene.addGameObject(paperBackground)
             
-        
+
+
 
         // Platform
         let platform = new GameObject("Platform");
         vec3.set(platform.transform.position, 0, -20, 0);
         vec3.set(platform.transform.rotation, 0, 0, 0);
-        vec3.set(platform.transform.scale, 3, 2, 1);
+        vec3.set(platform.transform.scale, 4, 2, 1);
         platform.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/doodle/atlas/platform0.png', pixelatedTextureInfo));
-        platform.addComponent(new BoxCollider(0, 1.5, 1, 1));
+        platform.addComponent(new BoxCollider(0, 1, 2, 1));
         platform.addComponent(new BouncePlatform(4000));
         
         
@@ -109,9 +111,20 @@ class Game {
         playerGameObject.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/doodle/player/tile000.png', pixelatedTextureInfo));
         playerGameObject.addComponent(new BoxCollider(0, 0, 1, 1));
         playerGameObject.addComponent(new Rigidbody(1.1, 110))
-        playerGameObject.addComponent(new LeftRightMovement(30));
+        playerGameObject.addComponent(new LeftRightMovement(50));
         mainScene.addGameObject(playerGameObject);
         
+
+        
+        // Add Camera
+        let camera = new GameObject('Camera');
+        vec3.set(camera.transform.position, 0, 0, 0);
+        vec3.set(camera.transform.rotation, 0, 0, 0);
+        vec3.set(camera.transform.scale, 1, 1, 1);
+        
+        camera.addComponent(new XBoundTeleportation(playerGameObject, 0, 25));
+        
+        mainScene.addGameObject(camera);
 
         
         this.sceneManager.addScene(mainScene);
@@ -135,7 +148,6 @@ class Game {
         let deltaFixedTime = time - this.fixedLastTime;
         while (this.fixedDeltaTime <= deltaFixedTime) {
             this.fixedLastTime += this.fixedDeltaTime;
-            console.log("Fixed Update")
             this.fixedUpdate(this.fixedLastTime, this.fixedDeltaTime);
             deltaFixedTime -= this.fixedDeltaTime;
         }

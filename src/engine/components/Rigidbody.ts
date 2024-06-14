@@ -42,13 +42,13 @@ class Rigidbody extends Component {
         
         // Reset acceleration for the next time step
         vec3.set(this.acceleration, 0, 0, 0);
-        
+
         // Apply gravity
         this.addForce([0, -this.gravity, 0]);
 
 
 
-        console.log(fixedDeltaTime,this.gameObject.transform.position,deltaPositionByVelocity, this.velocity, deltaVelocity, this.acceleration);
+        //console.log(fixedDeltaTime,this.gameObject.transform.position,deltaPositionByVelocity, this.velocity, deltaVelocity, this.acceleration);
     }
 
     public addForce(force: vec3) {
