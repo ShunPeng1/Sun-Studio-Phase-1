@@ -44,9 +44,9 @@ class GameObject {
         }
     }
 
-    public fixedUpdate() {
+    public fixedUpdate(fixedLastTime: number, fixedDeltaTime : number) {
         for (let i = 0; i < this.components.length; i++) {
-            this.components[i].fixedUpdate();
+            this.components[i].fixedUpdate(fixedLastTime, fixedDeltaTime);
         }
     }
 

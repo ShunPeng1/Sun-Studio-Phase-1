@@ -20,7 +20,7 @@ abstract class Component {
     public update(time: number, deltaTime : number){
     }
 
-    public fixedUpdate(){
+    public fixedUpdate(fixedLastTime: number, fixedDeltaTime : number){
     }
     
     public render(time: number, deltaTime : number) {

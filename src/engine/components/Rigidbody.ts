@@ -20,18 +20,18 @@ class Rigidbody extends Component {
         this.acceleration = vec3.create();
     }
 
-    public update(time: number, deltaTime: number): void {
+    public fixedUpdate(fixedLastTime: number, fixedDeltaTime : number): void {
         let deltaPosition = vec3.create();
-        vec3.scale(deltaPosition, this.velocity, deltaTime);
+        vec3.scale(deltaPosition, this.velocity, fixedDeltaTime);
         
         
         vec3.add(this.gameObject.transform.position, this.gameObject.transform.position, deltaPosition);
         
         let deltaVelocity = vec3.create();
-        vec3.scale(deltaVelocity, this.acceleration, deltaTime);
+        vec3.scale(deltaVelocity, this.acceleration, fixedDeltaTime);
         vec3.add(this.velocity, this.velocity, deltaVelocity);
 
-        vec3.add(this.acceleration, this.acceleration, [0, -this.gravity * deltaTime, 0]);
+        vec3.add(this.acceleration, this.acceleration, [0, -this.gravity * fixedDeltaTime, 0]);
         //console.log(deltaTime,this.gameObject.transform.position,deltaPosition, this.velocity, deltaVelocity, this.acceleration);
     }
 

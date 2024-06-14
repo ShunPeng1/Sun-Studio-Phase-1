@@ -39,17 +39,17 @@ class PhysicManager {
 
                 if (isColliding) {
                     if (this.collisionStates.get(key)) { // Collision stay
-                        collider1.onCollisionStay.emit('collision', collider2);
-                        collider2.onCollisionStay.emit('collision', collider1);
+                        collider1.invokeCollisionStay(collider2);
+                        collider2.invokeCollisionStay(collider1);
                         console.log('Collision stay');
                     } else { // Collision enter
-                        collider1.onCollisionEnter.emit('collision', collider2);
-                        collider2.onCollisionEnter.emit('collision', collider1);
+                        collider1.invokeCollisionEnter(collider2);
+                        collider2.invokeCollisionEnter(collider1);
                         console.log('Collision enter');
                     }
                 } else if (this.collisionStates.get(key)) { // Collision exit
-                    collider1.onCollisionExit.emit('collision', collider2);
-                    collider2.onCollisionExit.emit('collision', collider1);
+                    collider1.invokeCollisionExit(collider2);
+                    collider2.invokeCollisionExit(collider1);
                     console.log('Collision exit');
                 }
             }
