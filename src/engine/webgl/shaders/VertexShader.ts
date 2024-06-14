@@ -22,7 +22,6 @@ class VertexShader extends BaseShader {
         'void main()',
         '{',
         '  fragColor = vertColor;',
-        //'  fragTexCoord = (vertTexCoord * vec2(1/20,1/20)) + vertPosition.xy;',
         '  fragTexCoord = vertTexCoord * vec2(1,1);',
         '  fragNormal = vertNormal;',
         '  gl_Position = mProj * mView * mWorld * vec4(vertPosition, 1.0);',

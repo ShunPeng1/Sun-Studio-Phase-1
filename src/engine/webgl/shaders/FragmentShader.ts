@@ -13,8 +13,12 @@ class FragmentShader extends BaseShader {
         'uniform vec2 mTexScale;',
         'void main()',
         '{',
-        '  vec4 texColor = texture2D(sampler, fragTexCoord * vec2(1,1));',
-        '  gl_FragColor = fragColor * texColor;',
+        '  vec4 texColor = texture2D(sampler, fragTexCoord );',
+        
+        '  if (texColor.a * fragColor.a <= 0.01) {',
+        '    discard;',
+        '  }',
+        'gl_FragColor = vec4(fragColor.rgb * texColor.rgb, texColor.a * fragColor.a);',
         '}'
     ].join('\n');
 
