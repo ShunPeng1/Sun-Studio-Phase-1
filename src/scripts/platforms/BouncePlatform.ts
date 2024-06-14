@@ -14,7 +14,7 @@ class BouncePlatform extends Component {
 
     public awake(): void {
         this.gameObject.getComponent<Collider>(Collider)?.subcribeToCollisionEnter(this.bounce.bind(this));   
-        //this.gameObject.getComponent<Collider>(Collider)?.subcribeToCollisionStay(this.bounce.bind(this)); 
+        this.gameObject.getComponent<Collider>(Collider)?.subcribeToCollisionStay(this.bounce.bind(this)); 
     }
 
     private bounce(other : Collider) {
