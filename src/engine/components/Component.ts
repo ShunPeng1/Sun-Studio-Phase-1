@@ -5,6 +5,7 @@ abstract class Component {
     public gameObject: GameObject;
     public transform: Transform;
 
+    private isStarted: boolean = false;
 
     public setGameObject(gameObject: GameObject) {
         this.gameObject = gameObject;
@@ -14,7 +15,18 @@ abstract class Component {
     public awake() {
     }
 
-    public start() {
+    public tryStart() {
+        if (!this.isStarted) {
+            this.isStarted = true;
+            this.start();
+        }
+        else{
+            return;
+        }
+    }
+
+    protected start() {
+        
     }
 
     public update(time: number, deltaTime : number){

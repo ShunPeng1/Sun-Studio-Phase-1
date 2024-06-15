@@ -27,6 +27,7 @@ import CameraRenderer from "./engine/components/CameraRenderer";
 import JumpPlatformIgnorance from "./scripts/movement/JumpPlatformIgnorance";
 import Platform from "./scripts/platforms/Platform";
 import PlatformDestroyer from "./scripts/platforms/PlatformDestroyer";
+import InitialForce from "./scripts/movement/InitialForce";
 
 class Game {
     private canvas: HTMLCanvasElement;
@@ -88,26 +89,26 @@ class Game {
 
         // Platform
         let greenPlatform = new GameObject("Green Platform");
-        vec3.set(greenPlatform.transform.position, 0, -20, 0);
-        vec3.set(greenPlatform.transform.rotation, 0, 0, 0);
         vec3.set(greenPlatform.transform.scale, 4, 2, 1);
         greenPlatform.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/doodle/atlas/platform0.png', pixelatedTextureInfo));
-        greenPlatform.addComponent(new BoxCollider(0, 1, 2, 1));
+        greenPlatform.addComponent(new BoxCollider(false, 0, 1, 2, 1));
         greenPlatform.addComponent(new BouncePlatform(4000));
         greenPlatform.addComponent(new Platform())
+        greenPlatform.setScene(mainScene);
         
         
-        mainScene.addGameObject(greenPlatform);
+
         
         // Add Player
         let playerGameObject = new GameObject("Player");
-        vec3.set(playerGameObject.transform.position, 0, 2, 1);
+        vec3.set(playerGameObject.transform.position, 0, -20, 1);
         vec3.set(playerGameObject.transform.rotation, 0, 0, 0);
         vec3.set(playerGameObject.transform.scale, 4, 4, 1);
         playerGameObject.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/doodle/player/tile000.png', pixelatedTextureInfo));
-        playerGameObject.addComponent(new BoxCollider(0, 0, 1, 1));
+        playerGameObject.addComponent(new BoxCollider(false, 0, -0.5, 1, 0.25));
         playerGameObject.addComponent(new Rigidbody(1.1, 110))
         playerGameObject.addComponent(new LeftRightMovement(50));
+        playerGameObject.addComponent(new InitialForce([0, 5000, 0]))
         playerGameObject.addComponent(new JumpPlatformIgnorance());
         mainScene.addGameObject(playerGameObject);
         
@@ -150,7 +151,7 @@ class Game {
 
         // Add Destroyer
         let destroyer = new GameObject('Destroyer');
-        destroyer.addComponent(new BoxCollider(0,-40, 1000,20));
+        destroyer.addComponent(new BoxCollider(true, 0,-40, 1000,20));
         destroyer.addComponent(new PlatformDestroyer());
         destroyer.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         mainScene.addGameObject(destroyer);

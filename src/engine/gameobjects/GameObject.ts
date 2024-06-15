@@ -26,13 +26,15 @@ class GameObject {
         }
     }
     
-    public start() {
+    private start() {
         for (let i = 0; i < this.components.length; i++) {
-            this.components[i].start();
+            this.components[i].tryStart();
         }
     }
 
     public update(time: number, deltaTime : number) {
+        this.start();
+
         for (let i = 0; i < this.components.length; i++) {
             this.components[i].update(time, deltaTime);
         }
@@ -70,6 +72,13 @@ class GameObject {
             }
         }
         return null;
+    }
+
+    public removeComponent(component: Component) {
+        let index = this.components.indexOf(component);
+        if (index > -1) {
+            this.components.splice(index, 1);
+        }
     }
 
     public clone(): GameObject {

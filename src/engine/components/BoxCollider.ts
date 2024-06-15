@@ -10,8 +10,8 @@ class BoxCollider extends Collider{
     private width : number = 0;
     private height : number = 0;
 
-    constructor(x: number, y: number, width: number, height: number) {
-        super();
+    constructor(isTrigger : boolean, x: number, y: number, width: number, height: number) {
+        super(isTrigger);
 
         this.x = x;
         this.y = y;
@@ -55,6 +55,15 @@ class BoxCollider extends Collider{
 
             if (!collision) {
                 return false;
+            }
+
+            // Check if the collision is with a trigger
+            if (this.isTrigger && other.isTrigger) {
+                return false; // Ignore Snapping
+            }
+            
+            if (this.isTrigger || other.isTrigger) {
+                return true; // Ignore Snapping
             }
 
             // Determine the standing and snapping transforms
@@ -105,12 +114,12 @@ class BoxCollider extends Collider{
 
             const dx = Math.min(Math.abs(dMaxMinX), Math.abs(dMinMaxX));
             const dy = Math.min(Math.abs(dMaxMinY), Math.abs(dMinMaxY));
-            console.log("Snapping ", snappingCollider.gameObject.name, " Standing", standingCollider.gameObject.name)
-            console.log( snappingCollider.getMaxX(), standingCollider.getMinX(), dMaxMinX);
-            console.log( snappingCollider.getMinX(), standingCollider.getMaxX(), dMinMaxX);
-            console.log( snappingCollider.getMaxY(), standingCollider.getMinY(), dMaxMinY);
-            console.log( snappingCollider.getMinY(), standingCollider.getMaxY(), dMinMaxY);
-            console.log("dx ", dx, " dy ", dy);
+            // console.log("Snapping ", snappingCollider.gameObject.name, " Standing", standingCollider.gameObject.name)
+            // console.log( snappingCollider.getMaxX(), standingCollider.getMinX(), dMaxMinX);
+            // console.log( snappingCollider.getMinX(), standingCollider.getMaxX(), dMinMaxX);
+            // console.log( snappingCollider.getMaxY(), standingCollider.getMinY(), dMaxMinY);
+            // console.log( snappingCollider.getMinY(), standingCollider.getMaxY(), dMinMaxY);
+            // console.log("dx ", dx, " dy ", dy);
 
             if (Math.abs(dx) < Math.abs(dy)) {
                 // Horizontal collision
@@ -118,7 +127,7 @@ class BoxCollider extends Collider{
 
                 if (Math.abs(dMaxMinX) > Math.abs(dMinMaxX)) {
                     // Collision on the right side
-                    
+
                     if (snappingRigidbody) {
                         snappingRigidbody.velocity[0] = Math.max(0, snappingRigidbody.velocity[0]);
                         snappingRigidbody.acceleration[0] = Math.max(0, snappingRigidbody.acceleration[0]);
@@ -169,7 +178,7 @@ class BoxCollider extends Collider{
 
     public clone(): Component {
         // Add your implementation here
-        return new BoxCollider(this.x, this.y, this.width, this.height);
+        return new BoxCollider(this.isTrigger, this.x, this.y, this.width, this.height);
     }
 }
 

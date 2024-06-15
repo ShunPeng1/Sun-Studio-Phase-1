@@ -7,6 +7,7 @@ import Transform from './Transform';
 let idCounter = 0;
 
 class Collider extends Component{
+    public isTrigger : boolean = false;
     public onCollisionEvent: EventEmitter = new EventEmitter();
     public id: number;
     public isEnable: boolean = true;
@@ -15,9 +16,10 @@ class Collider extends Component{
     private COLLISION_STAY = "Collision Stay";
     private COLLISION_EXIT = "Collision Exit";
     
-    constructor(){
+    constructor(isTrigger: boolean){
         super();
         this.id = idCounter++;
+        this.isTrigger = isTrigger;
     }
     
     
@@ -73,7 +75,7 @@ class Collider extends Component{
 
     public clone(): Component {
         // Add your implementation here
-        return new Collider();
+        return new Collider(this.isTrigger);
     }
 
     public destroy(): void {

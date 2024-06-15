@@ -20,9 +20,6 @@ class Rigidbody extends Component {
         this.acceleration = vec3.create();
     }
 
-    public awake(): void {
-        this.addForce([0, -this.gravity, 0]);
-    }
 
     public fixedUpdate(fixedLastTime: number, fixedDeltaTime : number): void {
 
