@@ -1,7 +1,7 @@
 import Component from "../../engine/components/Component";
 import InputManager from "../../inputs/InputManager";
 
-class UpDownMovement extends Component {
+class UpDownControlMovement extends Component {
 
     private speed : number;
     private headingYPosition : number
@@ -57,8 +57,8 @@ class UpDownMovement extends Component {
 
     
     public  clone() {
-        return new UpDownMovement(this.speed);
+        return new UpDownControlMovement(this.speed);
     }
 }
 
-export default UpDownMovement;
+export default UpDownControlMovement;

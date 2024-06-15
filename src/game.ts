@@ -14,7 +14,7 @@ import { vec3 } from "gl-matrix";
 import PrimativeRenderer from "./engine/components/PremadeRenderer";
 import ShapeType from "./engine/webgl/shapes/ShapeType";
 import InputManager from "./inputs/InputManager";
-import LeftRightMovement from "./scripts/movement/LeftRightMovement";
+import LeftRightControlMovement from "./scripts/movement/LeftRightControlMovement";
 import Collider from "./engine/components/Collider";
 import BoxCollider from "./engine/components/BoxCollider";
 import Rigidbody from "./engine/components/Rigidbody";
@@ -28,6 +28,7 @@ import JumpPlatformIgnorance from "./scripts/movement/JumpPlatformIgnorance";
 import Platform from "./scripts/platforms/Platform";
 import PlatformDestroyer from "./scripts/platforms/PlatformDestroyer";
 import InitialForce from "./scripts/movement/InitialForce";
+import BreakablePlatform from "./scripts/platforms/BreakablePlatform";
 
 class Game {
     private canvas: HTMLCanvasElement;
@@ -93,10 +94,27 @@ class Game {
         greenPlatform.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/doodle/atlas/platform0.png', pixelatedTextureInfo));
         greenPlatform.addComponent(new BoxCollider(false, 0, 1, 2, 1));
         greenPlatform.addComponent(new BouncePlatform(4000));
-        greenPlatform.addComponent(new Platform())
         greenPlatform.setScene(mainScene);
+
         
+        // Moving Platform
         
+        let bluePlatform = new GameObject("Blue Platform");
+        vec3.set(bluePlatform.transform.scale, 4, 2, 1);
+        bluePlatform.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/doodle/atlas/platform1.png', pixelatedTextureInfo));
+        bluePlatform.addComponent(new BoxCollider(true, 0, 1, 2, 1));
+        bluePlatform.addComponent(new BouncePlatform(4000));
+        bluePlatform.addComponent(new LeftRightControlMovement(10, 10, 0, 20));
+        bluePlatform.setScene(mainScene);
+
+
+        // Breakable Platform
+        let brownPlatform = new GameObject("Brown Platform");
+        vec3.set(brownPlatform.transform.scale, 4, 4, 1);
+        brownPlatform.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/doodle/atlas/platform2.png', pixelatedTextureInfo));
+        brownPlatform.addComponent(new BoxCollider(true, 0, 1, 2, 1));
+        brownPlatform.addComponent(new BreakablePlatform());
+        brownPlatform.setScene(mainScene);
 
         
         // Add Player
@@ -107,7 +125,7 @@ class Game {
         playerGameObject.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/doodle/player/tile000.png', pixelatedTextureInfo));
         playerGameObject.addComponent(new BoxCollider(false, 0, -0.5, 1, 0.25));
         playerGameObject.addComponent(new Rigidbody(1.1, 110))
-        playerGameObject.addComponent(new LeftRightMovement(50));
+        playerGameObject.addComponent(new LeftRightControlMovement(50));
         playerGameObject.addComponent(new InitialForce([0, 5000, 0]))
         playerGameObject.addComponent(new JumpPlatformIgnorance());
         mainScene.addGameObject(playerGameObject);
@@ -142,7 +160,8 @@ class Game {
         // Add Spawner
         let spawner = new GameObject('Spawner');
         spawner.addComponent(new PlatformSpawner([
-            new PlatformSpawnInfo(greenPlatform, 1)
+            new PlatformSpawnInfo(greenPlatform, 10),
+            new PlatformSpawnInfo(brownPlatform, 1, true)
         ], 80, [-20,20], [6,13]));
         spawner.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         spawner.transform.position[1] = -20;

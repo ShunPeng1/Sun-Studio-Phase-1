@@ -2,8 +2,9 @@ import Collider from "../../engine/components/Collider";
 import Component from "../../engine/components/Component";
 import Rigidbody from "../../engine/components/Rigidbody";
 import Transform from "../../engine/components/Transform";
+import Platform from "./Platform";
 
-class BouncePlatform extends Component {
+class BouncePlatform extends Platform {
     private force : number;
 
     constructor(force : number) {

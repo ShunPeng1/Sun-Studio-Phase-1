@@ -2,7 +2,7 @@ import Component from "../../engine/components/Component";
 import InputManager from "../../inputs/InputManager";
 
 
-class LeftRightMovement extends Component {
+class LeftRightControlMovement extends Component {
 
     private speed : number;
     private headingXPosition : number
@@ -58,8 +58,8 @@ class LeftRightMovement extends Component {
 
     
     public  clone() {
-        return new LeftRightMovement(this.speed);
+        return new LeftRightControlMovement(this.speed);
     }
 }
 
-export default LeftRightMovement;
+export default LeftRightControlMovement;
