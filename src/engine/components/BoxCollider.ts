@@ -42,7 +42,10 @@ class BoxCollider extends Collider{
 
 
     public collidesWith(other: Collider): boolean {
-
+        if (!this.isEnable) {
+            return false;
+        }
+        
         if ((other instanceof BoxCollider))
         {
             const collision = this.getMinX() <= other.getMaxX() &&
@@ -95,34 +98,62 @@ class BoxCollider extends Collider{
             let snappingRigidbody = snappingTransform.gameObject.getComponent<Rigidbody>(Rigidbody)!;
             
             
-            const dx = snappingCollider.getCenter()[0] - standingCollider.getCenter()[0];
-            const dy = snappingCollider.getCenter()[1] - standingCollider.getCenter()[1];
+            const dMaxMinX = snappingCollider.getMaxX() - standingCollider.getMinX();
+            const dMaxMinY = snappingCollider.getMaxY() - standingCollider.getMinY();
+            const dMinMaxX = snappingCollider.getMinX() - standingCollider.getMaxX();
+            const dMinMaxY = snappingCollider.getMinY() - standingCollider.getMaxY();
 
-            if (Math.abs(dx) > Math.abs(dy)) {
+            const dx = Math.min(Math.abs(dMaxMinX), Math.abs(dMinMaxX));
+            const dy = Math.min(Math.abs(dMaxMinY), Math.abs(dMinMaxY));
+            console.log("Snapping ", snappingCollider.gameObject.name, " Standing", standingCollider.gameObject.name)
+            console.log( snappingCollider.getMaxX(), standingCollider.getMinX(), dMaxMinX);
+            console.log( snappingCollider.getMinX(), standingCollider.getMaxX(), dMinMaxX);
+            console.log( snappingCollider.getMaxY(), standingCollider.getMinY(), dMaxMinY);
+            console.log( snappingCollider.getMinY(), standingCollider.getMaxY(), dMinMaxY);
+            console.log("dx ", dx, " dy ", dy);
+
+            if (Math.abs(dx) < Math.abs(dy)) {
                 // Horizontal collision
-                if (snappingRigidbody) {
-                    snappingRigidbody.velocity[0] = 0;
-                    snappingRigidbody.acceleration[0] = 0;
-                }
+                
 
-                if (dx > 0) {
+                if (Math.abs(dMaxMinX) > Math.abs(dMinMaxX)) {
                     // Collision on the right side
+                    
+                    if (snappingRigidbody) {
+                        snappingRigidbody.velocity[0] = Math.max(0, snappingRigidbody.velocity[0]);
+                        snappingRigidbody.acceleration[0] = Math.max(0, snappingRigidbody.acceleration[0]);
+                    }
+                   
                     snappingTransform.position[0] = standingTransform.position[0] + standingCollider.x + snappingTransform.scale[0] * snappingCollider.width/2 + standingTransform.scale[0] * standingCollider.width/2;
                 } else {
                     // Collision on the left side
+
+                    if (snappingRigidbody) {
+                        snappingRigidbody.velocity[0] = Math.min(0, snappingRigidbody.velocity[0]);
+                        snappingRigidbody.acceleration[0] = Math.min(0, snappingRigidbody.acceleration[0]);
+                    }
+
                     snappingTransform.position[0] = standingTransform.position[0] + standingCollider.x - snappingTransform.scale[0] * snappingCollider.width/2 - standingTransform.scale[0] * standingCollider.width/2;
                 }
             } else {
-                if (snappingRigidbody){
-                    snappingRigidbody.velocity[1] = 0;
-                    snappingRigidbody.acceleration[1] = 0;
-                }
                 // Vertical collision
-                if (dy > 0) {
+                if (Math.abs(dMaxMinY) > Math.abs(dMinMaxY)) {
                     // Collision on the top side
+
+                    if (snappingRigidbody) {
+                        snappingRigidbody.velocity[1] = Math.max(0, snappingRigidbody.velocity[1]);
+                        snappingRigidbody.acceleration[1] = Math.max(0, snappingRigidbody.acceleration[1]);
+                    }
+
                     snappingTransform.position[1] = standingTransform.position[1] + standingCollider.y + standingTransform.scale[1] * standingCollider.height/2 + snappingTransform.scale[1] * snappingCollider.height/2;
                 } else {
                     // Collision on the bottom side
+
+                    if (snappingRigidbody) {
+                        snappingRigidbody.velocity[1] = Math.min(0, snappingRigidbody.velocity[1]);
+                        snappingRigidbody.acceleration[1] = Math.min(0, snappingRigidbody.acceleration[1]);
+                    }
+
                     snappingTransform.position[1] = standingTransform.position[1] + standingCollider.y - snappingTransform.scale[1] * snappingCollider.height/2 - standingTransform.scale[1] * standingCollider.height/2;
                 }
             }

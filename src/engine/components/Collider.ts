@@ -38,6 +38,18 @@ class Collider extends Component{
         this.onCollisionEvent.addListener(this.COLLISION_EXIT,callback);
     }
 
+    public unsubcribeToCollisionEnter(callback: (other: Collider) => void) {
+        this.onCollisionEvent.removeListener(this.COLLISION_ENTER, callback);
+    }
+
+    public unsubcribeToCollisionStay(callback: (other: Collider) => void) {
+        this.onCollisionEvent.removeListener(this.COLLISION_STAY, callback);
+    }
+
+    public unsubcribeToCollisionExit(callback: (other: Collider) => void) {
+        this.onCollisionEvent.removeListener(this.COLLISION_EXIT, callback);
+    }
+
     public invokeCollisionEnter(other: Collider) {
         this.onCollisionEvent.emit(this.COLLISION_ENTER, other);
     }
@@ -62,6 +74,10 @@ class Collider extends Component{
     public clone(): Component {
         // Add your implementation here
         return new Collider();
+    }
+
+    public destroy(): void {
+        PhysicManager.getInstance().removeCollider(this);
     }
 
 }

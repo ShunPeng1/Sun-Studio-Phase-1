@@ -27,6 +27,11 @@ class BouncePlatform extends Component {
         
     }
 
+    public destroy() {
+        this.gameObject.getComponent<Collider>(Collider)?.unsubcribeToCollisionEnter(this.bounce.bind(this));   
+        this.gameObject.getComponent<Collider>(Collider)?.unsubcribeToCollisionStay(this.bounce.bind(this)); 
+    }
+
 
     public clone(): Component {
         return new BouncePlatform(this.force);        
