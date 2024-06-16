@@ -150,10 +150,21 @@ class Transform extends Component{
     }
 
     public setParent(parent: Transform | null) {
-        this.parent = parent;
-
+        
         if (parent) {
+            this.parent = parent;
+
             parent.addChild(this);
+            if (this.gameObject.getScene() !== parent.gameObject.getScene()){
+                this.gameObject.setScene(parent.gameObject.getScene());
+            }
+        }
+        else{
+            if (this.gameObject.getScene() === null && this.parent && this.parent.gameObject.getScene() !== null){
+                this.gameObject.setScene(this.parent.gameObject.getScene());                
+            }
+            
+            this.parent?.removeChild(this);
         }
 
     }

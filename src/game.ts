@@ -29,6 +29,8 @@ import Platform from "./scripts/platforms/Platform";
 import PlatformDestroyer from "./scripts/platforms/PlatformDestroyer";
 import InitialForce from "./scripts/movement/InitialForce";
 import BreakablePlatform from "./scripts/platforms/BreakablePlatform";
+import WayPointMovement from "./scripts/movement/WayPointMovement";
+import PlatformWayPoint from "./scripts/platforms/PlatformWayPoint";
 
 class Game {
     private canvas: HTMLCanvasElement;
@@ -98,14 +100,25 @@ class Game {
 
         
         // Moving Platform
-        
         let bluePlatform = new GameObject("Blue Platform");
+        vec3.set(bluePlatform.transform.position, 0, 5, 1);
         vec3.set(bluePlatform.transform.scale, 4, 2, 1);
         bluePlatform.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/doodle/atlas/platform1.png', pixelatedTextureInfo));
-        bluePlatform.addComponent(new BoxCollider(true, 0, 1, 2, 1));
+        bluePlatform.addComponent(new BoxCollider(false, 0, 1, 2, 1));
         bluePlatform.addComponent(new BouncePlatform(4000));
-        bluePlatform.addComponent(new LeftRightControlMovement(10, 10, 0, 20));
-        bluePlatform.setScene(mainScene);
+        bluePlatform.setScene(mainScene); // Add to scene before waypoints
+
+        // Waypoints
+        let wayPoints = [
+            new GameObject("Waypoint 0").transform,
+            new GameObject("Waypoint 1").transform
+        ];
+        wayPoints[0].gameObject.addComponent(new PlatformWayPoint([ -0, 0, 1]));
+        wayPoints[1].gameObject.addComponent(new PlatformWayPoint([ 0, 0 ,1]));
+        wayPoints[0].setParent(bluePlatform.transform);
+        wayPoints[1].setParent(bluePlatform.transform);
+
+        bluePlatform.addComponent(new WayPointMovement(0.4, false));
 
 
         // Breakable Platform
@@ -135,7 +148,7 @@ class Game {
         
         // Add Camera
         let camera = new GameObject('Camera');
-        vec3.set(camera.transform.position, 0, 0, 55);
+        vec3.set(camera.transform.position, 0, 0, 155);
         vec3.set(camera.transform.rotation, 0, 0, 0);
         vec3.set(camera.transform.scale, 1, 1, 1);
         
@@ -148,21 +161,20 @@ class Game {
         
         // Add Background
         let paperBackground = new GameObject('Background 1');
-        vec3.set(paperBackground.transform.position, 0, 40, -65);
+        vec3.set(paperBackground.transform.position, 0, 40, -165);
         vec3.set(paperBackground.transform.rotation, 0, 0, 0);
         vec3.set(paperBackground.transform.scale, 30, 80, 1);
 
         paperBackground.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/doodle/atlas2/background.png', pixelatedTextureInfo));
-        
-        mainScene.addGameObject(paperBackground)
         paperBackground.transform.setParent(camera.transform);
 
         // Add Spawner
         let spawner = new GameObject('Spawner');
         spawner.addComponent(new PlatformSpawner([
             new PlatformSpawnInfo(greenPlatform, 10),
-            new PlatformSpawnInfo(brownPlatform, 1, true)
-        ], 80, [-20,20], [6,13]));
+            new PlatformSpawnInfo(brownPlatform, 1, true),
+            new PlatformSpawnInfo(bluePlatform, 1)
+        ], 60, [-20,20], [6,10]));
         spawner.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         spawner.transform.position[1] = -20;
         mainScene.addGameObject(spawner);
@@ -176,8 +188,6 @@ class Game {
         mainScene.addGameObject(destroyer);
 
 
-        
-        
 
         
         this.sceneManager.addScene(mainScene);

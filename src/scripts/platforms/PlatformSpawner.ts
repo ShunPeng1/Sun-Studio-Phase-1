@@ -10,6 +10,8 @@ class PlatformSpawner extends Component{
     private varianceX : vec2;
     private varianceY : vec2;
 
+    private accumulateBreakableLowerY : number = 0;
+
     private totalChanceCount : number = 0;
     constructor(platformSpawnInfos : PlatformSpawnInfo[], preemptiveSpawnHeight : number, varianceX : vec2, varianceY : vec2) {
         super();
@@ -62,7 +64,12 @@ class PlatformSpawner extends Component{
     
         if (!platformSpawnInfo.isBreakable){
             this.accumulateY = platform.transform.position[1];   
+            //this.accumulateBreakableLowerY = 0;
         }
+        else{
+            
+        }
+
 
     }
 
