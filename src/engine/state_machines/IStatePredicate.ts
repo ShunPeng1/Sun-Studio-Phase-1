@@ -1,4 +1,5 @@
 interface IStatePredicate {
+    
     evaluate(): boolean;
 }
 

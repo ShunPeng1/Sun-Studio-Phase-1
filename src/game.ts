@@ -34,6 +34,7 @@ import PlatformWayPoint from "./scripts/platforms/PlatformWayPoint";
 import Player from "./scripts/player/Player";
 import CloudPlatform from "./scripts/platforms/CloudPlatform";
 import ImageLoader from "./engine/webgl/textures/ImageLoader";
+import WoodenPlatformAnimator from "./scripts/animators/WoodenPlatformAnimator";
 
 class Game {
     private canvas: HTMLCanvasElement;
@@ -133,12 +134,28 @@ class Game {
         brownPlatform.addComponent(new WoodenPlatform());
         brownPlatform.setScene(mainScene);
 
-        imageLoader.loadImageFromUrls('assets/images/doodle/atlas/platform2.png',(imageElements)=>{   
+        
+        imageLoader.loadImageFromUrls([
+            'assets/images/doodle/atlas/platform2.png',
+            'assets/images/doodle/atlas/platformSheet_02.png',
+            'assets/images/doodle/atlas/platformSheet_03.png',
+            'assets/images/doodle/atlas/platformSheet_04.png',
+        ],(imageElements)=>{   
         
             brownPlatform.addComponent(new PrimativeRenderer(this.webGLManager, quad, imageElements, pixelatedTextureInfo));
-            
+            brownPlatform.addComponent(new WoodenPlatformAnimator())
         });
-                
+        
+       /*
+        imageLoader.loadImageFromUrls('assets/images/doodle/atlas/platform2.png',
+            (imageElements)=>{   
+        
+            brownPlatform.addComponent(new PrimativeRenderer(this.webGLManager, quad, imageElements, pixelatedTextureInfo));
+            brownPlatform.addComponent(new WoodenPlatformAnimator())
+        });
+         */
+        
+        
         // White Platform
         let whitePlatform = new GameObject("White Platform");
         vec3.set(whitePlatform.transform.scale, 4, 2, 1);
@@ -205,8 +222,8 @@ class Game {
         // Add Spawner
         let spawner = new GameObject('Spawner');
         spawner.addComponent(new PlatformSpawner([
-            new PlatformSpawnInfo(greenPlatform, 10),
-            new PlatformSpawnInfo(brownPlatform, 3, true),
+            new PlatformSpawnInfo(greenPlatform, 1),
+            new PlatformSpawnInfo(brownPlatform, 30, true),
             new PlatformSpawnInfo(bluePlatform, 3),
             new PlatformSpawnInfo(whitePlatform, 1)
         ], 60, [-20,20], [4,14]));

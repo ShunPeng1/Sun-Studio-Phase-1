@@ -7,20 +7,20 @@ class ImageLoader {
 
     }
 
-    public loadImageFromUrls(url: string | string[], callbackAll: (imageElements: ImageElement[]) => void = () => {} , callbackEach: (imageElement: ImageElement) => void = () => {}): Promise<ImageElement[]> {
+    public loadImageFromUrls(imageUrl: string | string[], callbackAll: (imageElements: ImageElement[]) => void = () => {} , callbackEach: (imageElement: ImageElement) => void = () => {}): Promise<ImageElement[]> {
         let imageElements: ImageElement[] = [];
 
         return new Promise((resolve, reject) => {
-            if (url instanceof Array) {
+            if (imageUrl instanceof Array) {
                 let loadedImages = 0;
-                url.forEach((url, index) => {
+                imageUrl.forEach((url, index) => {
                     let imageElement = new Image();
                     imageElements.push(imageElement);
                     imageElement.src = url;
                     imageElement.onload = () => {
                         loadedImages++;
                         callbackEach(imageElement);
-                        if (loadedImages === url.length) {
+                        if (loadedImages === imageUrl.length) {
                             callbackAll(imageElements);
                             resolve(imageElements);
                         }
@@ -30,7 +30,7 @@ class ImageLoader {
             } else {
                 let imageElement = new Image();
                 imageElements.push(imageElement);
-                imageElement.src = url;
+                imageElement.src = imageUrl;
                 imageElement.onload = () => {
                     callbackEach(imageElement);
                     callbackAll(imageElements);

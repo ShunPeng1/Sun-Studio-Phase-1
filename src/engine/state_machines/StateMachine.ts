@@ -3,6 +3,7 @@ import IStateMomentoStrategy from "./IStateMomentoStrategy";
 import IStatePredicate from "./IStatePredicate";
 import IStateTransition from "./IStateTransition";
 import IStateTransitionData from "./IStateTransitionData";
+import StateTransitionData from "./StateTransitionData";
 
 
 
@@ -15,50 +16,82 @@ class BaseStateMachine {
 
     protected stateHistoryStrategy: IStateMomentoStrategy;
 
-    protected constructor(initialStateNode: StateNode, onEnterCall: boolean = false, enterData: IStateTransitionData | null = null) {
-        this.nodes.set(initialStateNode.State.constructor, initialStateNode);
+    protected constructor(initialStateNode: StateNode | null = null, onEnterCall: boolean = false, enterData: IStateTransitionData | null = null) {
+        if (!initialStateNode) return;
+        
+        this.nodes.set(initialStateNode.state.constructor, initialStateNode);
         this.currentState = initialStateNode;
 
         if (onEnterCall) {
-            initialStateNode.State.enterState(enterData);
+            initialStateNode.state.enterState(enterData);
         }
     }
 
+    public setInitialState(initialState: IState, onEnterCall: boolean, enterData: IStateTransitionData | null = null): void  {
+        let initialStateNode : StateNode;
+        if (this.nodes.has(initialState.constructor)) {
+            initialStateNode = this.nodes.get(initialState.constructor)!;
+        }
+        else{
+            initialStateNode = new StateNode(initialState);
+            this.nodes.set(initialStateNode.state.constructor, initialStateNode);
+        }
+        
+        this.currentState = initialStateNode;
+
+        if (onEnterCall) {
+            initialStateNode.state.enterState(enterData);
+        }
     
+    }
 
     public static Builder = class {
-        private initialStateNode: StateNode;
-        private onEnterCall: boolean;
+        private initialStateNode: StateNode | null = null;
+        private onEnterCall: boolean = false;
         private enterData: IStateTransitionData | null = null;
         private stateHistoryStrategy: IStateMomentoStrategy;
 
-        public Build(): BaseStateMachine {
+        public build(): BaseStateMachine {
             const stateMachine = new BaseStateMachine(this.initialStateNode, this.onEnterCall, this.enterData);
             stateMachine.stateHistoryStrategy = this.stateHistoryStrategy;
             return stateMachine;
         }
 
-        public WithInitialState(initialState: IState, onEnterCall: boolean, enterData: IStateTransitionData | null = null): this {
+        public withInitialState(initialState: IState, onEnterCall: boolean, enterData: IStateTransitionData | null = null): this {
             this.initialStateNode = new StateNode(initialState);
             this.onEnterCall = onEnterCall;
             this.enterData = enterData;
             return this;
         }
 
-        public WithHistoryStrategy(historyStrategy: IStateMomentoStrategy): this {
+        public withHistoryStrategy(historyStrategy: IStateMomentoStrategy): this {
             this.stateHistoryStrategy = historyStrategy;
             return this;
         }
     }
 
-    private GetTransition(): IStateTransition | null {
+    public update(deltaTime : number): void {
+        const transition = this.getTransition();
+        let transitionData : StateTransitionData | null = null;
+        if (transition) {
+            transitionData = new StateTransitionData();
+            transitionData.fromState = this.currentState.state;
+            transitionData.transition = transition;
+            this.SetToState(transition.toState, null);
+            return;
+        }
+        this.currentState?.state.update(deltaTime, transitionData);
+    }
+
+
+    private getTransition(): IStateTransition | null {
         for (const transition of this.anyStateTransitions) {
             if (transition.condition.evaluate()) {
                 return transition;
             }
         }
 
-        for (const transition of this.currentState?.Transitions) {
+        for (const transition of this.currentState?.transitions) {
             if (transition.condition.evaluate()) {
                 return transition;
             }
@@ -66,28 +99,28 @@ class BaseStateMachine {
 
         return null;
     }
-
-    public AddOrOverwriteState(baseState: IState, transitions: Set<IStateTransition>): void {
+    
+    public addOrOverwriteState(baseState: IState, transitions: Set<IStateTransition>): void {
         this.nodes.set(baseState.constructor, new StateNode(baseState, transitions));
     }
 
-    public RemoveState(state: IState): void {
+    public removeState(state: IState): void {
         this.nodes.delete(state.constructor);
     }
 
-    public AddTransition(fromState: IState, toState: IState, predicate: IStatePredicate): void {
-        this.GetOrAddNode(fromState).AddTransition(toState, predicate);
+    public addTransition(fromState: IState, toState: IState, predicate: IStatePredicate): void {
+        this.getOrAddNode(fromState).addTransition(toState, predicate);
     }
 
-    public AddAnyTransition(toState: IState, predicate: IStatePredicate): void {
+    public addAnyTransition(toState: IState, predicate: IStatePredicate): void {
         this.anyStateTransitions.add({ toState: toState, condition: predicate });
     }
 
-    public RemoveTransition(fromState: IState, toState: IState, predicate: IStatePredicate): void {
-        this.GetOrAddNode(fromState).RemoveTransition(toState, predicate);
+    public removeTransition(fromState: IState, toState: IState, predicate: IStatePredicate): void {
+        this.getOrAddNode(fromState).removeTransition(toState, predicate);
     }
 
-    public RemoveAnyTransition(toState: IState, predicate: IStatePredicate): void {
+    public removeAnyTransition(toState: IState, predicate: IStatePredicate): void {
         this.anyStateTransitions.forEach(transition => {
             if (transition.toState === toState && transition.condition === predicate) {
                 this.anyStateTransitions.delete(transition);
@@ -95,7 +128,7 @@ class BaseStateMachine {
         });
     }
 
-    private GetOrAddNode(state: IState): StateNode {
+    private getOrAddNode(state: IState): StateNode {
         let node = this.nodes.get(state.constructor);
         if (!node) {
             node = new StateNode(state);
@@ -104,70 +137,72 @@ class BaseStateMachine {
         return node;
     }
 
-    public SettoState(toState: IState | null, transitionData: IStateTransitionData | null = null): void {
-        if (!toState || toState === this.currentState.State) return;
+    public SetToState(toState: IState | null, transitionData: IStateTransitionData | null = null): void {
+        if (!toState || toState === this.currentState.state) return;
 
         const nextState = this.nodes.get(toState.constructor);
         if (nextState) {
-            this.stateHistoryStrategy?.save(nextState.State, transitionData);
-            this.SwitchState(nextState, transitionData);
+            this.stateHistoryStrategy?.save(nextState.state, transitionData);
+            this.switchState(nextState, transitionData);
         } else {
             console.warn(`State ${toState.constructor.name} not found in state machine.`);
         }
     }
 
-    public GetcurrentState(): IState {
-        return this.currentState?.State;
+    public getCurrentState(): IState {
+        return this.currentState?.state;
     }
 
-    public GetcurrentStateType(): any {
-        return this.currentState?.State.constructor;
+    public getCurrentStateType(): any {
+        return this.currentState?.state.constructor;
     }
 
-    public RestoreState(): void {
+    public restoreState(): void {
         if (!this.stateHistoryStrategy) return;
         const [enterState, exitOldStateParameters] = this.stateHistoryStrategy.restore();
         if (enterState) {
-            this.SettoState(enterState, exitOldStateParameters);
+            this.SetToState(enterState, exitOldStateParameters);
         } else {
             console.warn("No state to restore.");
-            this.SettoState(null);
+            this.SetToState(null);
         }
     }
 
-    public PeakHistory(): [IState | null, IStateTransitionData | null] {
+    public peakHistory(): [IState | null, IStateTransitionData | null] {
         if (!this.stateHistoryStrategy) return [null, null];
         const [enterState, exitOldStateParameters] = this.stateHistoryStrategy.restore(false);
         return [enterState, exitOldStateParameters];
     }
 
-    private SwitchState(nextState: StateNode, transitionData: IStateTransitionData | null = null): void {
-        this.currentState.State.exitState(transitionData);
+    private switchState(nextState: StateNode, transitionData: IStateTransitionData | null = null): void {
+        this.currentState.state.exitState(transitionData);
         const lastStateEnum = this.currentState;
         this.currentState = nextState;
-        nextState.State.enterState(transitionData);
+        nextState.state.enterState(transitionData);
     }
 }
 
 
 class StateNode {
-    public State: IState;
-    public Transitions: Set<IStateTransition>;
+    public state: IState;
+    public transitions: Set<IStateTransition>;
 
     constructor(state: IState, transitions: Set<IStateTransition> = new Set()) {
-        this.State = state;
-        this.Transitions = transitions;
+        this.state = state;
+        this.transitions = transitions;
     }
 
-    public AddTransition(to: IState, condition: IStatePredicate): void {
-        this.Transitions.add({ toState: to, condition: condition });
+    public addTransition(to: IState, condition: IStatePredicate): void {
+        this.transitions.add({ toState: to, condition: condition });
     }
 
-    public RemoveTransition(to: IState, condition: IStatePredicate): void {
-        this.Transitions.forEach(transition => {
+    public removeTransition(to: IState, condition: IStatePredicate): void {
+        this.transitions.forEach(transition => {
             if (transition.toState === to && transition.condition === condition) {
-                this.Transitions.delete(transition);
+                this.transitions.delete(transition);
             }
         });
     }
 }
+
+export default BaseStateMachine;

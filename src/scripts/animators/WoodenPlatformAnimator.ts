@@ -1,0 +1,73 @@
+import Component from "../../engine/components/Component";
+import AnimationPredicate from "../../engine/components/animators/AnimationPredicate";
+import AnimationState from "../../engine/components/animators/AnimationState";
+import AnimationTransition from "../../engine/components/animators/AnimationTransition";
+import Animator from "../../engine/components/animators/Animator";
+import TextureAnimationClip from "../../engine/components/animators/TextureAnimationClip";
+import Renderer from "../../engine/components/renderers/Renderer";
+import StateMachine from "../../engine/state_machines/StateMachine";
+import WoodenPlatform from "../platforms/WoodenPlatform";
+
+class WoodenPlatformAnimator extends Animator {
+    private renderer : Renderer;
+    
+    public idleState : AnimationState;
+    public breakingState : AnimationState;
+    constructor() {
+        super();
+    
+    }
+
+    public awake(): void {
+        this.renderer = this.gameObject.getComponent<Renderer>(Renderer)!;
+        super.awake();
+    }
+
+    
+    protected createStateMachine(): StateMachine {
+        let stateMachine = new StateMachine.Builder().build();
+
+
+        // Define the states
+        this.idleState = new WoodenIdleState(this.renderer);
+        
+        this.breakingState = new WoodenBreakingState(this.renderer);
+        stateMachine.addOrOverwriteState(this.breakingState, new Set())
+
+
+        let idleTransition = new AnimationTransition(this.breakingState, new AnimationPredicate(() => {
+            return this.gameObject.getComponent<WoodenPlatform>(WoodenPlatform)?.isBroken || false;
+        }));
+        stateMachine.addOrOverwriteState(this.idleState, new Set([idleTransition]));
+
+
+
+        stateMachine.setInitialState(this.idleState, true);
+
+        return stateMachine;
+    }
+
+
+    public clone(): Component {
+        return new WoodenPlatformAnimator();
+    }
+
+}
+
+class WoodenIdleState extends AnimationState {
+    constructor(renderer : Renderer) {
+        let clip = new TextureAnimationClip([0]);
+        clip.setRenderer(renderer);
+        super(clip, 1, true, true, false, false);
+    }
+}
+
+class WoodenBreakingState extends AnimationState {
+    constructor(renderer : Renderer) {
+        let clip = new TextureAnimationClip([0,1,2,3]);
+        clip.setRenderer(renderer);
+        super(clip, 1, true, true, false, false);
+    }
+}
+
+export default WoodenPlatformAnimator;

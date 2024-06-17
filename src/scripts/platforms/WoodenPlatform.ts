@@ -7,7 +7,7 @@ import Platform from "./Platform";
 
 class WoodenPlatform extends Platform {
     
-    private isBroken : boolean = false;
+    public isBroken : boolean = false;
 
     protected onContact(other: Collider): void {
         if (other.gameObject.getComponent<Player>(Player) && !this.isBroken) {
@@ -19,7 +19,6 @@ class WoodenPlatform extends Platform {
     protected break(){
         this.isBroken = true;
         
-        this.gameObject.destroy();
     }
 
     public clone(): Component {
