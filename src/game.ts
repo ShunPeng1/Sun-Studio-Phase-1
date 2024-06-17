@@ -187,11 +187,11 @@ class Game {
         // Add Spawner
         let spawner = new GameObject('Spawner');
         spawner.addComponent(new PlatformSpawner([
-            new PlatformSpawnInfo(greenPlatform, 7),
+            new PlatformSpawnInfo(greenPlatform, 10),
             new PlatformSpawnInfo(brownPlatform, 3, true),
-            new PlatformSpawnInfo(bluePlatform, 1),
+            new PlatformSpawnInfo(bluePlatform, 3),
             new PlatformSpawnInfo(whitePlatform, 1)
-        ], 60, [-20,20], [6,10]));
+        ], 60, [-20,20], [4,14]));
         spawner.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         spawner.transform.position[1] = -20;
         mainScene.addGameObject(spawner);
