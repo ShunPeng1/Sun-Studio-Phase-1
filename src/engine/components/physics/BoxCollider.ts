@@ -58,9 +58,9 @@ class BoxCollider extends Collider{
             }
 
             // Check if the collision is with a trigger
-            if (this.isTrigger && other.isTrigger) {
-                return false; // Ignore Snapping
-            }
+            //if (this.isTrigger && other.isTrigger) {
+            //    return false; // Ignore Snapping
+            //}
             
             if (this.isTrigger || other.isTrigger) {
                 return true; // Ignore Snapping

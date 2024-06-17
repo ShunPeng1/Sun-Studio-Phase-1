@@ -66,7 +66,6 @@ class PhysicManager {
         return this.colliders.filter(filterFunction);
     }
 
-
 }
 
 export default PhysicManager;

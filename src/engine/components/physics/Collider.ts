@@ -7,6 +7,7 @@ import Transform from '../Transform';
 let idCounter = 0;
 
 class Collider extends Component{
+    
     public isTrigger : boolean = false;
     public onCollisionEvent: EventEmitter = new EventEmitter();
     public id: number;
@@ -15,6 +16,9 @@ class Collider extends Component{
     private COLLISION_ENTER = "Collision Enter";
     private COLLISION_STAY = "Collision Stay";
     private COLLISION_EXIT = "Collision Exit";
+    private TRIGGER_ENTER = "Trigger Enter";
+    private TRIGGER_STAY = "Trigger Stay";
+    private TRIGGER_EXIT = "Trigger Exit";
     
     constructor(isTrigger: boolean){
         super();
@@ -44,12 +48,36 @@ class Collider extends Component{
         this.onCollisionEvent.removeListener(this.COLLISION_ENTER, callback);
     }
 
+    public subcribeToTriggerEnter(callback: (other: Collider) => void) {
+        this.onCollisionEvent.addListener(this.TRIGGER_ENTER, callback);
+    }
+
+    public subcribeToTriggerStay(callback: (other: Collider) => void) {
+        this.onCollisionEvent.addListener(this.TRIGGER_STAY, callback);
+    }
+
+    public subcribeToTriggerExit(callback: (other: Collider) => void) {
+        this.onCollisionEvent.addListener(this.TRIGGER_EXIT,callback);
+    }
+
     public unsubcribeToCollisionStay(callback: (other: Collider) => void) {
         this.onCollisionEvent.removeListener(this.COLLISION_STAY, callback);
     }
 
     public unsubcribeToCollisionExit(callback: (other: Collider) => void) {
         this.onCollisionEvent.removeListener(this.COLLISION_EXIT, callback);
+    }
+
+    public unsubcribeToTriggerEnter(callback: (other: Collider) => void) {
+        this.onCollisionEvent.removeListener(this.TRIGGER_ENTER, callback);
+    }
+
+    public unsubcribeToTriggerStay(callback: (other: Collider) => void) {
+        this.onCollisionEvent.removeListener(this.TRIGGER_STAY, callback);
+    }
+
+    public unsubcribeToTriggerExit(callback: (other: Collider) => void) {
+        this.onCollisionEvent.removeListener(this.TRIGGER_EXIT, callback);
     }
 
     public invokeCollisionEnter(other: Collider) {
@@ -62,6 +90,18 @@ class Collider extends Component{
 
     public invokeCollisionExit(other: Collider) {
         this.onCollisionEvent.emit(this.COLLISION_EXIT, other);
+    }
+
+    public invokeTriggerEnter(other: Collider) {
+        this.onCollisionEvent.emit(this.TRIGGER_ENTER, other);
+    }
+
+    public invokeTriggerStay(other: Collider) {
+        this.onCollisionEvent.emit(this.TRIGGER_STAY, other);
+    }
+
+    public invokeTriggerExit(other: Collider) {
+        this.onCollisionEvent.emit(this.TRIGGER_EXIT, other);
     }
     
 

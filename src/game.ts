@@ -131,7 +131,7 @@ class Game {
         let brownPlatform = new GameObject("Brown Platform");
         vec3.set(brownPlatform.transform.scale, 4, 4, 1);
         brownPlatform.addComponent(new BoxCollider(true, 0, 1, 2, 1));
-        brownPlatform.addComponent(new WoodenPlatform(40));
+        brownPlatform.addComponent(new WoodenPlatform(40,1));
         brownPlatform.setScene(mainScene);
 
         
@@ -234,7 +234,7 @@ class Game {
 
         // Add Destroyer
         let destroyer = new GameObject('Destroyer');
-        destroyer.addComponent(new BoxCollider(true, 0,-40, 1000,20));
+        destroyer.addComponent(new BoxCollider(true, 0,-140, 1000,200));
         destroyer.addComponent(new PlatformDestroyer());
         destroyer.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         mainScene.addGameObject(destroyer);
