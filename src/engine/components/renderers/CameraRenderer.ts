@@ -1,4 +1,4 @@
-import WebGLManager from '../webgl/WebGLManager';
+import WebGLManager from '../../webgl/WebGLManager';
 import Renderer from './Renderer';
 import {glMatrix, mat4, quat, vec3} from 'gl-matrix';
 

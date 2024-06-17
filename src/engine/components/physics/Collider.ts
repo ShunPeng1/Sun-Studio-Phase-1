@@ -1,8 +1,8 @@
 import { EventEmitter } from 'events';
 
-import Component from "./Component";
-import PhysicManager from '../physics/PhysicManager';
-import Transform from './Transform';
+import Component from "../Component";
+import PhysicManager from '../../physics/PhysicManager';
+import Transform from '../Transform';
 
 let idCounter = 0;
 

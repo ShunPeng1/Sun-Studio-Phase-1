@@ -1,6 +1,6 @@
-import Collider from "../../engine/components/Collider";
+import Collider from "../../engine/components/physics/Collider";
 import Component from "../../engine/components/Component";
-import Rigidbody from "../../engine/components/Rigidbody";
+import Rigidbody from "../../engine/components/physics/Rigidbody";
 import PhysicManager from "../../engine/physics/PhysicManager";
 import Platform from "../platforms/Platform";
 

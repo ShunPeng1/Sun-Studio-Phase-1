@@ -1,5 +1,5 @@
 import { vec3 } from "gl-matrix";
-import Component from "./Component";
+import Component from "../Component";
 
 class Rigidbody extends Component {
     

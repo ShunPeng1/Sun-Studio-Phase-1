@@ -1,29 +1,32 @@
-import WebGLManager from "../webgl/WebGLManager";
-import Shape from "../webgl/shapes/Shape";
-import TextureInfo from "../webgl/textures/TextureInfo";
-import Component from "./Component";
+import WebGLManager from "../../webgl/WebGLManager";
+import Polyhedron from "../../webgl/shapes/Polyhedron";
+import Component from "../Component";
+
 import Renderer from "./Renderer";
+import TextureInfo from "../../webgl/textures/TextureInfo";
+import Mesh from "../../webgl/shapes/Mesh";
 
 
-class PrimativeRenderer extends Renderer {
 
+class MeshRenderer extends Renderer {
+    private mesh : Mesh;
 
-
-    public constructor(webgl : WebGLManager, shape: Shape, textureUrl : string, textureInfo : TextureInfo) {
+    constructor(webgl : WebGLManager, mesh : Mesh, textureUrl : string, textureInfo : TextureInfo ) {
         super(webgl);
-    
+        this.mesh = mesh;
+        
+        let shape = new Polyhedron(this.webgl.getGL(), this.webgl.getProgram(), mesh);
         this.initializeShape(shape);
-
         this.initializeTexture(textureUrl, textureInfo);
 
-
     }
 
+    
     public clone(): Component {
         // Add your implementation here
-        return new PrimativeRenderer(this.webgl, this.shape, this.textureUrl, this.textureInfo);
+        return new MeshRenderer(this.webgl, this.mesh, this.textureUrl, this.textureInfo);
     }
-
+    
     public render(time: number, deltaTime : number) {
         if (this.shape === undefined) {
             return;
@@ -42,11 +45,11 @@ class PrimativeRenderer extends Renderer {
         if (this.webglTexture) {
             let modelMatrixUniformLocation = gl.getUniformLocation(this.webgl.getProgram(), 'mTexScale');
 
-            gl.uniform2fv(modelMatrixUniformLocation, this.transform.getXYScale());
+            gl.uniform2fv(modelMatrixUniformLocation, [1,1]);
 
             gl.activeTexture(gl.TEXTURE0);
             gl.bindTexture(gl.TEXTURE_2D, this.webglTexture);
-            
+
         }
 
 
@@ -59,7 +62,6 @@ class PrimativeRenderer extends Renderer {
             gl.bindTexture(gl.TEXTURE_2D, null);
         }
     }
-  
 }
 
-export default PrimativeRenderer;
+export default MeshRenderer;

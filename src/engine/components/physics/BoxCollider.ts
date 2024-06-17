@@ -1,8 +1,8 @@
-import PhysicManager from "../physics/PhysicManager";
+import PhysicManager from "../../physics/PhysicManager";
 import Collider from "./Collider";
-import Component from "./Component";
+import Component from "../Component";
 import Rigidbody from "./Rigidbody";
-import Transform from "./Transform";
+import Transform from "../Transform";
 
 class BoxCollider extends Collider{
     private x : number= 0;

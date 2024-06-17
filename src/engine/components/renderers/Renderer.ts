@@ -1,7 +1,7 @@
-import WebGLManager from "../webgl/WebGLManager";
-import Shape, { TextureFilter, TextureType, TextureWrap } from "../webgl/shapes/Shape";
-import TextureInfo from "../webgl/textures/TextureInfo";
-import Component from "./Component";
+import WebGLManager from "../../webgl/WebGLManager";
+import Shape, { TextureFilter, TextureType, TextureWrap } from "../../webgl/shapes/Shape";
+import TextureInfo from "../../webgl/textures/TextureInfo";
+import Component from "../Component";
 
 class Renderer extends Component {
     protected webgl : WebGLManager;

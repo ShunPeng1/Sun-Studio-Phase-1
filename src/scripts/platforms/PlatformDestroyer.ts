@@ -1,4 +1,4 @@
-import Collider from "../../engine/components/Collider";
+import Collider from "../../engine/components/physics/Collider";
 import Component from "../../engine/components/Component";
 import Platform from "./Platform";
 

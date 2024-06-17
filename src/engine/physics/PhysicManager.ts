@@ -1,4 +1,4 @@
-import Collider from "../components/Collider";
+import Collider from "../components/physics/Collider";
 
 class PhysicManager {
     private static instance: PhysicManager;

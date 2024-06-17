@@ -1,6 +1,6 @@
 import { vec3 } from "gl-matrix";
 import Component from "../../engine/components/Component";
-import Rigidbody from "../../engine/components/Rigidbody";
+import Rigidbody from "../../engine/components/physics/Rigidbody";
 
 class InitialForce extends Component{
     
