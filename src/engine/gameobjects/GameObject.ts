@@ -97,41 +97,43 @@ class GameObject {
         this.components.push(component);
     }
 
-    public getComponent<T extends Component>(type: {new(...args: any[]): T}): T | null {
+    public getComponent<T extends Component>(type: (new(...args: any[]) => T) | {prototype: T}): T | null {
         for (let i = 0; i < this.components.length; i++) {
-            if (this.components[i] instanceof type) {
+            if (this.components[i] instanceof (type as any)) {
                 return this.components[i] as T;
             }
         }
         return null;
     }
-
-    public getComponentInParent<T extends Component>(type: {new(...args: any[]): T}): T | null {
+    
+    public getComponentInParent<T extends Component>(type: (new(...args: any[]) => T) | {prototype: T}): T | null {
         let parent = this.transform.getParent();
         while (parent) {
-            if (parent.gameObject.getComponent<T>(type)) {
-                return parent.gameObject.getComponent<T>(type);
+            let component = parent.gameObject.getComponent<T>(type);
+            if (component) {
+                return component;
             }
-            parent = parent.getParent();
+            parent = parent.transform.getParent();
         }
         return null;
     }
 
-    public getComponentInChildren<T extends Component>(type: {new(...args: any[]): T}): T | null {
+    public getComponentInChildren<T extends Component>(type: (new(...args: any[]) => T) | {prototype: T}): T | null {
         let children = this.transform.getChildren();
         for (let i = 0; i < children.length; i++) {
-            if (children[i].gameObject.getComponent<T>(type)) {
-                return children[i].gameObject.getComponent<T>(type);
+            let component = children[i].gameObject.getComponent<T>(type);
+            if (component) {
+                return component;
             }
         }
-
+    
         for (let i = 0; i < children.length; i++) {
             let child = children[i].gameObject.getComponentInChildren<T>(type);
             if (child) {
                 return child;
             }
         }
-
+    
         return null;
     }
     
