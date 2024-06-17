@@ -19,9 +19,7 @@ abstract class Animator extends Component {
     protected abstract createStateMachine(): StateMachine;
     
     
-    public update(deltaTime : number): void {
-        let test = this.gameObject.getComponent<WoodenPlatform>(WoodenPlatform)!.isBroken;
-        console.log(test);
+    public update(time :number ,deltaTime : number): void {
         this.stateMachine.update(deltaTime);
     }
 

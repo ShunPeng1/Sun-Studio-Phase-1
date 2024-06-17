@@ -131,7 +131,7 @@ class Game {
         let brownPlatform = new GameObject("Brown Platform");
         vec3.set(brownPlatform.transform.scale, 4, 4, 1);
         brownPlatform.addComponent(new BoxCollider(true, 0, 1, 2, 1));
-        brownPlatform.addComponent(new WoodenPlatform());
+        brownPlatform.addComponent(new WoodenPlatform(40));
         brownPlatform.setScene(mainScene);
 
         

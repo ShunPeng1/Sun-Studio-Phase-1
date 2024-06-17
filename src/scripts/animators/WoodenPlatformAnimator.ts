@@ -33,7 +33,8 @@ class WoodenPlatformAnimator extends Animator {
         
         this.breakingState = new WoodenBreakingState(this.renderer);
         stateMachine.addOrOverwriteState(this.breakingState, new Set())
-
+        
+        
 
         let idleTransition = new AnimationTransition(this.breakingState, new AnimationPredicate(() => {
             return this.gameObject.getComponent<WoodenPlatform>(WoodenPlatform)?.isBroken || false;
@@ -56,17 +57,19 @@ class WoodenPlatformAnimator extends Animator {
 
 class WoodenIdleState extends AnimationState {
     constructor(renderer : Renderer) {
-        let clip = new TextureAnimationClip([0]);
+        let clip = new TextureAnimationClip( [0], 5, false);
         clip.setRenderer(renderer);
         super(clip, 1, true, true, false, false);
+        clip.setAnimationState(this);
     }
 }
 
 class WoodenBreakingState extends AnimationState {
     constructor(renderer : Renderer) {
-        let clip = new TextureAnimationClip([0,1,2,3]);
+        let clip = new TextureAnimationClip([0,1,2,3],10, false);
         clip.setRenderer(renderer);
-        super(clip, 1, true, true, false, false);
+        super(clip, 1, true, false, false, false);
+        clip.setAnimationState(this);
     }
 }
 
