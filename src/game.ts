@@ -32,6 +32,7 @@ import WoodenPlatform from "./scripts/platforms/WoodenPlatform";
 import WayPointMovement from "./scripts/movement/WayPointMovement";
 import PlatformWayPoint from "./scripts/platforms/PlatformWayPoint";
 import Player from "./scripts/player/Player";
+import CloudPlatform from "./scripts/platforms/CloudPlatform";
 
 class Game {
     private canvas: HTMLCanvasElement;
@@ -136,7 +137,8 @@ class Game {
         whitePlatform.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/doodle/atlas/platform3.png', pixelatedTextureInfo));
         whitePlatform.addComponent(new BoxCollider(false, 0, 1, 2, 1));
         whitePlatform.addComponent(new Bounce(4000));
-        whitePlatform.addComponent(new WoodenPlatform());
+        whitePlatform.addComponent(new CloudPlatform());
+        whitePlatform.setScene(mainScene);
 
         
         // Add Player
@@ -185,9 +187,10 @@ class Game {
         // Add Spawner
         let spawner = new GameObject('Spawner');
         spawner.addComponent(new PlatformSpawner([
-            new PlatformSpawnInfo(greenPlatform, 10),
-            new PlatformSpawnInfo(brownPlatform, 1, true),
-            new PlatformSpawnInfo(bluePlatform, 1)
+            new PlatformSpawnInfo(greenPlatform, 7),
+            new PlatformSpawnInfo(brownPlatform, 3, true),
+            new PlatformSpawnInfo(bluePlatform, 1),
+            new PlatformSpawnInfo(whitePlatform, 1)
         ], 60, [-20,20], [6,10]));
         spawner.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         spawner.transform.position[1] = -20;
