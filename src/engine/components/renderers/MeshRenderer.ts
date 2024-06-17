@@ -5,26 +5,27 @@ import Component from "../Component";
 import Renderer from "./Renderer";
 import TextureInfo from "../../webgl/textures/TextureInfo";
 import Mesh from "../../webgl/shapes/Mesh";
+import ImageElements from "../../webgl/textures/ImageElements";
 
 
 
 class MeshRenderer extends Renderer {
     private mesh : Mesh;
 
-    constructor(webgl : WebGLManager, mesh : Mesh, textureUrl : string, textureInfo : TextureInfo ) {
+    constructor(webgl : WebGLManager, mesh : Mesh, imageElements : ImageElements[], textureInfo : TextureInfo ) {
         super(webgl);
         this.mesh = mesh;
         
         let shape = new Polyhedron(this.webgl.getGL(), this.webgl.getProgram(), mesh);
         this.initializeShape(shape);
-        this.initializeTexture(textureUrl, textureInfo);
+        this.initializeTexture(imageElements, textureInfo);
 
     }
 
     
     public clone(): Component {
         // Add your implementation here
-        return new MeshRenderer(this.webgl, this.mesh, this.textureUrl, this.textureInfo);
+        return new MeshRenderer(this.webgl, this.mesh, this.imageElements, this.textureInfo);
     }
     
     public render(time: number, deltaTime : number) {
@@ -42,13 +43,13 @@ class MeshRenderer extends Renderer {
         gl.bindTexture(gl.TEXTURE_2D, null);
 
         // Texture
-        if (this.webglTexture) {
+        if (this.webglTextures) {
             let modelMatrixUniformLocation = gl.getUniformLocation(this.webgl.getProgram(), 'mTexScale');
 
             gl.uniform2fv(modelMatrixUniformLocation, [1,1]);
 
             gl.activeTexture(gl.TEXTURE0);
-            gl.bindTexture(gl.TEXTURE_2D, this.webglTexture);
+            gl.bindTexture(gl.TEXTURE_2D, this.webglTextures[this.renderingTextureIndex]);
 
         }
 
@@ -58,7 +59,7 @@ class MeshRenderer extends Renderer {
         
 
         // Unbind the texture
-        if (this.webglTexture) {
+        if (this.webglTextures) {
             gl.bindTexture(gl.TEXTURE_2D, null);
         }
     }

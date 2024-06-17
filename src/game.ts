@@ -33,6 +33,7 @@ import WayPointMovement from "./scripts/movement/WayPointMovement";
 import PlatformWayPoint from "./scripts/platforms/PlatformWayPoint";
 import Player from "./scripts/player/Player";
 import CloudPlatform from "./scripts/platforms/CloudPlatform";
+import ImageLoader from "./engine/webgl/textures/ImageLoader";
 
 class Game {
     private canvas: HTMLCanvasElement;
@@ -87,25 +88,24 @@ class Game {
         let quad = shapeFactory.createShape(ShapeType.Quad);
         
         
+        // Load images
+        let imageLoader = new ImageLoader();
         
-            
-
-
 
         // Platform
         let greenPlatform = new GameObject("Green Platform");
         vec3.set(greenPlatform.transform.scale, 4, 2, 1);
-        greenPlatform.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/doodle/atlas/platform0.png', pixelatedTextureInfo));
         greenPlatform.addComponent(new BoxCollider(false, 0, 1, 2, 1));
         greenPlatform.addComponent(new Bounce(4000));
         greenPlatform.setScene(mainScene);
-
-        
+        imageLoader.loadImageFromUrls('assets/images/doodle/atlas/platform0.png', ()=>{}, (imageElements)=>{
+            greenPlatform.addComponent(new PrimativeRenderer(this.webGLManager, quad, imageElements, pixelatedTextureInfo));
+        });
+            
         // Moving Platform
         let bluePlatform = new GameObject("Blue Platform");
         vec3.set(bluePlatform.transform.position, 0, 5, 1);
         vec3.set(bluePlatform.transform.scale, 4, 2, 1);
-        bluePlatform.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/doodle/atlas/platform1.png', pixelatedTextureInfo));
         bluePlatform.addComponent(new BoxCollider(false, 0, 1, 2, 1));
         bluePlatform.addComponent(new Bounce(4000));
         bluePlatform.setScene(mainScene); // Add to scene before waypoints
@@ -122,31 +122,41 @@ class Game {
 
         bluePlatform.addComponent(new WayPointMovement(0.4, false));
 
+        imageLoader.loadImageFromUrls('assets/images/doodle/atlas/platform1.png', ()=>{},(imageElements)=>{   
+            bluePlatform.addComponent(new PrimativeRenderer(this.webGLManager, quad, imageElements, pixelatedTextureInfo));
+        });
 
         // Brown Platform
         let brownPlatform = new GameObject("Brown Platform");
         vec3.set(brownPlatform.transform.scale, 4, 4, 1);
-        brownPlatform.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/doodle/atlas/platform2.png', pixelatedTextureInfo));
         brownPlatform.addComponent(new BoxCollider(true, 0, 1, 2, 1));
         brownPlatform.addComponent(new WoodenPlatform());
         brownPlatform.setScene(mainScene);
 
+        imageLoader.loadImageFromUrls('assets/images/doodle/atlas/platform2.png', ()=>{},(imageElements)=>{   
+        
+            brownPlatform.addComponent(new PrimativeRenderer(this.webGLManager, quad, imageElements, pixelatedTextureInfo));
+            
+        });
+                
         // White Platform
         let whitePlatform = new GameObject("White Platform");
         vec3.set(whitePlatform.transform.scale, 4, 2, 1);
-        whitePlatform.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/doodle/atlas/platform3.png', pixelatedTextureInfo));
         whitePlatform.addComponent(new BoxCollider(false, 0, 1, 2, 1));
         whitePlatform.addComponent(new Bounce(4000));
         whitePlatform.addComponent(new CloudPlatform());
         whitePlatform.setScene(mainScene);
+    
+        imageLoader.loadImageFromUrls('assets/images/doodle/atlas/platform3.png', ()=>{},(imageElements)=>{   
+            whitePlatform.addComponent(new PrimativeRenderer(this.webGLManager, quad, imageElements, pixelatedTextureInfo));
+        });
 
-        
+
         // Add Player
         let playerGameObject = new GameObject("Player");
         vec3.set(playerGameObject.transform.position, 0, -20, 1);
         vec3.set(playerGameObject.transform.rotation, 0, 0, 0);
         vec3.set(playerGameObject.transform.scale, 4, 4, 1);
-        playerGameObject.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/doodle/player/tile000.png', pixelatedTextureInfo));
         playerGameObject.addComponent(new BoxCollider(false, 0, -0.5, 1, 0.25));
         playerGameObject.addComponent(new Rigidbody(1.1, 110))
         playerGameObject.addComponent(new LeftRightControlMovement(50));
@@ -159,7 +169,11 @@ class Game {
         playerGameObject.addComponent(new Player(playerHead.transform, playerBack.transform));
         mainScene.addGameObject(playerGameObject);
         
-        
+        imageLoader.loadImageFromUrls('assets/images/doodle/player/tile000.png', ()=>{},(imageElements)=>{
+            
+            playerGameObject.addComponent(new PrimativeRenderer(this.webGLManager, quad, imageElements, pixelatedTextureInfo));
+            
+        });
 
         
         // Add Camera
@@ -173,16 +187,20 @@ class Game {
         camera.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         
         mainScene.addGameObject(camera);
-
         
+
         // Add Background
         let paperBackground = new GameObject('Background 1');
         vec3.set(paperBackground.transform.position, 0, 40, -65);
         vec3.set(paperBackground.transform.rotation, 0, 0, 0);
         vec3.set(paperBackground.transform.scale, 30, 80, 1);
-
-        paperBackground.addComponent(new PrimativeRenderer(this.webGLManager, quad, 'assets/images/doodle/atlas2/background.png', pixelatedTextureInfo));
         paperBackground.transform.setParent(camera.transform);
+            
+        imageLoader.loadImageFromUrls('assets/images/doodle/atlas2/background.png', ()=>{},(imageElements)=>{
+            
+            paperBackground.addComponent(new PrimativeRenderer(this.webGLManager, quad, imageElements, pixelatedTextureInfo));
+            console.log("Loaded Background")
+        });
 
         // Add Spawner
         let spawner = new GameObject('Spawner');
@@ -208,7 +226,7 @@ class Game {
 
         
         this.sceneManager.addScene(mainScene);
-        
+        console.log("Scene Loaded");
     }
 
     private startGameLoop() {

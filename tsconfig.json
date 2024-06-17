@@ -17,7 +17,9 @@
     "strictPropertyInitialization": false,
 
     "moduleResolution": "node",
-    "lib": ["dom", "esnext"]
+    "lib": ["dom", "esnext"],
+
+    "outDir": "./dist",
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts"],

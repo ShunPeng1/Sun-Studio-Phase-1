@@ -1,5 +1,6 @@
 import WebGLManager from "../../webgl/WebGLManager";
 import Shape from "../../webgl/shapes/Shape";
+import ImageElements from "../../webgl/textures/ImageElements";
 import TextureInfo from "../../webgl/textures/TextureInfo";
 import Component from "../Component";
 import Renderer from "./Renderer";
@@ -9,19 +10,19 @@ class PrimativeRenderer extends Renderer {
 
 
 
-    public constructor(webgl : WebGLManager, shape: Shape, textureUrl : string, textureInfo : TextureInfo) {
+    public constructor(webgl : WebGLManager, shape: Shape, imageElements : ImageElements[], textureInfo : TextureInfo) {
         super(webgl);
     
         this.initializeShape(shape);
 
-        this.initializeTexture(textureUrl, textureInfo);
+        this.initializeTexture(imageElements, textureInfo);
 
 
     }
 
     public clone(): Component {
         // Add your implementation here
-        return new PrimativeRenderer(this.webgl, this.shape, this.textureUrl, this.textureInfo);
+        return new PrimativeRenderer(this.webgl, this.shape, this.imageElements, this.textureInfo);
     }
 
     public render(time: number, deltaTime : number) {
@@ -39,13 +40,13 @@ class PrimativeRenderer extends Renderer {
         gl.bindTexture(gl.TEXTURE_2D, null);
 
         // Texture
-        if (this.webglTexture) {
+        if (this.webglTextures) {
             let modelMatrixUniformLocation = gl.getUniformLocation(this.webgl.getProgram(), 'mTexScale');
 
             gl.uniform2fv(modelMatrixUniformLocation, this.transform.getXYScale());
 
             gl.activeTexture(gl.TEXTURE0);
-            gl.bindTexture(gl.TEXTURE_2D, this.webglTexture);
+            gl.bindTexture(gl.TEXTURE_2D, this.webglTextures[this.renderingTextureIndex]);
             
         }
 
@@ -55,7 +56,7 @@ class PrimativeRenderer extends Renderer {
         
 
         // Unbind the texture
-        if (this.webglTexture) {
+        if (this.webglTextures) {
             gl.bindTexture(gl.TEXTURE_2D, null);
         }
     }

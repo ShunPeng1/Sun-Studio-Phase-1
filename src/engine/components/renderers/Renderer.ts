@@ -1,15 +1,20 @@
+import ImageElements from "../../webgl/textures/ImageElements";
 import WebGLManager from "../../webgl/WebGLManager";
-import Shape, { TextureFilter, TextureType, TextureWrap } from "../../webgl/shapes/Shape";
+import Shape from "../../webgl/shapes/Shape";
 import TextureInfo from "../../webgl/textures/TextureInfo";
 import Component from "../Component";
 
+
 class Renderer extends Component {
     protected webgl : WebGLManager;
-    protected webglTexture : WebGLTexture;
     protected shape : Shape;
-    protected texture : ImageBitmap | ImageData | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement | OffscreenCanvas;
-    protected textureUrl : string;
+    
+    
+    protected imageElements : ImageElements[];
+    protected webglTextures : WebGLTexture[];
     protected textureInfo: TextureInfo;
+
+    protected renderingTextureIndex : number = 0;
     constructor(webgl : WebGLManager){
         super();
         this.webgl = webgl;
@@ -19,16 +24,17 @@ class Renderer extends Component {
         this.shape = shape;
     }
     
-    protected initializeTexture( textureUrl : string, textureInfo : TextureInfo) {
-        this.textureUrl = textureUrl;
+    protected initializeTexture(imageElements : ImageElements[], textureInfo : TextureInfo) {
+        this.imageElements = imageElements;
         this.textureInfo = textureInfo;
+        this.webglTextures = [];
        
-        this.texture = new Image();
-        this.texture.src = textureUrl;
-        this.texture.onload = () => {
-            this.addTexture(this.texture, textureInfo);
-            
-        };
+        imageElements.forEach(image => {
+            let webglTexture = this.addTexture(image, textureInfo);
+            this.webglTextures.push(webglTexture);
+        });
+        
+        this.renderingTextureIndex = 0;
     }
 
 
@@ -44,12 +50,10 @@ class Renderer extends Component {
     public addTexture(
         texture : ImageBitmap | ImageData | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement | OffscreenCanvas, 
         textureInfo : TextureInfo
-    ) : void {
-        this.texture = texture;
+    ) : WebGLTexture {
         let gl = this.webgl.getGL();
 
         var webglTexture = gl.createTexture()!;
-        this.webglTexture = webglTexture;
 
         gl.bindTexture(textureInfo.textureType, webglTexture);
 
@@ -70,6 +74,15 @@ class Renderer extends Component {
         // Unbind the texture
         gl.bindTexture(gl.TEXTURE_2D, null);
 
+
+        return webglTexture;
+    }
+
+    public useTexture(index : number) {
+        if (index < 0 || index >= this.webglTextures.length) {
+            console.error("Invalid texture index");
+        }
+        this.renderingTextureIndex = index;
     }
 }
 
