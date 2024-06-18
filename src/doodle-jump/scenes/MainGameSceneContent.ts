@@ -221,7 +221,8 @@ class MainGameSceneContent implements ISceneContent{
         sceneGameObjects.push(scoreText);
 
         vec3.set(scoreText.transform.position, 0, 0, 10);
-        scoreText.addComponent(new TextRenderer('Score: 0', 10, 10, 'bold 50px Arial', 'white'));
+        
+        scoreText.addComponent(new TextRenderer('Score: 0', 50, 50, 'black', '30px Arial'));
         
         
 
