@@ -1,8 +1,8 @@
 import WebGLManager from '../../webgl/WebGLManager';
-import Renderer from './Renderer';
+import WebglRenderer from './Renderer';
 import {glMatrix, mat4, quat, vec3} from 'gl-matrix';
 
-class CameraRenderer extends Renderer {
+class CameraRenderer extends WebglRenderer {
     private worldMatrix: mat4;
     private viewMatrix: mat4;
     private projMatrix: mat4;

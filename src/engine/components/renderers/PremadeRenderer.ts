@@ -3,10 +3,10 @@ import Shape from "../../webgl/shapes/Shape";
 import ImageElements from "../../webgl/textures/ImageElements";
 import TextureInfo from "../../webgl/textures/TextureInfo";
 import Component from "../Component";
-import Renderer from "./Renderer";
+import WebglRenderer from "./Renderer";
 
 
-class PrimativeRenderer extends Renderer {
+class PrimativeRenderer extends WebglRenderer {
 
 
 

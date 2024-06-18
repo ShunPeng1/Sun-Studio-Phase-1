@@ -4,12 +4,12 @@ import AnimationState from "../../engine/components/animators/AnimationState";
 import AnimationTransition from "../../engine/components/animators/AnimationTransition";
 import Animator from "../../engine/components/animators/Animator";
 import TextureAnimationClip from "../../engine/components/animators/TextureAnimationClip";
-import Renderer from "../../engine/components/renderers/Renderer";
+import WebglRenderer from "../../engine/components/renderers/Renderer";
 import StateMachine from "../../engine/state_machines/StateMachine";
 import WoodenPlatform from "../platforms/WoodenPlatform";
 
 class WoodenPlatformAnimator extends Animator {
-    private renderer : Renderer;
+    private renderer : WebglRenderer;
     
     public idleState : AnimationState;
     public breakingState : AnimationState;
@@ -19,7 +19,7 @@ class WoodenPlatformAnimator extends Animator {
     }
 
     public awake(): void {
-        this.renderer = this.gameObject.getComponent<Renderer>(Renderer)!;
+        this.renderer = this.gameObject.getComponent<WebglRenderer>(WebglRenderer)!;
         super.awake();
     }
 
@@ -56,7 +56,7 @@ class WoodenPlatformAnimator extends Animator {
 }
 
 class WoodenIdleState extends AnimationState {
-    constructor(renderer : Renderer) {
+    constructor(renderer : WebglRenderer) {
         let clip = new TextureAnimationClip( [0], 5, false);
         clip.setRenderer(renderer);
         super(clip, 1, true, true, false, false);
@@ -65,7 +65,7 @@ class WoodenIdleState extends AnimationState {
 }
 
 class WoodenBreakingState extends AnimationState {
-    constructor(renderer : Renderer) {
+    constructor(renderer : WebglRenderer) {
         let clip = new TextureAnimationClip([0,1,2,3],10, false);
         clip.setRenderer(renderer);
         super(clip, 1, true, false, false, false);

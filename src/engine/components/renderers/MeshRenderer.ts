@@ -2,14 +2,14 @@ import WebGLManager from "../../webgl/WebGLManager";
 import Polyhedron from "../../webgl/shapes/Polyhedron";
 import Component from "../Component";
 
-import Renderer from "./Renderer";
+import WebglRenderer from "./Renderer";
 import TextureInfo from "../../webgl/textures/TextureInfo";
 import Mesh from "../../webgl/shapes/Mesh";
 import ImageElements from "../../webgl/textures/ImageElements";
 
 
 
-class MeshRenderer extends Renderer {
+class MeshRenderer extends WebglRenderer {
     private mesh : Mesh;
 
     constructor(webgl : WebGLManager, mesh : Mesh, imageElements : ImageElements[], textureInfo : TextureInfo ) {
