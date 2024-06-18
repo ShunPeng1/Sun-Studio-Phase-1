@@ -51,7 +51,10 @@ class MainGameSceneContent implements ISceneContent{
     private PLATFORM_SHEET_03_URL = `${this.ATLAS_URL}/platformSheet_03.png`;
     private PLATFORM_SHEET_04_URL = `${this.ATLAS_URL}/platformSheet_04.png`;
     private PLATFORM3_URL = `${this.ATLAS_URL}/platform3.png`;
+
     private BACKGROUND_URL = `${this.ATLAS2_URL}/background.png`;
+    private TOP_URL = `${this.ATLAS_URL}/top.png`;
+    
     private PLAYER_TILE_URL = `${this.PLAYER_URL}/tile000.png`;
 
 
@@ -90,6 +93,7 @@ class MainGameSceneContent implements ISceneContent{
         imageLoadPromises.push(imageLoader.loadImageFromUrls(this.PLATFORM3_URL));
         imageLoadPromises.push(imageLoader.loadImageFromUrls(this.PLAYER_TILE_URL));
         imageLoadPromises.push(imageLoader.loadImageFromUrls(this.BACKGROUND_URL));
+        imageLoadPromises.push(imageLoader.loadImageFromUrls(this.TOP_URL));
         return imageLoadPromises;
     }
 
@@ -220,10 +224,14 @@ class MainGameSceneContent implements ISceneContent{
 
         // Add UI
         let scoreText = new GameObject('Score Text');
-        sceneGameObjects.push(scoreText);
+        scoreText.transform.setParent(camera.transform);
 
-        vec3.set(scoreText.transform.position, 0, 0, 10);
-        let textRenderer = new TextRenderer('Score: 0', 50, 50, 'black', '30px Arial');
+        vec3.set(scoreText.transform.position, 0, 29, -50);
+        vec3.set(scoreText.transform.scale, 30, 5, 1);
+        let topImageElements = this.imageLoader.getImageElements(this.TOP_URL);
+        scoreText.addComponent(new PrimativeRenderer(this.quad, topImageElements, this.vectorArtTextureInfo));
+        
+        let textRenderer = new TextRenderer('Score: 0', 50, 40, 'black', '30px Arial');
         scoreText.addComponent(textRenderer);
         scoreText.addComponent(new TextWriter(textRenderer, () => {
             return ScoreManager.getInstance().getScore().toString();
