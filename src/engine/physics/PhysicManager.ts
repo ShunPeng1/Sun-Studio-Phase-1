@@ -41,16 +41,16 @@ class PhysicManager {
                     if (this.collisionStates.get(key)) { // Collision stay
                         collider1.invokeCollisionStay(collider2);
                         collider2.invokeCollisionStay(collider1);
-                        console.log('Collision stay');
+                        //console.log('Collision stay');
                     } else { // Collision enter
                         collider1.invokeCollisionEnter(collider2);
                         collider2.invokeCollisionEnter(collider1);
-                        console.log('Collision enter');
+                        //console.log('Collision enter');
                     }
                 } else if (this.collisionStates.get(key)) { // Collision exit
                     collider1.invokeCollisionExit(collider2);
                     collider2.invokeCollisionExit(collider1);
-                    console.log('Collision exit');
+                    //console.log('Collision exit');
                 }
             }
         }

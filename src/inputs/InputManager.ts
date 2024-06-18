@@ -11,7 +11,7 @@ class InputManager{
                 callbacks.forEach(callback => callback());
             }
             
-            console.log('Key pressed: ' + event.key);
+            //console.log('Key pressed: ' + event.key);
         });
 
         window.addEventListener('keypress', (event) => {
@@ -20,7 +20,7 @@ class InputManager{
                 callbacks.forEach(callback => callback());
             }
             
-            console.log('Key continuously pressed: ' + event.key);
+            //console.log('Key continuously pressed: ' + event.key);
         });
 
         window.addEventListener('keyup', (event) => {
@@ -29,7 +29,7 @@ class InputManager{
                 callbacks.forEach(callback => callback());
             }
             
-            console.log('Key released: ' + event.key);
+            //console.log('Key released: ' + event.key);
         });
     }
 

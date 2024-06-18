@@ -22,11 +22,12 @@ import JumpPlatformIgnorance from "../movement/JumpPlatformIgnorance";
 import Player from "../player/Player";
 import PlatformSpawner from "../platforms/PlatformSpawner";
 import PlatformSpawnInfo from "../platforms/PlatformSpawnInfo";
-import MaxFollowerMovement from "../movement/FollowerMovement";
+import MaxFollowerMovement from "../movement/MaxFollowerMovement";
 import CameraRenderer from "../../engine/components/renderers/CameraRenderer";
 import XBoundTeleportation from "../movement/XBoundTeleportation";
 import PlatformDestroyer from "../platforms/PlatformDestroyer";
 import Shape from "../../engine/webgl/shapes/Shape";
+import ScoreTracking from "../player/ScoreTracking";
 
 class MainGameSceneContent implements ISceneContent{
     private webGLManager: WebGLManager;
@@ -202,11 +203,14 @@ class MainGameSceneContent implements ISceneContent{
         vec3.set(camera.transform.rotation, 0, 0, 0);
         vec3.set(camera.transform.scale, 1, 1, 1);
         
+        
         camera.addComponent(new CameraRenderer(this.webGLManager, this.canvas));
         camera.addComponent(new XBoundTeleportation(playerGameObject, 0, 25));
         camera.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         
+        
     
+
 
         // Add Background
         let paperBackground = new GameObject('Background 1');
@@ -239,10 +243,12 @@ class MainGameSceneContent implements ISceneContent{
         let destroyer = new GameObject('Destroyer');
         sceneGameObjects.push(destroyer);
 
+        let destroyerFollwerMovement = new MaxFollowerMovement(playerGameObject, false, true, false);
         destroyer.addComponent(new BoxCollider(true, 0,-140, 1000, 200));
         destroyer.addComponent(new PlatformDestroyer());
-        destroyer.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
+        destroyer.addComponent(destroyerFollwerMovement);
         
+        destroyer.addComponent(new ScoreTracking(destroyerFollwerMovement, 18));
         
         return sceneGameObjects;
     }
