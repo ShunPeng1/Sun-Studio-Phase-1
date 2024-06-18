@@ -1,5 +1,5 @@
 import Component from "../../engine/components/Component";
-import InputManager from "../../inputs/InputManager";
+import InputManager from "../../engine/inputs/InputManager";
 
 class UpDownControlMovement extends Component {
 

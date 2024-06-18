@@ -3,6 +3,7 @@ import Collider from "./Collider";
 import Component from "../Component";
 import Rigidbody from "./Rigidbody";
 import Transform from "../Transform";
+import Ray from "../../physics/Ray";
 
 class BoxCollider extends Collider{
     private x : number= 0;
@@ -174,7 +175,22 @@ class BoxCollider extends Collider{
         return false;
     }
     
+    public intersectsRay(ray: Ray): boolean {
+        let tmin = (this.getMinX() - ray.origin[0]) / ray.direction[0];
+        let tmax = (this.getMaxX() - ray.origin[0]) / ray.direction[0];
     
+        if (tmin > tmax) [tmin, tmax] = [tmax, tmin];
+    
+        let tymin = (this.getMinY() - ray.origin[1]) / ray.direction[1];
+        let tymax = (this.getMaxY() - ray.origin[1]) / ray.direction[1];
+    
+        if (tymin > tymax) [tymin, tymax] = [tymax, tymin];
+    
+        if ((tmin > tymax) || (tymin > tmax))
+            return false;
+    
+        return true;
+    }
 
     public clone(): Component {
         // Add your implementation here

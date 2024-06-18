@@ -3,10 +3,12 @@ import { EventEmitter } from 'events';
 import Component from "../Component";
 import PhysicManager from '../../physics/PhysicManager';
 import Transform from '../Transform';
+import Ray from '../../physics/Ray';
 
 let idCounter = 0;
 
 class Collider extends Component{
+    
     
     public isTrigger : boolean = false;
     public onCollisionEvent: EventEmitter = new EventEmitter();
@@ -112,6 +114,12 @@ class Collider extends Component{
         return false;
     }
     
+    public intersectsRay(ray: Ray) : boolean {
+        if (this.isEnable) {
+            return false;
+        }
+        return false;
+    }
 
     public clone(): Component {
         // Add your implementation here

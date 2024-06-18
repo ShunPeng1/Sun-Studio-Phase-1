@@ -1,4 +1,5 @@
 import Collider from "../components/physics/Collider";
+import Ray from "./Ray";
 
 class PhysicManager {
     private static instance: PhysicManager;
@@ -56,6 +57,15 @@ class PhysicManager {
         }
 
         this.collisionStates = newCollisionStates;
+    }
+
+    public raycast(ray: Ray): Collider | null {
+        for (let collider of this.colliders) {
+            if (collider.intersectsRay(ray)) { // Assuming Collider has an intersectsRay method
+                return collider;
+            }
+        }
+        return null;
     }
 
     public actionOnAllColliders(action : (collider : Collider) => void){

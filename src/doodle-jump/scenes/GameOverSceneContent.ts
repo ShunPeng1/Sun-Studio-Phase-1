@@ -7,6 +7,7 @@ import TextRenderer, { Align, Baseline, FontStyle } from "../../engine/component
 import TextWriter from "../scores/TextWriter";
 import ScoreManager from "../ScoreManager";
 import PrimativeRenderer from "../../engine/components/renderers/PremadeRenderer";
+import Button from "../../engine/components/ui/Button";
 
 class GameOverSceneContent extends DoodleJumpSceneContent{
 
@@ -68,7 +69,9 @@ class GameOverSceneContent extends DoodleJumpSceneContent{
         vec3.set(playAgainGameObject.transform.scale, 7, 5, 1);
         let playAgainImageElements = this.imageLoader.getImageElements([this.PLAY_AGAIN_1_URL, this.PLAY_AGAIN_2_URL]);
         playAgainGameObject.addComponent(new PrimativeRenderer(this.quad, playAgainImageElements, this.vectorArtTextureInfo));
-        
+        playAgainGameObject.addComponent(new Button(220,540, 220,50, ()=>{
+            console.log('Play Again');
+        }))
         sceneGameObjects.push(playAgainGameObject);
 
 
@@ -78,7 +81,9 @@ class GameOverSceneContent extends DoodleJumpSceneContent{
         vec3.set(menuGameObject.transform.scale, 7, 5, 1);
         let menuImageElements = this.imageLoader.getImageElements([this.MENU_1_URL, this.MENU_2_URL]);
         menuGameObject.addComponent(new PrimativeRenderer(this.quad, menuImageElements, this.vectorArtTextureInfo));
-
+        menuGameObject.addComponent(new Button(340,610, 220,50, ()=>{
+            console.log('Menu');
+        }))
         sceneGameObjects.push(menuGameObject);
 
         // Add Game Over Text
@@ -109,8 +114,8 @@ class GameOverSceneContent extends DoodleJumpSceneContent{
 
         // Tap to change image
         let tapToChangeGameObject = new GameObject('Tap To Change Image');
-        vec3.set(tapToChangeGameObject.transform.position, 15, -5, 0);
-        vec3.set(tapToChangeGameObject.transform.scale, 10, 10, 1);
+        vec3.set(tapToChangeGameObject.transform.position, 14, -5, 0);
+        vec3.set(tapToChangeGameObject.transform.scale, 9, 9, 1);
         let tapToChangeImageElements = this.imageLoader.getImageElements(this.TAP_TO_CHANGE_URL);
         tapToChangeGameObject.addComponent(new PrimativeRenderer(this.quad, tapToChangeImageElements, this.vectorArtTextureInfo));
         sceneGameObjects.push(tapToChangeGameObject);

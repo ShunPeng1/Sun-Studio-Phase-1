@@ -71,6 +71,29 @@ class CameraRenderer extends WebGLRenderer {
         mat4.lookAt(this.viewMatrix, this.transform.position, target, [0, 1, 0]);
         mat4.perspective(this.projMatrix, glMatrix.toRadian(60), this.htmlCanvas.width / this.htmlCanvas.height, 0.1, 1000.0);
     }
+
+    public getRayFromMouse(mouseX: number, mouseY: number): vec3 {
+        let nearPoint = vec3.fromValues(mouseX, mouseY, 0);
+        let farPoint = vec3.fromValues(mouseX, mouseY, 1);
+    
+        let inverseProjMatrix = mat4.create();
+        let inverseViewMatrix = mat4.create();
+    
+        mat4.invert(inverseProjMatrix, this.projMatrix);
+        mat4.invert(inverseViewMatrix, this.viewMatrix);
+    
+        vec3.transformMat4(nearPoint, nearPoint, inverseProjMatrix);
+        vec3.transformMat4(nearPoint, nearPoint, inverseViewMatrix);
+    
+        vec3.transformMat4(farPoint, farPoint, inverseProjMatrix);
+        vec3.transformMat4(farPoint, farPoint, inverseViewMatrix);
+    
+        let rayDirection = vec3.create();
+        vec3.subtract(rayDirection, farPoint, nearPoint);
+        vec3.normalize(rayDirection, rayDirection);
+    
+        return rayDirection;
+    }
 }
 
 export default CameraRenderer;

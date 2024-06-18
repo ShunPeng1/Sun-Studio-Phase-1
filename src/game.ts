@@ -5,17 +5,21 @@ import PhysicsManager from "./engine/physics/PhysicManager";
 import Scene from "./engine/scenes/Scene";
 import MainGameSceneContent from "./doodle-jump/scenes/MainGameSceneContent";
 import GameOverSceneContent from "./doodle-jump/scenes/GameOverSceneContent";
+import InputManager from "./engine/inputs/InputManager";
 
 class Game {
-    private canvasManager: CanvasManager;
-    private webGLManager: WebGLManager;
-    private sceneManager: SceneManager;
+    // Time variables
     private lastTime : number = 0;
     private deltaTime : number = 0;
     private fixedDeltaTime : number = 1/60;
     private fixedLastTime : number = 0;
 
+    // Managers
+    private canvasManager: CanvasManager;
+    private webGLManager: WebGLManager;
+    private sceneManager: SceneManager;
     private physicsManager: PhysicsManager;
+    private inputManager: InputManager;
 
 
     constructor() {
@@ -27,6 +31,7 @@ class Game {
         this.webGLManager = WebGLManager.getInstance();
         this.sceneManager = SceneManager.getInstance();
         this.physicsManager = PhysicsManager.getInstance();
+        this.inputManager = InputManager.getInstance();
 
         this.initialize();
         
