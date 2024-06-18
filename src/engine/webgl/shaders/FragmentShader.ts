@@ -18,7 +18,7 @@ class FragmentShader extends BaseShader {
         '  if (texColor.a * fragColor.a <= 0.01) {',
         '    discard;',
         '  }',
-        'gl_FragColor = vec4(fragColor.rgb * texColor.rgb, texColor.a * fragColor.a);',
+        'gl_FragColor = fragColor * texColor ;',
         '}'
     ].join('\n');
 

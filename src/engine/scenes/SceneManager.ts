@@ -1,17 +1,29 @@
 import Scene from './Scene';
 
 class SceneManager {
-    
+    private static instance: SceneManager ;
     private scenes: Scene[] = [];
     private currentScene: Scene | null = null;
+    private startScene: Scene | null = null;
 
-    constructor() {
+    private constructor() {
         this.scenes = [];
         this.currentScene = null;
     }
 
+    public static getInstance() {
+        if (!SceneManager.instance) {
+            SceneManager.instance = new SceneManager();
+        }
+        return SceneManager.instance;
+    }
+
     public addScene(scene: Scene) {
         this.scenes.push(scene);
+    }
+
+    public setStartScene(scene: Scene) {
+        this.startScene = scene;
     }
 
     public getCurrentScene() {
@@ -40,6 +52,16 @@ class SceneManager {
             this.loadScene(scene);
         }
     }
+
+    public loadStartScene() {
+        if (this.startScene) {
+            this.loadScene(this.startScene);
+        }
+        else{
+            this.loadScene(this.scenes[0]);
+        }
+    }
+
 
     public loadScene(scene: Scene) {
         if (this.currentScene){

@@ -30,7 +30,6 @@ class Quad extends Shape {
                 1.0, 1.0
             ];
 
-            console.log("Default texture coordinates")
         }
 
         let positions = [

@@ -63,6 +63,9 @@ class TextRenderer extends CanvasRenderer {
     public renderText() {
         this.context.fillStyle = this.color;
         this.context.font = `${this.fontStyle} ${this.fontSize} ${this.fontFamily}`;
+        this.context.textAlign = this.align as CanvasTextAlign;
+        this.context.textBaseline = this.baseline;
+
         this.context.fillText(this.text, this.x, this.y);
     }
 
@@ -149,3 +152,5 @@ class TextRenderer extends CanvasRenderer {
 }
 
 export default TextRenderer;
+
+export {FontStyle, Align, Baseline} ;

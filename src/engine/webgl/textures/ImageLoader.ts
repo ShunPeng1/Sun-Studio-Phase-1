@@ -2,7 +2,7 @@ import ImageElement from "./ImageElements";
 
 
 class ImageLoader {
-    private urlToImageElement: Map<string, ImageElement> = new Map<string, ImageElement>();
+    private static urlToImageElement: Map<string, ImageElement> = new Map<string, ImageElement>();
 
     constructor(){
 
@@ -20,7 +20,8 @@ class ImageLoader {
                     imageElement.src = url;
                     imageElement.onload = () => {
                         loadedImages++;
-                        this.urlToImageElement.set(url, imageElement);
+                        
+                        ImageLoader.urlToImageElement.set(url, imageElement);
                         callbackEach(imageElement);
                         if (loadedImages === imageUrl.length) {
                             
@@ -35,7 +36,7 @@ class ImageLoader {
                 imageElements.push(imageElement);
                 imageElement.src = imageUrl;
                 imageElement.onload = () => {
-                    this.urlToImageElement.set(imageUrl, imageElement);
+                    ImageLoader.urlToImageElement.set(imageUrl, imageElement);
                     callbackEach(imageElement);
                     callbackAll(imageElements);
                     resolve(imageElements);
@@ -46,10 +47,10 @@ class ImageLoader {
     }
 
     private getImageElementByUrl(url: string): ImageElement{
-        if (!this.urlToImageElement.has(url)) {
+        if (!ImageLoader.urlToImageElement.has(url)) {
             throw new Error(`Image with url ${url} not found`);
         }
-        return this.urlToImageElement.get(url)!;
+        return ImageLoader.urlToImageElement.get(url)!;
     }
 
     public getImageElements(urls : string[] | string): ImageElement[]{

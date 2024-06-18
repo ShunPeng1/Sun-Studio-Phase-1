@@ -4,6 +4,7 @@ import SceneManager from "./engine/scenes/SceneManager";
 import PhysicsManager from "./engine/physics/PhysicManager";
 import Scene from "./engine/scenes/Scene";
 import MainGameSceneContent from "./doodle-jump/scenes/MainGameSceneContent";
+import GameOverSceneContent from "./doodle-jump/scenes/GameOverSceneContent";
 
 class Game {
     private canvasManager: CanvasManager;
@@ -23,8 +24,8 @@ class Game {
         
         // Create Managers
 
-        this.webGLManager = new WebGLManager();
-        this.sceneManager = new SceneManager();
+        this.webGLManager = WebGLManager.getInstance();
+        this.sceneManager = SceneManager.getInstance();
         this.physicsManager = PhysicsManager.getInstance();
 
         this.initialize();
@@ -44,11 +45,13 @@ class Game {
    
     private async initializeGameScene() {
         // TOOO: Add your scene here
-        let mainScene = new Scene('main', new MainGameSceneContent());
 
         
-        this.sceneManager.addScene(mainScene);
+        //this.sceneManager.addScene(new Scene('main', new MainGameSceneContent()));
+        this.sceneManager.addScene(new Scene('gameover', new GameOverSceneContent()));
         // wait for all images to load
+
+        this.sceneManager.setStartScene(this.sceneManager.getSceneByName('gameover')!);
 
         await this.sceneManager.createScenesContent();
 
@@ -57,7 +60,7 @@ class Game {
 
     private startGameLoop() {
         // Load the main scene
-        this.sceneManager.loadSceneByName('main');
+        this.sceneManager.loadStartScene();
 
         // Start the game loop
         this.lastTime = performance.now()/1000;

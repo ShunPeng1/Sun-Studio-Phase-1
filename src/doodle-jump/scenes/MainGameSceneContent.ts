@@ -1,6 +1,5 @@
 import { vec3 } from "gl-matrix";
 import GameObject from "../../engine/gameobjects/GameObject";
-import ISceneContent from "../../engine/scenes/ISceneContent";
 import ModelReaderFactory from "../../engine/webgl/factories/ModelReaderFactory";
 import ShapeFactory from "../../engine/webgl/factories/ShapeFactory";
 import ShapeType from "../../engine/webgl/shapes/ShapeType";
@@ -30,56 +29,16 @@ import ScoreTracking from "../scores/ScoreTracking";
 import TextRenderer from "../../engine/components/renderers/TextRenderer";
 import TextWriter from "../scores/TextWriter";
 import ScoreManager from "../ScoreManager";
+import DoodleJumpSceneContent from "./DoodleJumpSceneContent";
+import PlayerGameOverContact from "../player/PlayerGameOverContact";
 
-class MainGameSceneContent implements ISceneContent{
-
-
-    private imageLoader: ImageLoader;
-    private quad: Shape;
-    private vectorArtTextureInfo: TextureInfo;
-
-
-    private ASSETS_BASE_URL = 'assets/images/doodle';
-    private ATLAS_URL = `${this.ASSETS_BASE_URL}/atlas`;
-    private ATLAS2_URL = `${this.ASSETS_BASE_URL}/atlas2`;
-    private PLAYER_URL = `${this.ASSETS_BASE_URL}/player`;
-
-    private PLATFORM0_URL = `${this.ATLAS_URL}/platform0.png`;
-    private PLATFORM1_URL = `${this.ATLAS_URL}/platform1.png`;
-    private PLATFORM2_URL = `${this.ATLAS_URL}/platform2.png`;
-    private PLATFORM_SHEET_02_URL = `${this.ATLAS_URL}/platformSheet_02.png`;
-    private PLATFORM_SHEET_03_URL = `${this.ATLAS_URL}/platformSheet_03.png`;
-    private PLATFORM_SHEET_04_URL = `${this.ATLAS_URL}/platformSheet_04.png`;
-    private PLATFORM3_URL = `${this.ATLAS_URL}/platform3.png`;
-
-    private BACKGROUND_URL = `${this.ATLAS2_URL}/background.png`;
-    private TOP_URL = `${this.ATLAS_URL}/top.png`;
-    
-    private PLAYER_TILE_URL = `${this.PLAYER_URL}/tile000.png`;
-
-
-    constructor(){
-    }
+class MainGameSceneContent extends DoodleJumpSceneContent{
 
     download(): Promise<any>[]{
-        let vectorArtTextureInfo = new TextureInfo(true, WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.CLAMP_TO_EDGE, WebGLRenderingContext.CLAMP_TO_EDGE,
-            WebGLRenderingContext.LINEAR, WebGLRenderingContext.LINEAR);
-        this.vectorArtTextureInfo = vectorArtTextureInfo;
-
-        // Create factory
-        let objectFactory = new ModelReaderFactory();
-        let shapeFactory = new ShapeFactory();
         
-        // Create quad
-        let quad = shapeFactory.createShape(ShapeType.Quad);
-        this.quad = quad;
-        
-        
-        // Load images
-        let imageLoader = new ImageLoader();
         let imageLoadPromises = [];
-        this.imageLoader = imageLoader;
-
+        
+        let imageLoader = this.imageLoader;
 
         // Load all images here
         imageLoadPromises.push(imageLoader.loadImageFromUrls(this.PLATFORM0_URL));
@@ -99,6 +58,44 @@ class MainGameSceneContent implements ISceneContent{
 
     create(): GameObject[] {
         let sceneGameObjects : GameObject[] = [];
+
+
+        // Add Player
+        let playerGameObject = new GameObject("Player");
+        sceneGameObjects.push(playerGameObject);
+
+        vec3.set(playerGameObject.transform.position, 0, -20, 1);
+        vec3.set(playerGameObject.transform.rotation, 0, 0, 0);
+        vec3.set(playerGameObject.transform.scale, 4, 4, 1);
+        playerGameObject.addComponent(new BoxCollider(false, 0, -0.5, 1, 0.25));
+        playerGameObject.addComponent(new Rigidbody(1.1, 110))
+        playerGameObject.addComponent(new LeftRightControlMovement(50));
+        playerGameObject.addComponent(new InitialForce([0, 5000, 0]))
+        playerGameObject.addComponent(new JumpPlatformIgnorance());
+
+        // Add Player Parts
+        let playerHead = new GameObject("Player Head");
+        playerHead.transform.setParent(playerGameObject.transform);
+        
+        let playerBack = new GameObject("Player Back");
+        playerBack.transform.setParent(playerGameObject.transform);
+
+        playerGameObject.addComponent(new Player(playerHead.transform, playerBack.transform));
+        
+        let playerImageElements = this.imageLoader.getImageElements(this.PLAYER_TILE_URL);
+        playerHead.addComponent(new PrimativeRenderer(this.quad, playerImageElements, this.vectorArtTextureInfo));
+        
+
+        // Add components
+        this.camera.addComponent(new XBoundTeleportation(playerGameObject, 0, 25));
+        this.camera.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
+        sceneGameObjects.push(this.camera);
+
+        // Add Background
+        let paperBackground = this.createBackground();
+
+        // Add UI
+        let scorePanel = this.createScorePanel();
 
         // Platform
         let greenPlatform = new GameObject("Green Platform");
@@ -170,73 +167,6 @@ class MainGameSceneContent implements ISceneContent{
         
 
 
-        // Add Player
-        let playerGameObject = new GameObject("Player");
-        sceneGameObjects.push(playerGameObject);
-
-        vec3.set(playerGameObject.transform.position, 0, -20, 1);
-        vec3.set(playerGameObject.transform.rotation, 0, 0, 0);
-        vec3.set(playerGameObject.transform.scale, 4, 4, 1);
-        playerGameObject.addComponent(new BoxCollider(false, 0, -0.5, 1, 0.25));
-        playerGameObject.addComponent(new Rigidbody(1.1, 110))
-        playerGameObject.addComponent(new LeftRightControlMovement(50));
-        playerGameObject.addComponent(new InitialForce([0, 5000, 0]))
-        playerGameObject.addComponent(new JumpPlatformIgnorance());
-
-        // Add Player Parts
-        let playerHead = new GameObject("Player Head");
-        playerHead.transform.setParent(playerGameObject.transform);
-        
-        let playerBack = new GameObject("Player Back");
-        playerBack.transform.setParent(playerGameObject.transform);
-
-        playerGameObject.addComponent(new Player(playerHead.transform, playerBack.transform));
-        
-        let playerImageElements = this.imageLoader.getImageElements(this.PLAYER_TILE_URL);
-        playerHead.addComponent(new PrimativeRenderer(this.quad, playerImageElements, this.vectorArtTextureInfo));
-        
-        
-        // Add Camera
-        let camera = new GameObject('Camera');
-        sceneGameObjects.push(camera);
-
-        vec3.set(camera.transform.position, 0, 0, 55);
-        vec3.set(camera.transform.rotation, 0, 0, 0);
-        vec3.set(camera.transform.scale, 1, 1, 1);
-        
-        
-        camera.addComponent(new CameraRenderer());
-        camera.addComponent(new XBoundTeleportation(playerGameObject, 0, 25));
-        camera.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
-        
-
-        // Add Background
-        let paperBackground = new GameObject('Background 1');
-        paperBackground.transform.setParent(camera.transform);
-        
-        vec3.set(paperBackground.transform.position, 0, 40, -65);
-        vec3.set(paperBackground.transform.rotation, 0, 0, 0);
-        vec3.set(paperBackground.transform.scale, 30, 80, 1);
-        
-        let paperBackgroundImageElements = this.imageLoader.getImageElements(this.BACKGROUND_URL);
-        paperBackground.addComponent(new PrimativeRenderer( this.quad, paperBackgroundImageElements, this.vectorArtTextureInfo));
-
-
-        // Add UI
-        let scoreText = new GameObject('Score Text');
-        scoreText.transform.setParent(camera.transform);
-
-        vec3.set(scoreText.transform.position, 0, 29, -50);
-        vec3.set(scoreText.transform.scale, 30, 5, 1);
-        let topImageElements = this.imageLoader.getImageElements(this.TOP_URL);
-        scoreText.addComponent(new PrimativeRenderer(this.quad, topImageElements, this.vectorArtTextureInfo));
-        
-        let textRenderer = new TextRenderer('Score: 0', 50, 40, 'black', '30px Arial');
-        scoreText.addComponent(textRenderer);
-        scoreText.addComponent(new TextWriter(textRenderer, () => {
-            return ScoreManager.getInstance().getScore().toString();
-        }))
-        
 
         // Add Spawner
         let spawner = new GameObject('Spawner');
@@ -257,11 +187,11 @@ class MainGameSceneContent implements ISceneContent{
         sceneGameObjects.push(destroyer);
 
         let destroyerFollwerMovement = new MaxFollowerMovement(playerGameObject, false, true, false);
-        destroyer.addComponent(new BoxCollider(true, 0,-135, 1000, 200));
+        destroyer.addComponent(new BoxCollider(true, 0,-40, 1000, 20));
         destroyer.addComponent(new PlatformDestroyer());
         destroyer.addComponent(destroyerFollwerMovement);
-        
         destroyer.addComponent(new ScoreTracking(destroyerFollwerMovement, 18));
+        destroyer.addComponent(new PlayerGameOverContact());
         
         return sceneGameObjects;
     }
