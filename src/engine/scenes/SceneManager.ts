@@ -64,6 +64,21 @@ class SceneManager {
             this.scenes.splice(index, 1);
         }
     }
+
+
+    private async downloadScenesContent() {
+        const downloadPromises = this.scenes.map(scene => scene.downloadContent());
+        
+        await Promise.all(downloadPromises.flat());
+    }
+
+    public async createScenesContent() {
+        await this.downloadScenesContent();
+    
+        this.scenes.forEach(scene => {
+            scene.createContent();
+        })
+    };
 }
 
 export default SceneManager;

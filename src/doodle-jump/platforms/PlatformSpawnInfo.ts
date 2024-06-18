@@ -1,4 +1,5 @@
 import GameObject from "../../engine/gameobjects/GameObject";
+import Scene from "../../engine/scenes/Scene";
 
 class PlatformSpawnInfo{
     private platformPrefab : GameObject;
@@ -12,7 +13,8 @@ class PlatformSpawnInfo{
         this.isBreakable = isBreakable;
     }
 
-    public clonePlatform() : GameObject{
+    public clonePlatform(scene : Scene) : GameObject{
+        this.platformPrefab.setScene(scene);
         return this.platformPrefab.clone();
     }
 }

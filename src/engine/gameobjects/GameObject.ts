@@ -86,6 +86,11 @@ class GameObject {
 
     public setScene(scene: Scene) {
         this.scene = scene;
+
+        let children = this.transform.getChildren();
+        for (let i = 0; i < children.length; i++) {
+            children[i].gameObject.setScene(scene);
+        }
     }
 
     public getScene() {

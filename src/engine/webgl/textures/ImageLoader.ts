@@ -2,7 +2,8 @@ import ImageElement from "./ImageElements";
 
 
 class ImageLoader {
-    
+    private urlToImageElement: Map<string, ImageElement> = new Map<string, ImageElement>();
+
     constructor(){
 
     }
@@ -19,8 +20,10 @@ class ImageLoader {
                     imageElement.src = url;
                     imageElement.onload = () => {
                         loadedImages++;
+                        this.urlToImageElement.set(url, imageElement);
                         callbackEach(imageElement);
                         if (loadedImages === imageUrl.length) {
+                            
                             callbackAll(imageElements);
                             resolve(imageElements);
                         }
@@ -32,6 +35,7 @@ class ImageLoader {
                 imageElements.push(imageElement);
                 imageElement.src = imageUrl;
                 imageElement.onload = () => {
+                    this.urlToImageElement.set(imageUrl, imageElement);
                     callbackEach(imageElement);
                     callbackAll(imageElements);
                     resolve(imageElements);
@@ -40,6 +44,22 @@ class ImageLoader {
             }
         });
     }
+
+    private getImageElementByUrl(url: string): ImageElement{
+        if (!this.urlToImageElement.has(url)) {
+            throw new Error(`Image with url ${url} not found`);
+        }
+        return this.urlToImageElement.get(url)!;
+    }
+
+    public getImageElements(urls : string[] | string): ImageElement[]{
+        if (typeof urls === 'string') {
+            urls = [urls];
+        }
+    
+        return urls.map((url) => this.getImageElementByUrl(url));
+    }
+
 }
 
 export default ImageLoader;

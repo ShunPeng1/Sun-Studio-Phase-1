@@ -1,12 +1,15 @@
 import GameObject from "../gameobjects/GameObject";
+import ISceneContent from "./ISceneContent";
 
 class Scene{
     
     private name: string;
     private gameObjects: GameObject[] = []; 
+    private content: ISceneContent;
 
-    constructor(name: string) {
+    constructor(name: string, content : ISceneContent) {
         this.name = name;
+        this.content = content;
     }
 
     public addGameObject(gameObject: GameObject) {
@@ -28,6 +31,18 @@ class Scene{
     public getGameObjects(): GameObject[]{
         return this.gameObjects;
     }
+
+    public downloadContent() : Promise<any> []{
+        return this.content.download(); // Ensure this returns a Promise
+    }
+
+    public createContent(){
+        this.gameObjects = this.content.create();
+        for (let gameObject of this.gameObjects){
+            gameObject.setScene(this);
+        }
+    }
+
 
     public load() {
         this.gameObjects.forEach((gameObject) => {
