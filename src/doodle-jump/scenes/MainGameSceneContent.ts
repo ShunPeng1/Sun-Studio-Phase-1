@@ -26,8 +26,10 @@ import CameraRenderer from "../../engine/components/renderers/CameraRenderer";
 import XBoundTeleportation from "../movement/XBoundTeleportation";
 import PlatformDestroyer from "../platforms/PlatformDestroyer";
 import Shape from "../../engine/webgl/shapes/Shape";
-import ScoreTracking from "../player/ScoreTracking";
+import ScoreTracking from "../scores/ScoreTracking";
 import TextRenderer from "../../engine/components/renderers/TextRenderer";
+import TextWriter from "../scores/TextWriter";
+import ScoreManager from "../ScoreManager";
 
 class MainGameSceneContent implements ISceneContent{
 
@@ -221,9 +223,11 @@ class MainGameSceneContent implements ISceneContent{
         sceneGameObjects.push(scoreText);
 
         vec3.set(scoreText.transform.position, 0, 0, 10);
-        
-        scoreText.addComponent(new TextRenderer('Score: 0', 50, 50, 'black', '30px Arial'));
-        
+        let textRenderer = new TextRenderer('Score: 0', 50, 50, 'black', '30px Arial');
+        scoreText.addComponent(textRenderer);
+        scoreText.addComponent(new TextWriter(textRenderer, () => {
+            return ScoreManager.getInstance().getScore().toString();
+        }))
         
 
         // Add Spawner

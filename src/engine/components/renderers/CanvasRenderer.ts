@@ -15,7 +15,7 @@ class CanvasRenderer extends Component {
     }
 
     public render(time: number, deltaTime: number) {
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        
     }
 
     public clone(): Component {

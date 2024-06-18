@@ -6,6 +6,7 @@ import Scene from "./engine/scenes/Scene";
 import MainGameSceneContent from "./doodle-jump/scenes/MainGameSceneContent";
 
 class Game {
+    private canvasManager: CanvasManager;
     private webGLManager: WebGLManager;
     private sceneManager: SceneManager;
     private lastTime : number = 0;
@@ -18,9 +19,10 @@ class Game {
 
     constructor() {
         // Create canvas  
-        CanvasManager.createInstance(600, 800);
+        this.canvasManager = CanvasManager.createInstance(600, 800);
         
         // Create Managers
+
         this.webGLManager = new WebGLManager();
         this.sceneManager = new SceneManager();
         this.physicsManager = PhysicsManager.getInstance();
@@ -116,6 +118,8 @@ class Game {
 
     private render(time: number, deltaTime : number) : void {
         // Clear the screen
+        
+        this.canvasManager.clearRect();
         this.webGLManager.clearScreen();
 
         // Render game objects

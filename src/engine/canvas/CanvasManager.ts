@@ -1,11 +1,15 @@
 import Canvas from "./Canvas";
 
 class CanvasManager {
+    
     private static instance: CanvasManager;
     private webglCanvas: Canvas;
     private html2dCanvas: Canvas;
     private webglCanvasContext: WebGLRenderingContext;
     private html2dCanvasContext: CanvasRenderingContext2D;
+
+    private width : number;
+    private height : number;
 
     private constructor(width: number = 800, height: number = 600) {
 
@@ -14,6 +18,9 @@ class CanvasManager {
 
         this.webglCanvasContext = this.webglCanvas.getWebGLContext();
         this.html2dCanvasContext = this.html2dCanvas.get2dContext();
+
+        this.width = width;
+        this.height = height;
     }
 
     public static createInstance(width: number = 800, height: number = 600): CanvasManager {
@@ -28,6 +35,10 @@ class CanvasManager {
             CanvasManager.instance = new CanvasManager();
         }
         return CanvasManager.instance;
+    }
+
+    public clearRect() {
+        this.html2dCanvasContext.clearRect(0, 0, this.width, this.height);
     }
 
     public getWebglCanvas(): HTMLCanvasElement {
