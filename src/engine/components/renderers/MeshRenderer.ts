@@ -1,19 +1,19 @@
-import WebGLManager from "../../webgl/WebGLManager";
+
 import Polyhedron from "../../webgl/shapes/Polyhedron";
 import Component from "../Component";
 
-import WebglRenderer from "./Renderer";
 import TextureInfo from "../../webgl/textures/TextureInfo";
 import Mesh from "../../webgl/shapes/Mesh";
 import ImageElements from "../../webgl/textures/ImageElements";
+import WebGLRenderer from "./WebGLRenderer";
 
 
 
-class MeshRenderer extends WebglRenderer {
+class MeshRenderer extends WebGLRenderer {
     private mesh : Mesh;
 
-    constructor(webgl : WebGLManager, mesh : Mesh, imageElements : ImageElements[], textureInfo : TextureInfo ) {
-        super(webgl);
+    constructor(mesh : Mesh, imageElements : ImageElements[], textureInfo : TextureInfo ) {
+        super();
         this.mesh = mesh;
         
         let shape = new Polyhedron(this.webgl.getGL(), this.webgl.getProgram(), mesh);
@@ -25,7 +25,7 @@ class MeshRenderer extends WebglRenderer {
     
     public clone(): Component {
         // Add your implementation here
-        return new MeshRenderer(this.webgl, this.mesh, this.imageElements, this.textureInfo);
+        return new MeshRenderer(this.mesh, this.imageElements, this.textureInfo);
     }
     
     public render(time: number, deltaTime : number) {

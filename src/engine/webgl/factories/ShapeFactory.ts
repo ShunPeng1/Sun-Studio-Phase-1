@@ -7,8 +7,8 @@ import ShapeType from "../shapes/ShapeType";
 class ShapeFactory {
     private webgl: WebGLManager;
 
-    constructor(webgl: WebGLManager) {
-        this.webgl = webgl;
+    constructor() {
+        this.webgl = WebGLManager.getInstance();
     }
 
     public createShape(shapeType: ShapeType, colors : number[] = [], textureCoordinates : number[] = []): Shape {

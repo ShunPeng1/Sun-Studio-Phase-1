@@ -1,17 +1,17 @@
-import WebGLManager from "../../webgl/WebGLManager";
+
 import Shape from "../../webgl/shapes/Shape";
 import ImageElements from "../../webgl/textures/ImageElements";
 import TextureInfo from "../../webgl/textures/TextureInfo";
 import Component from "../Component";
-import WebglRenderer from "./Renderer";
+import WebGLRenderer from "./WebGLRenderer";
 
 
-class PrimativeRenderer extends WebglRenderer {
+class PrimativeRenderer extends WebGLRenderer {
 
 
 
-    public constructor(webgl : WebGLManager, shape: Shape, imageElements : ImageElements[], textureInfo : TextureInfo) {
-        super(webgl);
+    public constructor(shape: Shape, imageElements : ImageElements[], textureInfo : TextureInfo) {
+        super();
     
         this.initializeShape(shape);
 
@@ -22,7 +22,7 @@ class PrimativeRenderer extends WebglRenderer {
 
     public clone(): Component {
         // Add your implementation here
-        return new PrimativeRenderer(this.webgl, this.shape, this.imageElements, this.textureInfo);
+        return new PrimativeRenderer(this.shape, this.imageElements, this.textureInfo);
     }
 
     public render(time: number, deltaTime : number) {

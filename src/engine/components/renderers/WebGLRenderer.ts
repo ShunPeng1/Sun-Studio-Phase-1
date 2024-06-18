@@ -5,7 +5,7 @@ import TextureInfo from "../../webgl/textures/TextureInfo";
 import Component from "../Component";
 
 
-class WebglRenderer extends Component {
+class WebGLRenderer extends Component {
     protected webgl : WebGLManager;
     protected shape : Shape;
     
@@ -15,9 +15,9 @@ class WebglRenderer extends Component {
     protected textureInfo: TextureInfo;
 
     protected renderingTextureIndex : number = 0;
-    constructor(webgl : WebGLManager){
+    constructor(){
         super();
-        this.webgl = webgl;
+        this.webgl = WebGLManager.getInstance();
     }
 
     protected initializeShape(shape : Shape) {
@@ -86,4 +86,4 @@ class WebglRenderer extends Component {
     }
 }
 
-export default WebglRenderer;
+export default WebGLRenderer;

@@ -1,12 +1,12 @@
 import Component from "../Component";
-import WebglRenderer from "../renderers/Renderer";
+import WebGLRenderer from "../renderers/WebGLRenderer";
 import AnimationState from "./AnimationState";
 import IAnimationClip from "./IAnimationClip";
 
 
 class TextureAnimationClip implements IAnimationClip{
     private animationState: AnimationState;
-    private renderer: WebglRenderer;
+    private renderer: WebGLRenderer;
     private sequenceIndexes : number[];
     private frameRate: number;
 
@@ -23,7 +23,7 @@ class TextureAnimationClip implements IAnimationClip{
         this.isLoop = isLoop;
     }
     
-    public setRenderer(renderer : WebglRenderer) {
+    public setRenderer(renderer : WebGLRenderer) {
         this.renderer = renderer;
     }
 

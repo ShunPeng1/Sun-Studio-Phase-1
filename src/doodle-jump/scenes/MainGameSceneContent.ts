@@ -1,7 +1,6 @@
 import { vec3 } from "gl-matrix";
 import GameObject from "../../engine/gameobjects/GameObject";
 import ISceneContent from "../../engine/scenes/ISceneContent";
-import WebGLManager from "../../engine/webgl/WebGLManager";
 import ModelReaderFactory from "../../engine/webgl/factories/ModelReaderFactory";
 import ShapeFactory from "../../engine/webgl/factories/ShapeFactory";
 import ShapeType from "../../engine/webgl/shapes/ShapeType";
@@ -28,10 +27,10 @@ import XBoundTeleportation from "../movement/XBoundTeleportation";
 import PlatformDestroyer from "../platforms/PlatformDestroyer";
 import Shape from "../../engine/webgl/shapes/Shape";
 import ScoreTracking from "../player/ScoreTracking";
+import TextRenderer from "../../engine/components/renderers/TextRenderer";
 
 class MainGameSceneContent implements ISceneContent{
-    private webGLManager: WebGLManager;
-    private canvas: HTMLCanvasElement;
+
 
     private imageLoader: ImageLoader;
     private quad: Shape;
@@ -54,11 +53,7 @@ class MainGameSceneContent implements ISceneContent{
     private PLAYER_TILE_URL = `${this.PLAYER_URL}/tile000.png`;
 
 
-
-    constructor(webGLManager: WebGLManager, canvas: HTMLCanvasElement){
-        this.webGLManager = webGLManager;
-        this.canvas = canvas;
-    
+    constructor(){
     }
 
     download(): Promise<any>[]{
@@ -68,7 +63,7 @@ class MainGameSceneContent implements ISceneContent{
 
         // Create factory
         let objectFactory = new ModelReaderFactory();
-        let shapeFactory = new ShapeFactory(this.webGLManager);
+        let shapeFactory = new ShapeFactory();
         
         // Create quad
         let quad = shapeFactory.createShape(ShapeType.Quad);
@@ -107,7 +102,7 @@ class MainGameSceneContent implements ISceneContent{
         greenPlatform.addComponent(new BounceUpPlatform(4000));
         
         let greenPlatfromImageElements = this.imageLoader.getImageElements(this.PLATFORM0_URL);
-        greenPlatform.addComponent(new PrimativeRenderer(this.webGLManager, this.quad, greenPlatfromImageElements, this.vectorArtTextureInfo));
+        greenPlatform.addComponent(new PrimativeRenderer(this.quad, greenPlatfromImageElements, this.vectorArtTextureInfo));
         
             
         // Moving Platform
@@ -131,7 +126,7 @@ class MainGameSceneContent implements ISceneContent{
         bluePlatform.addComponent(new WayPointMovement(0.4, false));
 
         let bluePlatfromImageElements = this.imageLoader.getImageElements(this.PLATFORM1_URL);
-        bluePlatform.addComponent(new PrimativeRenderer(this.webGLManager, this.quad, bluePlatfromImageElements, this.vectorArtTextureInfo));
+        bluePlatform.addComponent(new PrimativeRenderer(this.quad, bluePlatfromImageElements, this.vectorArtTextureInfo));
         
 
         // Brown Platform
@@ -150,7 +145,7 @@ class MainGameSceneContent implements ISceneContent{
             ]
         );
         
-        brownPlatform.addComponent(new PrimativeRenderer(this.webGLManager, this.quad, brownPlatfromImageElements, this.vectorArtTextureInfo));
+        brownPlatform.addComponent(new PrimativeRenderer(this.quad, brownPlatfromImageElements, this.vectorArtTextureInfo));
         brownPlatform.addComponent(new WoodenPlatformAnimator())
     
         
@@ -165,7 +160,7 @@ class MainGameSceneContent implements ISceneContent{
         whitePlatform.addComponent(new CloudPlatform());
  
         let whitePlatformImageElements = this.imageLoader.getImageElements(this.PLATFORM3_URL);
-        whitePlatform.addComponent(new PrimativeRenderer(this.webGLManager, this.quad, whitePlatformImageElements, this.vectorArtTextureInfo)); 
+        whitePlatform.addComponent(new PrimativeRenderer(this.quad, whitePlatformImageElements, this.vectorArtTextureInfo)); 
         
 
 
@@ -192,7 +187,7 @@ class MainGameSceneContent implements ISceneContent{
         playerGameObject.addComponent(new Player(playerHead.transform, playerBack.transform));
         
         let playerImageElements = this.imageLoader.getImageElements(this.PLAYER_TILE_URL);
-        playerHead.addComponent(new PrimativeRenderer(this.webGLManager, this.quad, playerImageElements, this.vectorArtTextureInfo));
+        playerHead.addComponent(new PrimativeRenderer(this.quad, playerImageElements, this.vectorArtTextureInfo));
         
         
         // Add Camera
@@ -204,13 +199,10 @@ class MainGameSceneContent implements ISceneContent{
         vec3.set(camera.transform.scale, 1, 1, 1);
         
         
-        camera.addComponent(new CameraRenderer(this.webGLManager, this.canvas));
+        camera.addComponent(new CameraRenderer());
         camera.addComponent(new XBoundTeleportation(playerGameObject, 0, 25));
         camera.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         
-        
-    
-
 
         // Add Background
         let paperBackground = new GameObject('Background 1');
@@ -221,8 +213,16 @@ class MainGameSceneContent implements ISceneContent{
         vec3.set(paperBackground.transform.scale, 30, 80, 1);
         
         let paperBackgroundImageElements = this.imageLoader.getImageElements(this.BACKGROUND_URL);
-        paperBackground.addComponent(new PrimativeRenderer(this.webGLManager, this.quad, paperBackgroundImageElements, this.vectorArtTextureInfo));
+        paperBackground.addComponent(new PrimativeRenderer( this.quad, paperBackgroundImageElements, this.vectorArtTextureInfo));
 
+
+        // Add UI
+        let scoreText = new GameObject('Score Text');
+        sceneGameObjects.push(scoreText);
+
+        vec3.set(scoreText.transform.position, 0, 0, 10);
+        scoreText.addComponent(new TextRenderer('Score: 0', 10, 10, 'bold 50px Arial', 'white'));
+        
         
 
         // Add Spawner
@@ -244,7 +244,7 @@ class MainGameSceneContent implements ISceneContent{
         sceneGameObjects.push(destroyer);
 
         let destroyerFollwerMovement = new MaxFollowerMovement(playerGameObject, false, true, false);
-        destroyer.addComponent(new BoxCollider(true, 0,-140, 1000, 200));
+        destroyer.addComponent(new BoxCollider(true, 0,-135, 1000, 200));
         destroyer.addComponent(new PlatformDestroyer());
         destroyer.addComponent(destroyerFollwerMovement);
         

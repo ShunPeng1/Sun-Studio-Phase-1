@@ -1,22 +1,21 @@
-import WebGLManager from '../../webgl/WebGLManager';
-import WebglRenderer from './Renderer';
+import CanvasManager from '../../canvas/CanvasManager';
+import WebGLRenderer from './WebGLRenderer';
 import {glMatrix, mat4, quat, vec3} from 'gl-matrix';
 
-class CameraRenderer extends WebglRenderer {
+class CameraRenderer extends WebGLRenderer {
     private worldMatrix: mat4;
     private viewMatrix: mat4;
     private projMatrix: mat4;
 
-    private canvas: HTMLCanvasElement;
+    private htmlCanvas: HTMLCanvasElement;
 
-
-    constructor(webgl: WebGLManager, canvas: HTMLCanvasElement) {
-        super(webgl);
+    constructor() {
+        super();
         this.worldMatrix = mat4.create();
         this.viewMatrix = mat4.create();
         this.projMatrix = mat4.create();
 
-        this.canvas = canvas;
+        this.htmlCanvas = CanvasManager.getInstance().getWebglCanvas();
 
     }
 
@@ -70,7 +69,7 @@ class CameraRenderer extends WebglRenderer {
 
         mat4.identity(this.worldMatrix);
         mat4.lookAt(this.viewMatrix, this.transform.position, target, [0, 1, 0]);
-        mat4.perspective(this.projMatrix, glMatrix.toRadian(60), this.canvas.width / this.canvas.height, 0.1, 1000.0);
+        mat4.perspective(this.projMatrix, glMatrix.toRadian(60), this.htmlCanvas.width / this.htmlCanvas.height, 0.1, 1000.0);
     }
 }
 

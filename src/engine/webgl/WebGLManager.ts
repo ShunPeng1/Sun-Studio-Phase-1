@@ -9,31 +9,27 @@ import Polyhedron from './shapes/Polyhedron';
 
 import * as GLM from 'gl-matrix'
 
+import Canvas from '../canvas/Canvas';
+import CanvasManager from '../canvas/CanvasManager';
+
 
 class WebGLManager {
+    private static instance: WebGLManager;
     
     private gl: WebGLRenderingContext;
-    private canvas: HTMLCanvasElement;
+    private webglCanvas: HTMLCanvasElement;
+
     private program: WebGLProgram;
 
     private worldMatrix: GLM.mat4;
     private viewMatrix: GLM.mat4;
     private projMatrix: GLM.mat4;
 
-    constructor(canvas: HTMLCanvasElement) {
-        this.canvas = canvas;
-        this.gl = canvas.getContext('webgl') as WebGLRenderingContext;
+    constructor() {
+        this.webglCanvas = CanvasManager.getInstance().getWebglCanvas();
+        this.gl = CanvasManager.getInstance().getWebglCanvasRenderingContext();
 
-        if (!this.gl) {
-            console.log('WebGL not supported, falling back on experimental-webgl');
-            this.gl = canvas.getContext('experimental-webgl') as WebGLRenderingContext;
-        }
-
-        if (!this.gl) {
-            console.error('WebGL not supported');
-            return;
-        }
-
+       
         // Get WebGL context
         let gl = this.gl;
 
@@ -74,6 +70,13 @@ class WebGLManager {
         gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
         
         
+    }
+
+    public static getInstance(): WebGLManager {
+        if (!WebGLManager.instance) {
+            WebGLManager.instance = new WebGLManager();
+        }
+        return WebGLManager.instance;
     }
 
 
