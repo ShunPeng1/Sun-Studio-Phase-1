@@ -37,7 +37,11 @@ class LeftRightControlMovement extends Component {
         }
 
         this.gameObject.transform.position[0] += this.headingXPosition * deltaTime * this.speed;
-        this.gameObject.transform.rotation[1] = (this.headingXPosition >= 1 ? 1 : 0)  * Math.PI; 
+    
+        // Only rotate the player if it's moving
+        if (this.headingXPosition !== 0) {
+            this.gameObject.transform.rotation[1] = (this.headingXPosition == 1 ? 1 : 0) * Math.PI; 
+        }
     }
 
     public moveLeft() {
