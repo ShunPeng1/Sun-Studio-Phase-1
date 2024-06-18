@@ -1,4 +1,4 @@
-import WoodenPlatform from "../../../scripts/platforms/WoodenPlatform";
+import WoodenPlatform from "../../../doodle-jump/platforms/WoodenPlatform";
 import IStateTransition from "../../state_machines/IStateTransition";
 import StateMachine from "../../state_machines/StateMachine";
 import Component from "../Component";
