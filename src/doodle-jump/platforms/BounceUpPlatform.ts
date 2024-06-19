@@ -22,7 +22,12 @@ class BounceUpPlatform extends Platform {
     }
 
     private bounce(other : Collider) {
-        let playerRigidbody = other.gameObject.getComponent<Rigidbody>(Rigidbody);
+        let playerRigidbody = other.gameObject.getComponent<Rigidbody>(Rigidbody)!;
+
+        playerRigidbody.velocity[1] = 0;
+        playerRigidbody.acceleration[1] = 0; 
+
+
         playerRigidbody?.addForce?.([0, this.force,0]);
     
     }
