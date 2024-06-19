@@ -8,7 +8,7 @@ import InitialForce from "../movement/InitialForce";
 import Collider from "../../engine/components/physics/Collider";
 import BoxCollider from "../../engine/components/physics/BoxCollider";
 import BounceUpPlatform from "../platforms/BounceUpPlatform";
-import JumpPlatformIgnorance from "../movement/JumpPlatformIgnorance";
+import JumpPlatformIgnorance from "../player/JumpPlatformIgnorance";
 
 class MenuSceneContent extends DoodleJumpSceneContent{
 

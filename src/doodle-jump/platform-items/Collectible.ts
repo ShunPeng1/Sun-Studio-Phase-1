@@ -6,7 +6,7 @@ import Platform from "../platforms/Platform";
 import Player from "../player/Player";
 import PlatformItem from "./PlatformItem";
 
-abstract class Collectible extends Component implements PlatformItem {
+abstract class Collectible extends PlatformItem {
     platform: Platform;
     
     protected collider : Collider;
@@ -40,12 +40,10 @@ abstract class Collectible extends Component implements PlatformItem {
         let player = other.gameObject.getComponent<Player>(Player);
         if (player) {
             this.onCollect(player);
+            this.gameObject.destroy();
         }
     }
 
-    public clone(): Component {
-        throw new Error("Method not implemented.");
-    }
 
 }
 

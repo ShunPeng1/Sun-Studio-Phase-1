@@ -5,6 +5,7 @@ class PhysicManager {
     private static instance: PhysicManager;
     private colliders: Collider[] = [];
     private collisionStates: Map<Collider[], boolean> = new Map();
+    private ignoreCollisionSet: Set<string> = new Set();
 
     private constructor() {}
 
@@ -23,18 +24,26 @@ class PhysicManager {
         const index = this.colliders.indexOf(collider);
         if (index > -1) {
             this.colliders.splice(index, 1);
-            this.removeCollisionStates(collider);
+            this.removeCollisionMapAndSet(collider);
         }
         else{
             console.error("Collider not found");
         }
     }
 
-    private removeCollisionStates(collider: Collider): void {
+    private removeCollisionMapAndSet(collider: Collider): void {
         for (let key of this.collisionStates.keys()) {
             if (key.includes(collider)) {
                 this.collisionStates.delete(key);
             }
+        }
+
+        for (let key of this.ignoreCollisionSet) {
+            let keyArray = key.split('-');
+            if (keyArray.includes(collider.id.toString())) {
+                this.ignoreCollisionSet.delete(key);
+            }
+            
         }
     }
 
@@ -46,7 +55,12 @@ class PhysicManager {
                 let collider1 = this.colliders[i];
                 let collider2 = this.colliders[j];
                 let key = [collider1, collider2].sort();
+                let keyString = [collider1.id, collider2.id].sort().join('-');
 
+                // Skip the collision check if the pair is in the ignore map
+                if (this.ignoreCollisionSet.has(keyString)) {
+                    continue;
+                }
 
                 let isColliding = collider1.collidesWith(collider2);
                 newCollisionStates.set(key, isColliding);
@@ -87,6 +101,16 @@ class PhysicManager {
 
     public queryColliders(filterFunction : (collider : Collider) => boolean) : Collider[] {
         return this.colliders.filter(filterFunction);
+    }
+
+    public ignoreCollisions(collider1: Collider, collider2: Collider): void {
+        let key = [collider1.id, collider2.id].sort().join('-');
+        this.ignoreCollisionSet.add(key);
+    }
+    
+    public unignoreCollisions(collider1: Collider, collider2: Collider): void {
+        let key = [collider1.id, collider2.id].sort().join('-');
+        this.ignoreCollisionSet.delete(key);
     }
 
 }

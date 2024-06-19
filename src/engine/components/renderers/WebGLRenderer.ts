@@ -7,6 +7,8 @@ import Mesh from "../../webgl/shapes/Mesh";
 
 
 class WebGLRenderer extends Component {
+    protected isEnable : boolean = true;
+
     protected webgl : WebGLManager;
 
     protected shape : Shape;
@@ -90,6 +92,10 @@ class WebGLRenderer extends Component {
             console.error("Invalid texture index");
         }
         this.renderingTextureIndex = index;
+    }
+
+    public setEnable(isEnable : boolean) {
+        this.isEnable = isEnable;
     }
 }
 

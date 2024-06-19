@@ -187,7 +187,7 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
         let playerBack = new GameObject("Player Back");
         playerBack.transform.setParent(playerGameObject.transform);
 
-        playerGameObject.addComponent(new Player(playerHead.transform, playerBack.transform));
+        playerGameObject.addComponent(new Player(playerHead, playerBack));
         
         let playerImageElements = this.imageLoader.getImageElements(this.PLAYER_TILE_URL);
         playerHead.addComponent(new MeshRenderer(this.quad, playerImageElements, this.vectorArtTextureInfo));

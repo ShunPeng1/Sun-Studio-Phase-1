@@ -36,6 +36,11 @@ class MeshRenderer extends WebGLRenderer {
         if (this.shape === undefined) {
             return;
         }
+
+        if (this.isEnable === false) {
+            return;
+        }
+
         let gl = this.webgl.getGL();
 
         // Get the location of the transformation matrix uniform

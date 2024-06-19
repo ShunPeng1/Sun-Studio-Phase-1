@@ -15,7 +15,7 @@ import CloudPlatform from "../platforms/CloudPlatform";
 import Rigidbody from "../../engine/components/physics/Rigidbody";
 import LeftRightControlMovement from "../movement/LeftRightControlMovement";
 import InitialForce from "../movement/InitialForce";
-import JumpPlatformIgnorance from "../movement/JumpPlatformIgnorance";
+import JumpPlatformIgnorance from "../player/JumpPlatformIgnorance";
 import Player from "../player/Player";
 import PlatformSpawner from "../platforms/PlatformSpawner";
 import PlatformSpawnInfo from "../platforms/PlatformSpawnInfo";
@@ -32,6 +32,7 @@ import DoodleJumpSceneContent from "./DoodleJumpSceneContent";
 import PlayerGameOverContact from "../player/PlayerGameOverContact";
 import PlatformItemSpawnInfo from "../platform-items/PlatformItemSpawnInfo";
 import Spring from "../platform-items/Spring";
+import JetpackCollectible from "../platform-items/JetpackCollectible";
 
 class MainGameSceneContent extends DoodleJumpSceneContent{
     
@@ -173,6 +174,15 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         let springImageElements = this.imageLoader.getImageElements([this.SPRING0_URL, this.SPRING1_URL]);
         spring.addComponent(new MeshRenderer(this.quad, springImageElements, this.vectorArtTextureInfo));
 
+        // Add Jetpack
+        let jetpack = new GameObject("Jetpack");
+        vec3.set(jetpack.transform.scale, 1.5, 2, 1);
+        jetpack.addComponent(new BoxCollider(true, 0, 1, 2, 1));
+        jetpack.addComponent(new JetpackCollectible(5,5,5000));
+
+        let jetpackImageElements = this.imageLoader.getImageElements(this.PLATFORM3_URL);
+        jetpack.addComponent(new MeshRenderer(this.quad, jetpackImageElements, this.vectorArtTextureInfo));
+
 
         // Add Spawner
         let spawner = new GameObject('Spawner');
@@ -184,7 +194,8 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
             new PlatformSpawnInfo(bluePlatform, 3, false, true),
             new PlatformSpawnInfo(whitePlatform, 1, false, false)
         ], 60, [-20,20], [4,14], [
-            new PlatformItemSpawnInfo(spring, 100,[-0.2,0.2], 0.8)
+            //new PlatformItemSpawnInfo(spring, 100,[-0.2,0.2], 0.8),
+            new PlatformItemSpawnInfo(jetpack, 100,[-0.2,0.2], 0.8)
         ], 0));
         spawner.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         spawner.transform.position[1] = -30;
