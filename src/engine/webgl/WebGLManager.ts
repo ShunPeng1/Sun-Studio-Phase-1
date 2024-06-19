@@ -4,8 +4,6 @@ import FragmentShader from './shaders/FragmentShader';
 
 
 import Shape from './shapes/Shape';
-import Box from './shapes/Box';
-import Polyhedron from './shapes/Polyhedron';
 
 import * as GLM from 'gl-matrix'
 

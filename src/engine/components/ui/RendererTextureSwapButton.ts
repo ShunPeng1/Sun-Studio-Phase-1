@@ -17,6 +17,9 @@ class RendererTextureSwapButton extends Button {
     public awake(): void {
         this.renderer = this.gameObject.getComponent<WebGLRenderer>(WebGLRenderer)!;
 
+    }
+
+    public start(): void {
         this.swapTexture(this.mouseUpTextureIndex);
     }
 

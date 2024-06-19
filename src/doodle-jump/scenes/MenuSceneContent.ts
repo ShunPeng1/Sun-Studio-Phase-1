@@ -1,7 +1,7 @@
 import { vec3 } from "gl-matrix";
 import GameObject from "../../engine/gameobjects/GameObject";
 import DoodleJumpSceneContent from "./DoodleJumpSceneContent";
-import PrimativeRenderer from "../../engine/components/renderers/PremadeRenderer";
+import MeshRenderer from "../../engine/components/renderers/PremadeRenderer";
 import RendererTextureSwapButton from "../../engine/components/ui/RendererTextureSwapButton";
 import SceneManager from "../../engine/scenes/SceneManager";
 import InitialForce from "../movement/InitialForce";
@@ -45,7 +45,7 @@ class MenuSceneContent extends DoodleJumpSceneContent{
         vec3.set(background.transform.position, 0, 70, -65);
         vec3.set(background.transform.scale, 55, 140, 1);
         let backgroundElements = this.imageLoader.getImageElements(this.BACKGROUND_MENU_URL);
-        background.addComponent(new PrimativeRenderer(this.quad, backgroundElements, this.vectorArtTextureInfo));
+        background.addComponent(new MeshRenderer(this.quad, backgroundElements, this.vectorArtTextureInfo));
         sceneGameObjects.push(background);
 
         // Add Player
@@ -65,7 +65,7 @@ class MenuSceneContent extends DoodleJumpSceneContent{
         greenPlatform.addComponent(new BoxCollider(false, 0, 1, 2, 1));
         greenPlatform.addComponent(new BounceUpPlatform(4000));
         let platformImageElements = this.imageLoader.getImageElements(this.PLATFORM0_URL);
-        greenPlatform.addComponent(new PrimativeRenderer(this.quad, platformImageElements, this.vectorArtTextureInfo));
+        greenPlatform.addComponent(new MeshRenderer(this.quad, platformImageElements, this.vectorArtTextureInfo));
         sceneGameObjects.push(greenPlatform);
 
 
@@ -75,7 +75,7 @@ class MenuSceneContent extends DoodleJumpSceneContent{
         vec3.set(playButton.transform.position, -7, 15, 0);
         vec3.set(playButton.transform.scale, 7, 5, 1);
         let playButtonImageElements = this.imageLoader.getImageElements([this.PLAY1_URL, this.PLAY2_URL]);
-        let playButtonRenderer = new PrimativeRenderer(this.quad, playButtonImageElements, this.vectorArtTextureInfo);
+        let playButtonRenderer = new MeshRenderer(this.quad, playButtonImageElements, this.vectorArtTextureInfo);
         playButton.addComponent(playButtonRenderer);
         playButton.addComponent(new RendererTextureSwapButton(0,1, 100,200, 220,90, () =>{
             SceneManager.getInstance().setNextSceneByName('main');

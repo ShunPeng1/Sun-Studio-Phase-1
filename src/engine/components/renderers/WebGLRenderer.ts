@@ -3,12 +3,14 @@ import WebGLManager from "../../webgl/WebGLManager";
 import Shape from "../../webgl/shapes/Shape";
 import TextureInfo from "../../webgl/textures/TextureInfo";
 import Component from "../Component";
+import Mesh from "../../webgl/shapes/Mesh";
 
 
 class WebGLRenderer extends Component {
     protected webgl : WebGLManager;
+
     protected shape : Shape;
-    
+    protected mesh : Mesh;
     
     protected imageElements : ImageElements[];
     protected webglTextures : WebGLTexture[];
@@ -17,11 +19,16 @@ class WebGLRenderer extends Component {
     protected renderingTextureIndex : number = 0;
     constructor(){
         super();
+    }
+
+    public awake(): void {
+        
         this.webgl = WebGLManager.getInstance();
     }
 
-    protected initializeShape(shape : Shape) {
-        this.shape = shape;
+
+    protected initializeShape(mesh : Mesh) {
+        this.shape = new Shape(this.webgl.getGL(), this.webgl.getProgram(), mesh);
     }
     
     protected initializeTexture(imageElements : ImageElements[], textureInfo : TextureInfo) {

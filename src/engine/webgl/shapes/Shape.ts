@@ -3,7 +3,7 @@ import TextureInfo from "../textures/TextureInfo";
 import Mesh from "./Mesh";
 
 
-abstract class Shape{
+class Shape{
     protected gl: WebGLRenderingContext;
     protected program: WebGLProgram;
 

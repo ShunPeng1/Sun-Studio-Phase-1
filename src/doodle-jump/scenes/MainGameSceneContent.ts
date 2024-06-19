@@ -1,13 +1,12 @@
 import { vec3 } from "gl-matrix";
 import GameObject from "../../engine/gameobjects/GameObject";
 import ModelReaderFactory from "../../engine/webgl/factories/ModelReaderFactory";
-import ShapeFactory from "../../engine/webgl/factories/ShapeFactory";
-import ShapeType from "../../engine/webgl/shapes/ShapeType";
+import MeshType from "../../engine/webgl/shapes/MeshType";
 import ImageLoader from "../../engine/webgl/textures/ImageLoader";
 import TextureInfo from "../../engine/webgl/textures/TextureInfo";
 import BoxCollider from "../../engine/components/physics/BoxCollider";
 import BounceUpPlatform from "../platforms/BounceUpPlatform";
-import PrimativeRenderer from "../../engine/components/renderers/PremadeRenderer";
+import MeshRenderer from "../../engine/components/renderers/PremadeRenderer";
 import WoodenPlatform from "../platforms/WoodenPlatform";
 import WayPointMovement from "../movement/WayPointMovement";
 import PlatformWayPoint from "../platforms/PlatformWayPoint";
@@ -95,7 +94,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         greenPlatform.addComponent(new BounceUpPlatform(4000));
         
         let greenPlatfromImageElements = this.imageLoader.getImageElements(this.PLATFORM0_URL);
-        greenPlatform.addComponent(new PrimativeRenderer(this.quad, greenPlatfromImageElements, this.vectorArtTextureInfo));
+        greenPlatform.addComponent(new MeshRenderer(this.quad, greenPlatfromImageElements, this.vectorArtTextureInfo));
         
             
         // Moving Platform
@@ -119,7 +118,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         bluePlatform.addComponent(new WayPointMovement(0.4, false));
 
         let bluePlatfromImageElements = this.imageLoader.getImageElements(this.PLATFORM1_URL);
-        bluePlatform.addComponent(new PrimativeRenderer(this.quad, bluePlatfromImageElements, this.vectorArtTextureInfo));
+        bluePlatform.addComponent(new MeshRenderer(this.quad, bluePlatfromImageElements, this.vectorArtTextureInfo));
         
 
         // Brown Platform
@@ -138,7 +137,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
             ]
         );
         
-        brownPlatform.addComponent(new PrimativeRenderer(this.quad, brownPlatfromImageElements, this.vectorArtTextureInfo));
+        brownPlatform.addComponent(new MeshRenderer(this.quad, brownPlatfromImageElements, this.vectorArtTextureInfo));
         brownPlatform.addComponent(new WoodenPlatformAnimator())
     
         
@@ -153,7 +152,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         whitePlatform.addComponent(new CloudPlatform());
  
         let whitePlatformImageElements = this.imageLoader.getImageElements(this.PLATFORM3_URL);
-        whitePlatform.addComponent(new PrimativeRenderer(this.quad, whitePlatformImageElements, this.vectorArtTextureInfo)); 
+        whitePlatform.addComponent(new MeshRenderer(this.quad, whitePlatformImageElements, this.vectorArtTextureInfo)); 
         
 
 

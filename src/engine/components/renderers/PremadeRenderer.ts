@@ -1,4 +1,5 @@
 
+import Mesh from "../../webgl/shapes/Mesh";
 import Shape from "../../webgl/shapes/Shape";
 import ImageElements from "../../webgl/textures/ImageElements";
 import TextureInfo from "../../webgl/textures/TextureInfo";
@@ -6,23 +7,29 @@ import Component from "../Component";
 import WebGLRenderer from "./WebGLRenderer";
 
 
-class PrimativeRenderer extends WebGLRenderer {
+class MeshRenderer extends WebGLRenderer {
 
 
 
-    public constructor(shape: Shape, imageElements : ImageElements[], textureInfo : TextureInfo) {
+    public constructor(mesh: Mesh, imageElements : ImageElements[], textureInfo : TextureInfo) {
         super();
     
-        this.initializeShape(shape);
+        this.mesh = mesh;
+        this.imageElements = imageElements;
+        this.textureInfo = textureInfo;
 
-        this.initializeTexture(imageElements, textureInfo);
+    }
 
+    public start(): void {
+        
+        this.initializeShape(this.mesh);
 
+        this.initializeTexture(this.imageElements, this.textureInfo);
     }
 
     public clone(): Component {
         // Add your implementation here
-        return new PrimativeRenderer(this.shape, this.imageElements, this.textureInfo);
+        return new MeshRenderer(this.mesh, this.imageElements, this.textureInfo);
     }
 
     public render(time: number, deltaTime : number) {
@@ -63,4 +70,4 @@ class PrimativeRenderer extends WebGLRenderer {
   
 }
 
-export default PrimativeRenderer;
+export default MeshRenderer;

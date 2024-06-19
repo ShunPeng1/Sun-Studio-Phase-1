@@ -14,12 +14,12 @@ class CameraRenderer extends WebGLRenderer {
         this.worldMatrix = mat4.create();
         this.viewMatrix = mat4.create();
         this.projMatrix = mat4.create();
-
-        this.htmlCanvas = CanvasManager.getInstance().getWebglCanvas();
-
     }
 
     public awake() {
+        super.awake();
+        
+        this.htmlCanvas = CanvasManager.getInstance().getWebglCanvas();
         let gl = this.webgl.getGL();
         let program = this.webgl.getProgram();
 

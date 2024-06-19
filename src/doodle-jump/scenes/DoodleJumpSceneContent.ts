@@ -5,10 +5,9 @@ import ISceneContent from "../../engine/scenes/ISceneContent";
 import Shape from "../../engine/webgl/shapes/Shape";
 import ImageLoader from "../../engine/webgl/textures/ImageLoader";
 import TextureInfo from "../../engine/webgl/textures/TextureInfo";
-import PrimativeRenderer from "../../engine/components/renderers/PremadeRenderer";
+import MeshRenderer from "../../engine/components/renderers/PremadeRenderer";
 import ModelReaderFactory from "../../engine/webgl/factories/ModelReaderFactory";
-import ShapeFactory from "../../engine/webgl/factories/ShapeFactory";
-import ShapeType from "../../engine/webgl/shapes/ShapeType";
+import MeshType from "../../engine/webgl/shapes/MeshType";
 import TextRenderer from "../../engine/components/renderers/TextRenderer";
 import TextWriter from "../scores/TextWriter";
 import ScoreManager from "../ScoreManager";
@@ -18,11 +17,13 @@ import LeftRightControlMovement from "../movement/LeftRightControlMovement";
 import InitialForce from "../movement/InitialForce";
 import JumpPlatformIgnorance from "../movement/JumpPlatformIgnorance";
 import Player from "../player/Player";
+import Mesh from "../../engine/webgl/shapes/Mesh";
+import MeshFactory from "../../engine/webgl/factories/MeshFactory";
 
 abstract class DoodleJumpSceneContent implements ISceneContent{
 
     protected imageLoader: ImageLoader;
-    protected quad: Shape;
+    protected quad: Mesh;
     protected vectorArtTextureInfo: TextureInfo;
 
 
@@ -60,10 +61,10 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
 
         // Create factory
         let objectFactory = new ModelReaderFactory();
-        let shapeFactory = new ShapeFactory();
+        let shapeFactory = new MeshFactory();
         
         // Create quad
-        let quad = shapeFactory.createShape(ShapeType.Quad);
+        let quad = shapeFactory.createMesh(MeshType.Quad);
         this.quad = quad;
         
         
@@ -118,7 +119,7 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
         vec3.set(paperBackground.transform.scale, 30, 80, 1);
         
         let paperBackgroundImageElements = this.imageLoader.getImageElements(this.BACKGROUND_URL);
-        paperBackground.addComponent(new PrimativeRenderer( this.quad, paperBackgroundImageElements, this.vectorArtTextureInfo));
+        paperBackground.addComponent(new MeshRenderer( this.quad, paperBackgroundImageElements, this.vectorArtTextureInfo));
 
         return paperBackground;
     }
@@ -130,7 +131,7 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
         vec3.set(scoreText.transform.position, 0, 29, -50);
         vec3.set(scoreText.transform.scale, 30, 5, 1);
         let topImageElements = this.imageLoader.getImageElements(this.TOP_URL);
-        scoreText.addComponent(new PrimativeRenderer(this.quad, topImageElements, this.vectorArtTextureInfo));
+        scoreText.addComponent(new MeshRenderer(this.quad, topImageElements, this.vectorArtTextureInfo));
         
         let textRenderer = new TextRenderer('Score: 0', 50, 40, 'black', '30px Arial');
         scoreText.addComponent(textRenderer);
@@ -186,7 +187,7 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
         playerGameObject.addComponent(new Player(playerHead.transform, playerBack.transform));
         
         let playerImageElements = this.imageLoader.getImageElements(this.PLAYER_TILE_URL);
-        playerHead.addComponent(new PrimativeRenderer(this.quad, playerImageElements, this.vectorArtTextureInfo));
+        playerHead.addComponent(new MeshRenderer(this.quad, playerImageElements, this.vectorArtTextureInfo));
         
         return playerGameObject;
     }

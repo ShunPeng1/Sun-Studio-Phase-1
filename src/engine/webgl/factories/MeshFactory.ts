@@ -1,8 +1,28 @@
-import Mesh from "./Mesh";
-import Shape from "./Shape";
+import Mesh from "../shapes/Mesh";
+import MeshType from "../shapes/MeshType";
 
-class Box extends Shape {
-    constructor(gl: WebGLRenderingContext, program: WebGLProgram, color: number[] = [], normal: number[] = [], texCoords : number[] = []) {
+class MeshFactory {
+
+    public createMesh(shapeType: MeshType, colors : number[] = [], textureCoordinates : number[] = [], normals : number [] = []): Mesh {
+        // Check if the shape is in the cache
+        
+        let mesh: Mesh;
+        switch(shapeType){
+            case MeshType.Box:
+                mesh = this.createBox(colors, textureCoordinates, normals);
+                break;
+            case MeshType.Quad:
+                mesh = this.createQuad(colors, textureCoordinates, normals);
+                break;
+            default:
+                throw new Error('Unsupported shape type');
+        }
+
+        return mesh;
+    }
+
+
+    public createBox(colors: number[], textureCoordinates: number[], normals: number []): Mesh {
         
         var boxVertices = 
         [ // X, Y, Z 
@@ -70,10 +90,10 @@ class Box extends Shape {
             22, 20, 23
         ];
 
-        if (color.length !== 24) {
-            console.log("Color array must have 24 elements, used default color instead");
+        if (colors.length !== 24) {
+            //console.log("Color array must have 24 elements, used default color instead");
 
-            color = [
+            colors = [
                 // Top
                 1, 0, 0, 1,
                 1, 0, 0, 1,
@@ -112,10 +132,10 @@ class Box extends Shape {
             ];
         }
 
-        if (normal.length !== 24) {
-            console.log("Normal array must have 24 elements, used default normal instead");
+        if (normals.length !== 24) {
+            //console.log("Normal array must have 24 elements, used default normal instead");
 
-            normal = [
+            normals = [
                 // Top
                 0, 1, 0,
                 0, 1, 0,
@@ -154,10 +174,10 @@ class Box extends Shape {
             ];
         }
 
-        if (texCoords.length !== 16) {
-            console.log("Texture coordinates array must have 16 elements, used default texture coordinates instead");
+        if (textureCoordinates.length !== 16) {
+            //console.log("Texture coordinates array must have 16 elements, used default texture coordinates instead");
 
-            texCoords = [
+            textureCoordinates = [
                 // Top
                 0, 0,
                 0, 1,
@@ -196,12 +216,54 @@ class Box extends Shape {
             ];
         }
         
-        let mesh = new Mesh(boxVertices, boxIndices, color, normal, texCoords);
-        super(gl, program, mesh);
+        return new Mesh(boxVertices, boxIndices, colors, normals, textureCoordinates);
     }
+    public createQuad(colors: number[], textureCoordinates: number[], normals: number []): Mesh {
+        if (colors.length == 0) {
+            colors = [
+                1.0, 1.0, 1.0, 1.0, 
+                1.0, 1.0, 1.0, 1.0,
+                1.0, 1.0, 1.0, 1.0, 
+                1.0, 1.0, 1.0, 1.0
+                ];
+        }
 
+        if (normals.length == 0) {
+            normals = [
+                0.0, 0.0, 1.0,
+                0.0, 0.0, 1.0,
+                0.0, 0.0, 1.0,
+                0.0, 0.0, 1.0
+            ];
+        }
+
+        if (textureCoordinates.length == 0) {
+            textureCoordinates = [
+                0.0, 1.0, 
+                0.0, 0.0, 
+                1.0, 0.0, 
+                1.0, 1.0
+            ];
+
+        }
+
+        let positions = [
+            -1.0, 1.0, 0.0,
+            -1.0, -1.0, 0.0,
+            1.0, -1.0, 0.0,
+            1.0, 1.0, 0.0
+        ];
+
+        let indices = [
+            0, 1, 2,
+            0, 2, 3
+        ];
+
+        return new Mesh(positions, indices, colors, normals, textureCoordinates);
+    }
     
+
 }
 
 
-export default Box;
+export default MeshFactory;

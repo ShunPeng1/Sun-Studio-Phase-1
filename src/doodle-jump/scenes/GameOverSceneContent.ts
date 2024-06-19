@@ -1,13 +1,10 @@
 import { vec3 } from "gl-matrix";
 import GameObject from "../../engine/gameobjects/GameObject";
-import ISceneContent from "../../engine/scenes/ISceneContent";
-import CameraRenderer from "../../engine/components/renderers/CameraRenderer";
 import DoodleJumpSceneContent from "./DoodleJumpSceneContent";
 import TextRenderer, { Align, Baseline, FontStyle } from "../../engine/components/renderers/TextRenderer";
 import TextWriter from "../scores/TextWriter";
 import ScoreManager from "../ScoreManager";
-import PrimativeRenderer from "../../engine/components/renderers/PremadeRenderer";
-import Button from "../../engine/components/ui/Button";
+import MeshRenderer from "../../engine/components/renderers/PremadeRenderer";
 
 import SceneManager from "../../engine/scenes/SceneManager";
 import RendererTextureSwapButton from "../../engine/components/ui/RendererTextureSwapButton";
@@ -66,7 +63,7 @@ class GameOverSceneContent extends DoodleJumpSceneContent{
         vec3.set(gameOverGameObject.transform.position, 0, 20, 0);
         vec3.set(gameOverGameObject.transform.scale, 15, 15, 1);
         let gameOverImageElements = this.imageLoader.getImageElements(this.GAME_OVER_URL);
-        gameOverGameObject.addComponent(new PrimativeRenderer(this.quad, gameOverImageElements, this.vectorArtTextureInfo));
+        gameOverGameObject.addComponent(new MeshRenderer(this.quad, gameOverImageElements, this.vectorArtTextureInfo));
         sceneGameObjects.push(gameOverGameObject);
 
 
@@ -75,7 +72,7 @@ class GameOverSceneContent extends DoodleJumpSceneContent{
         vec3.set(playAgainGameObject.transform.position, 2, -10, 0);
         vec3.set(playAgainGameObject.transform.scale, 7, 5, 1);
         let playAgainImageElements = this.imageLoader.getImageElements([this.PLAY_AGAIN_1_URL, this.PLAY_AGAIN_2_URL]);
-        playAgainGameObject.addComponent(new PrimativeRenderer(this.quad, playAgainImageElements, this.vectorArtTextureInfo));
+        playAgainGameObject.addComponent(new MeshRenderer(this.quad, playAgainImageElements, this.vectorArtTextureInfo));
         playAgainGameObject.addComponent(new RendererTextureSwapButton(0,1, 220,520, 220,70, ()=>{
             SceneManager.getInstance().setNextSceneByName('main');
         }))
@@ -87,7 +84,7 @@ class GameOverSceneContent extends DoodleJumpSceneContent{
         vec3.set(menuGameObject.transform.position, 12, -17, 0);
         vec3.set(menuGameObject.transform.scale, 7, 5, 1);
         let menuImageElements = this.imageLoader.getImageElements([this.MENU_1_URL, this.MENU_2_URL]);
-        menuGameObject.addComponent(new PrimativeRenderer(this.quad, menuImageElements, this.vectorArtTextureInfo));
+        menuGameObject.addComponent(new MeshRenderer(this.quad, menuImageElements, this.vectorArtTextureInfo));
         menuGameObject.addComponent(new RendererTextureSwapButton(0,1,340,610, 220,70, ()=>{
             SceneManager.getInstance().setNextSceneByName('menu');
         }))
@@ -124,7 +121,7 @@ class GameOverSceneContent extends DoodleJumpSceneContent{
         vec3.set(tapToChangeGameObject.transform.position, 14, -5, 0);
         vec3.set(tapToChangeGameObject.transform.scale, 9, 9, 1);
         let tapToChangeImageElements = this.imageLoader.getImageElements(this.TAP_TO_CHANGE_URL);
-        tapToChangeGameObject.addComponent(new PrimativeRenderer(this.quad, tapToChangeImageElements, this.vectorArtTextureInfo));
+        tapToChangeGameObject.addComponent(new MeshRenderer(this.quad, tapToChangeImageElements, this.vectorArtTextureInfo));
         sceneGameObjects.push(tapToChangeGameObject);
 
 
