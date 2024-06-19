@@ -24,7 +24,7 @@ class DoodleJumpSceneCollection implements IGameSceneCollection{
         return [this.mainScene, this.menuScene, this.gameOverScene];
     }
     setStartScene(): Scene {
-        return this.menuScene;
+        return this.mainScene;
     }
 }
 

@@ -30,8 +30,13 @@ import TextWriter from "../scores/TextWriter";
 import ScoreManager from "../ScoreManager";
 import DoodleJumpSceneContent from "./DoodleJumpSceneContent";
 import PlayerGameOverContact from "../player/PlayerGameOverContact";
+import PlatformItemSpawnInfo from "../platform-items/PlatformItemSpawnInfo";
+import Spring from "../platform-items/Spring";
 
 class MainGameSceneContent extends DoodleJumpSceneContent{
+    
+    private SPRING0_URL = `${this.ATLAS_URL}/bonus0.png`;
+    private SPRING1_URL = `${this.ATLAS_URL}/bonus01.png`;
 
     download(): Promise<any>[]{
         
@@ -52,6 +57,9 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         imageLoadPromises.push(imageLoader.loadImageFromUrls(this.PLAYER_TILE_URL));
         imageLoadPromises.push(imageLoader.loadImageFromUrls(this.BACKGROUND_URL));
         imageLoadPromises.push(imageLoader.loadImageFromUrls(this.TOP_URL));
+
+        imageLoadPromises.push(imageLoader.loadImageFromUrls(this.SPRING0_URL));
+        imageLoadPromises.push(imageLoader.loadImageFromUrls(this.SPRING1_URL));
         return imageLoadPromises;
     }
 
@@ -67,7 +75,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         vec3.set(playerGameObject.transform.position, 0, -20, 1);
         vec3.set(playerGameObject.transform.rotation, 0, 0, 0);
         vec3.set(playerGameObject.transform.scale, 4, 4, 1);
-        playerGameObject.addComponent(new LeftRightControlMovement(50));
+        playerGameObject.addComponent(new LeftRightControlMovement(45));
         playerGameObject.addComponent(new InitialForce([0, 5000, 0]))
         playerGameObject.addComponent(new JumpPlatformIgnorance());
         
@@ -154,19 +162,31 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         let whitePlatformImageElements = this.imageLoader.getImageElements(this.PLATFORM3_URL);
         whitePlatform.addComponent(new MeshRenderer(this.quad, whitePlatformImageElements, this.vectorArtTextureInfo)); 
         
+        // Add Spring
+        let spring = new GameObject("Spring");
 
+        vec3.set(spring.transform.scale, 1, 2, 1);
+        spring.addComponent(new Spring())
+        spring.addComponent(new BoxCollider(false, 0, 1, 2, 1));
+        spring.addComponent(new BounceUpPlatform(8000));
 
+        let springImageElements = this.imageLoader.getImageElements([this.SPRING0_URL, this.SPRING1_URL]);
+        spring.addComponent(new MeshRenderer(this.quad, springImageElements, this.vectorArtTextureInfo));
+
+        sceneGameObjects.push(spring);
 
         // Add Spawner
         let spawner = new GameObject('Spawner');
         sceneGameObjects.push(spawner);
 
         spawner.addComponent(new PlatformSpawner([
-            new PlatformSpawnInfo(greenPlatform, 1),
-            new PlatformSpawnInfo(brownPlatform, 30, true),
-            new PlatformSpawnInfo(bluePlatform, 3),
-            new PlatformSpawnInfo(whitePlatform, 1)
-        ], 60, [-20,20], [4,14]));
+            new PlatformSpawnInfo(greenPlatform, 10, false, true),
+            new PlatformSpawnInfo(brownPlatform, 3, true, false),
+            new PlatformSpawnInfo(bluePlatform, 3, false, true),
+            new PlatformSpawnInfo(whitePlatform, 1, false, false)
+        ], 60, [-20,20], [4,14], [
+            new PlatformItemSpawnInfo(spring, 100,[-1,1], 1.5)
+        ], 0));
         spawner.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         spawner.transform.position[1] = -30;
         
@@ -176,7 +196,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         sceneGameObjects.push(destroyer);
 
         let destroyerFollwerMovement = new MaxFollowerMovement(playerGameObject, false, true, false);
-        destroyer.addComponent(new BoxCollider(true, 0,-40, 1000, 20));
+        destroyer.addComponent(new BoxCollider(true, 0,-130, 1000, 200));
         destroyer.addComponent(new PlatformDestroyer());
         destroyer.addComponent(destroyerFollwerMovement);
         destroyer.addComponent(new ScoreTracking(destroyerFollwerMovement, 18));

@@ -1,6 +1,7 @@
 import { vec2 } from "gl-matrix";
 import Component from "../../engine/components/Component";
 import PlatformSpawnInfo from "./PlatformSpawnInfo";
+import PlatformItemSpawnInfo from "../platform-items/PlatformItemSpawnInfo";
 
 
 class PlatformSpawner extends Component{
@@ -11,10 +12,18 @@ class PlatformSpawner extends Component{
     private varianceX : vec2;
     private varianceY : vec2;
 
-    private totalChanceCount : number = 0;
+    private platformItemSpawnInfos : PlatformItemSpawnInfo[];
+    private baseNoItemChance : number;
+
+
+    private totalPlatformChanceCount : number = 0;
     private totalNonBreakableChanceCount : number = 0;
     private canSpawnBreakable : boolean = true;
-    constructor(platformSpawnInfos : PlatformSpawnInfo[], preemptiveSpawnHeight : number, varianceX : vec2, varianceY : vec2) {
+
+    private totalItemChanceCount : number = 0;
+    
+    
+    constructor(platformSpawnInfos : PlatformSpawnInfo[], preemptiveSpawnHeight : number, varianceX : vec2, varianceY : vec2, platformItemSpawnInfos : PlatformItemSpawnInfo[], baseNoItemChance : number) {
         super();
 
         this.preemptiveSpawnHeight = preemptiveSpawnHeight;
@@ -22,15 +31,22 @@ class PlatformSpawner extends Component{
         this.varianceY = varianceY;
 
         this.platformSpawnInfos = platformSpawnInfos;
+        this.platformItemSpawnInfos = platformItemSpawnInfos;
+
+        this.baseNoItemChance = baseNoItemChance;
 
         this.platformSpawnInfos.forEach(element => {
-            this.totalChanceCount += element.spawnChance;
+            this.totalPlatformChanceCount += element.spawnChance;
         
             if (!element.isBreakable){
                 this.totalNonBreakableChanceCount += element.spawnChance;
             }
         });
-        
+
+
+        this.platformItemSpawnInfos.forEach(element => {
+            this.totalItemChanceCount += element.spawnChance;
+        });
     }
 
     public awake(): void {
@@ -46,7 +62,7 @@ class PlatformSpawner extends Component{
     }
 
     private getRandomPlatformSpawnInfo() : PlatformSpawnInfo {
-        let random = Math.random() * this.totalChanceCount;
+        let random = Math.random() * this.totalPlatformChanceCount;
 
         let index = 0;
         let accumulatedChance = 0;
@@ -60,6 +76,27 @@ class PlatformSpawner extends Component{
 
         return this.platformSpawnInfos[index];
     }
+
+    private getRandomItemSpawnInfo() : PlatformItemSpawnInfo | null{
+        let random = Math.random() * (this.totalItemChanceCount + this.baseNoItemChance);
+
+        if (random < this.baseNoItemChance) {
+            return null;
+        }
+    
+        let index = 0;
+        let accumulatedChance = this.baseNoItemChance;
+        for (let i = 0; i < this.platformItemSpawnInfos.length; i++) {
+            accumulatedChance += this.platformItemSpawnInfos[i].spawnChance;
+            if (random <= accumulatedChance) {
+                index = i;
+                break;
+            }
+        }
+    
+        return this.platformItemSpawnInfos[index];
+    }
+
 
     private getRandomNonBreakablePlatformSpawnInfo() : PlatformSpawnInfo {
         let random = Math.random() * this.totalNonBreakableChanceCount;
@@ -104,6 +141,17 @@ class PlatformSpawner extends Component{
             this.accumulateNonBreakableY = this.accumulateY;
         }
 
+        if (platformSpawnInfo.haveItem){
+
+            let itemInfo = this.getRandomItemSpawnInfo();
+
+            if (itemInfo != null){
+                let platformItem = itemInfo.clonePlatformItem(this.gameObject.getScene());
+                platformItem.transform.position[0] = platform.transform.position[0] + Math.random() * (itemInfo.varianceX[1] - itemInfo.varianceX[0]) + itemInfo.varianceX[0];
+                platformItem.transform.position[1] = platform.transform.position[1] + itemInfo.offsetY;
+                //platformItem.gameObject.transform.setParent(platform.transform);
+            }
+        }
         
         if (this.accumulateNonBreakableY - this.accumulateY + this.varianceY[1] > this.varianceY[0] * 2){
             this.canSpawnBreakable = true;

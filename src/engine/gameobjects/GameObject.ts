@@ -172,6 +172,10 @@ class GameObject {
     }
 
     public destroy() {
+        if (this.isMarkedForDestruction)
+        {
+            return;
+        }
         this.isMarkedForDestruction = true;
         for (let i = 0; i < this.components.length; i++) {
             this.components[i].destroy();
