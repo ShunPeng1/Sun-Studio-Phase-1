@@ -160,14 +160,16 @@ class GameObject {
         for (let i = 0; i < this.components.length; i++) {
             gameObject.addComponent(this.components[i].clone());
         }
-        this.scene.addGameObject(gameObject);
 
         let children = this.transform.getChildren();
         for (let i = 0; i < children.length; i++) {
             let child = children[i].gameObject.clone(gameObject.transform);
         }
         
-        gameObject.awake(); // Awake the new game object similar to Unity
+        if (parent == null) {
+            this.scene.addGameObject(gameObject);        
+            gameObject.awake(); // Awake the new game object similar to Unity
+        }
         return gameObject;
     }
 
@@ -187,6 +189,12 @@ class GameObject {
         }
         
         this.scene.removeGameObject(this);
+
+        let parent = this.transform.getParent();
+        if (parent) {
+            parent.gameObject.transform.removeChild(this.transform);    
+        }
+
         this.isDestroyed = true;
     }
 

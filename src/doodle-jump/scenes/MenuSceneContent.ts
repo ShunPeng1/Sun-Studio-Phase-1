@@ -1,7 +1,7 @@
 import { vec3 } from "gl-matrix";
 import GameObject from "../../engine/gameobjects/GameObject";
 import DoodleJumpSceneContent from "./DoodleJumpSceneContent";
-import MeshRenderer from "../../engine/components/renderers/PremadeRenderer";
+import MeshRenderer from "../../engine/components/renderers/MeshRenderer";
 import RendererTextureSwapButton from "../../engine/components/ui/RendererTextureSwapButton";
 import SceneManager from "../../engine/scenes/SceneManager";
 import InitialForce from "../movement/InitialForce";

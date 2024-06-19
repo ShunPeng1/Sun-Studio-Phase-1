@@ -6,7 +6,7 @@ import ImageLoader from "../../engine/webgl/textures/ImageLoader";
 import TextureInfo from "../../engine/webgl/textures/TextureInfo";
 import BoxCollider from "../../engine/components/physics/BoxCollider";
 import BounceUpPlatform from "../platforms/BounceUpPlatform";
-import MeshRenderer from "../../engine/components/renderers/PremadeRenderer";
+import MeshRenderer from "../../engine/components/renderers/MeshRenderer";
 import WoodenPlatform from "../platforms/WoodenPlatform";
 import WayPointMovement from "../movement/WayPointMovement";
 import PlatformWayPoint from "../platforms/PlatformWayPoint";
@@ -33,11 +33,15 @@ import PlayerGameOverContact from "../player/PlayerGameOverContact";
 import PlatformItemSpawnInfo from "../platform-items/PlatformItemSpawnInfo";
 import Spring from "../platform-items/Spring";
 import JetpackCollectible from "../platform-items/JetpackCollectible";
+import HatCollectible from "../platform-items/HatCollectible";
 
 class MainGameSceneContent extends DoodleJumpSceneContent{
     
     private SPRING0_URL = `${this.ATLAS_URL}/bonus0.png`;
     private SPRING1_URL = `${this.ATLAS_URL}/bonus01.png`;
+
+    private JETPACK_URL = `${this.ATLAS_URL}/bonus2.png`;
+    private HAT_URL = `${this.ATLAS_URL}/bonus3.png`;
 
     download(): Promise<any>[]{
         
@@ -61,6 +65,8 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
 
         imageLoadPromises.push(imageLoader.loadImageFromUrls(this.SPRING0_URL));
         imageLoadPromises.push(imageLoader.loadImageFromUrls(this.SPRING1_URL));
+        imageLoadPromises.push(imageLoader.loadImageFromUrls(this.JETPACK_URL));
+        imageLoadPromises.push(imageLoader.loadImageFromUrls(this.HAT_URL));
         return imageLoadPromises;
     }
 
@@ -176,12 +182,22 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
 
         // Add Jetpack
         let jetpack = new GameObject("Jetpack");
-        vec3.set(jetpack.transform.scale, 1.5, 2, 1);
+        vec3.set(jetpack.transform.scale, 2, 4, 1);
         jetpack.addComponent(new BoxCollider(true, 0, 1, 2, 1));
-        jetpack.addComponent(new JetpackCollectible(5,5,5000));
+        jetpack.addComponent(new JetpackCollectible(5,3,4000));
 
-        let jetpackImageElements = this.imageLoader.getImageElements(this.PLATFORM3_URL);
+        let jetpackImageElements = this.imageLoader.getImageElements(this.JETPACK_URL);
         jetpack.addComponent(new MeshRenderer(this.quad, jetpackImageElements, this.vectorArtTextureInfo));
+
+
+        // Add Hat 
+        let hat = new GameObject("Hat");
+        vec3.set(hat.transform.scale, 2, 4, 1);
+        hat.addComponent(new BoxCollider(true, 0, 1, 2, 1));
+        hat.addComponent(new HatCollectible(4,2,2000));
+
+        let hatImageElements = this.imageLoader.getImageElements(this.HAT_URL);
+        hat.addComponent(new MeshRenderer(this.quad, hatImageElements, this.vectorArtTextureInfo));
 
 
         // Add Spawner
@@ -195,7 +211,8 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
             new PlatformSpawnInfo(whitePlatform, 1, false, false)
         ], 60, [-20,20], [4,14], [
             //new PlatformItemSpawnInfo(spring, 100,[-0.2,0.2], 0.8),
-            new PlatformItemSpawnInfo(jetpack, 100,[-0.2,0.2], 0.8)
+            new PlatformItemSpawnInfo(jetpack, 100,[-0.2,0.2], 2),
+            new PlatformItemSpawnInfo(hat, 100,[-0.2,0.2], 1.8)
         ], 0));
         spawner.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         spawner.transform.position[1] = -30;

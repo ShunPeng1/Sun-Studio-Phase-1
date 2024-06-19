@@ -4,7 +4,7 @@ import DoodleJumpSceneContent from "./DoodleJumpSceneContent";
 import TextRenderer, { Align, Baseline, FontStyle } from "../../engine/components/renderers/TextRenderer";
 import TextWriter from "../scores/TextWriter";
 import ScoreManager from "../ScoreManager";
-import MeshRenderer from "../../engine/components/renderers/PremadeRenderer";
+import MeshRenderer from "../../engine/components/renderers/MeshRenderer";
 
 import SceneManager from "../../engine/scenes/SceneManager";
 import RendererTextureSwapButton from "../../engine/components/ui/RendererTextureSwapButton";

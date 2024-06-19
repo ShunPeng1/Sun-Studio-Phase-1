@@ -4,7 +4,7 @@ import GameObject from "../../engine/gameobjects/GameObject";
 import ISceneContent from "../../engine/scenes/ISceneContent";
 import ImageLoader from "../../engine/webgl/textures/ImageLoader";
 import TextureInfo from "../../engine/webgl/textures/TextureInfo";
-import MeshRenderer from "../../engine/components/renderers/PremadeRenderer";
+import MeshRenderer from "../../engine/components/renderers/MeshRenderer";
 import ModelReaderFactory from "../../engine/webgl/factories/ModelReaderFactory";
 import MeshType from "../../engine/webgl/shapes/MeshType";
 import TextRenderer from "../../engine/components/renderers/TextRenderer";
