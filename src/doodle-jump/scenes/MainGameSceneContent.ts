@@ -181,10 +181,10 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         spawner.addComponent(new PlatformSpawner([
             new PlatformSpawnInfo(greenPlatform, 10, false, true),
             new PlatformSpawnInfo(brownPlatform, 3, true, false),
-            new PlatformSpawnInfo(bluePlatform, 3, false, false),
+            new PlatformSpawnInfo(bluePlatform, 3, false, true),
             new PlatformSpawnInfo(whitePlatform, 1, false, false)
         ], 60, [-20,20], [4,14], [
-            new PlatformItemSpawnInfo(spring, 100,[-1,1], 1)
+            new PlatformItemSpawnInfo(spring, 100,[-0.8,0.8], 0.8)
         ], 0));
         spawner.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         spawner.transform.position[1] = -30;
