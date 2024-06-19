@@ -6,6 +6,7 @@ import Scene from "./engine/scenes/Scene";
 import MainGameSceneContent from "./doodle-jump/scenes/MainGameSceneContent";
 import GameOverSceneContent from "./doodle-jump/scenes/GameOverSceneContent";
 import InputManager from "./engine/inputs/InputManager";
+import MenuSceneContent from "./doodle-jump/scenes/MenuSceneContent";
 
 class Game {
     // Time variables
@@ -51,12 +52,12 @@ class Game {
     private async initializeGameScene() {
         // TOOO: Add your scene here
 
-        
+        this.sceneManager.addScene(new Scene('menu', new MenuSceneContent()));
         this.sceneManager.addScene(new Scene('main', new MainGameSceneContent()));
         this.sceneManager.addScene(new Scene('gameover', new GameOverSceneContent()));
         // wait for all images to load
 
-        this.sceneManager.setNextScene(this.sceneManager.getSceneByName('main')!);
+        this.sceneManager.setNextScene(this.sceneManager.getSceneByName('menu')!);
 
         await this.sceneManager.downloadScenesContent();
 

@@ -12,6 +12,12 @@ import ShapeType from "../../engine/webgl/shapes/ShapeType";
 import TextRenderer from "../../engine/components/renderers/TextRenderer";
 import TextWriter from "../scores/TextWriter";
 import ScoreManager from "../ScoreManager";
+import BoxCollider from "../../engine/components/physics/BoxCollider";
+import Rigidbody from "../../engine/components/physics/Rigidbody";
+import LeftRightControlMovement from "../movement/LeftRightControlMovement";
+import InitialForce from "../movement/InitialForce";
+import JumpPlatformIgnorance from "../movement/JumpPlatformIgnorance";
+import Player from "../player/Player";
 
 abstract class DoodleJumpSceneContent implements ISceneContent{
 
@@ -70,6 +76,24 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
     
     public abstract create(): GameObject[] ;
     
+
+    protected downloadPlayerImages(): Promise<any>[]{
+        let promises: Promise<any>[] = [];
+        promises.push(this.imageLoader.loadImageFromUrls(this.PLAYER_TILE_URL));
+        return promises;
+    }
+
+    protected downloadBackgroundImage(): Promise<any>[]{
+        let promises: Promise<any>[] = [];
+        promises.push(this.imageLoader.loadImageFromUrls(this.BACKGROUND_URL));
+        return promises;
+    }
+
+    protected downloadScorePanelImage(): Promise<any>[]{
+        let promises: Promise<any>[] = [];
+        promises.push(this.imageLoader.loadImageFromUrls(this.TOP_URL));
+        return promises;
+    }
 
     protected createCamera(): GameObject{
         // Add Camera
@@ -139,6 +163,33 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
         return scoreText;
     }
 
+
+    protected createPlayer(): GameObject{
+        
+        // Add Player
+        let playerGameObject = new GameObject("Player");
+
+        vec3.set(playerGameObject.transform.position, 0, -20, 1);
+        vec3.set(playerGameObject.transform.rotation, 0, 0, 0);
+        vec3.set(playerGameObject.transform.scale, 4, 4, 1);
+        playerGameObject.addComponent(new BoxCollider(false, 0, -0.5, 1, 0.25));
+        playerGameObject.addComponent(new Rigidbody(1.1, 110))
+
+        // Add Player Parts
+        
+        let playerHead = new GameObject("Player Head");
+        playerHead.transform.setParent(playerGameObject.transform);
+        
+        let playerBack = new GameObject("Player Back");
+        playerBack.transform.setParent(playerGameObject.transform);
+
+        playerGameObject.addComponent(new Player(playerHead.transform, playerBack.transform));
+        
+        let playerImageElements = this.imageLoader.getImageElements(this.PLAYER_TILE_URL);
+        playerHead.addComponent(new PrimativeRenderer(this.quad, playerImageElements, this.vectorArtTextureInfo));
+        
+        return playerGameObject;
+    }
 
 }
 

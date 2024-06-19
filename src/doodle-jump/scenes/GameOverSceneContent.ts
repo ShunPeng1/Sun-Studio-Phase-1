@@ -89,7 +89,7 @@ class GameOverSceneContent extends DoodleJumpSceneContent{
         let menuImageElements = this.imageLoader.getImageElements([this.MENU_1_URL, this.MENU_2_URL]);
         menuGameObject.addComponent(new PrimativeRenderer(this.quad, menuImageElements, this.vectorArtTextureInfo));
         menuGameObject.addComponent(new RendererTextureSwapButton(0,1,340,610, 220,70, ()=>{
-            console.log('Menu');
+            SceneManager.getInstance().setNextSceneByName('menu');
         }))
         sceneGameObjects.push(menuGameObject);
 

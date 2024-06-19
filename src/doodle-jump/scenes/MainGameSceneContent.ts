@@ -61,32 +61,16 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
 
 
         // Add Player
-        let playerGameObject = new GameObject("Player");
+        let playerGameObject = this.createPlayer();
+        
         sceneGameObjects.push(playerGameObject);
 
         vec3.set(playerGameObject.transform.position, 0, -20, 1);
         vec3.set(playerGameObject.transform.rotation, 0, 0, 0);
         vec3.set(playerGameObject.transform.scale, 4, 4, 1);
-        playerGameObject.addComponent(new BoxCollider(false, 0, -0.5, 1, 0.25));
-        playerGameObject.addComponent(new Rigidbody(1.1, 110))
         playerGameObject.addComponent(new LeftRightControlMovement(50));
         playerGameObject.addComponent(new InitialForce([0, 5000, 0]))
         playerGameObject.addComponent(new JumpPlatformIgnorance());
-
-        // Add Player Parts
-        let playerHead = new GameObject("Player Head");
-        playerHead.transform.setParent(playerGameObject.transform);
-        
-        let playerBack = new GameObject("Player Back");
-        playerBack.transform.setParent(playerGameObject.transform);
-
-        playerGameObject.addComponent(new Player(playerHead.transform, playerBack.transform));
-        
-        let playerImageElements = this.imageLoader.getImageElements(this.PLAYER_TILE_URL);
-        playerHead.addComponent(new PrimativeRenderer(this.quad, playerImageElements, this.vectorArtTextureInfo));
-        
-
-        // Add components
         
         // Create Camera
         let camera = this.createCamera();
