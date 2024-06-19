@@ -18,7 +18,6 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
     protected imageLoader: ImageLoader;
     protected quad: Shape;
     protected vectorArtTextureInfo: TextureInfo;
-    protected camera: GameObject;
 
 
     // Assets base url
@@ -65,11 +64,6 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
         // Load images
         let imageLoader = new ImageLoader();
         this.imageLoader = imageLoader;
-
-
-        // Create Camera
-        let camera = this.createCamera();
-        this.camera = camera;
     }
 
     public abstract download(): Promise<any>[] ;
@@ -102,14 +96,12 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
         let paperBackgroundImageElements = this.imageLoader.getImageElements(this.BACKGROUND_URL);
         paperBackground.addComponent(new PrimativeRenderer( this.quad, paperBackgroundImageElements, this.vectorArtTextureInfo));
 
-        paperBackground.transform.setParent(this.camera.transform);
         return paperBackground;
     }
 
     protected createScorePanel(): GameObject{
         // Add UI
         let scoreText = new GameObject('Score Text');
-        scoreText.transform.setParent(this.camera.transform);
 
         vec3.set(scoreText.transform.position, 0, 29, -50);
         vec3.set(scoreText.transform.scale, 30, 5, 1);
@@ -122,7 +114,6 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
             return ScoreManager.getInstance().getScore().toString();
         }))
 
-        scoreText.transform.setParent(this.camera.transform);
         return scoreText;
     }
 

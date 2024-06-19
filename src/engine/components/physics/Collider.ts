@@ -30,6 +30,7 @@ class Collider extends Component{
     
     
     public awake(): void {
+        //console.log("Awake Collider ", this.id, this.gameObject.name);
         PhysicManager.getInstance().addCollider(this);
     }
     
@@ -127,6 +128,7 @@ class Collider extends Component{
     }
 
     public destroy(): void {
+        //console.log("Destroying Collider ", this.id, this.gameObject.name);
         PhysicManager.getInstance().removeCollider(this);
     }
 

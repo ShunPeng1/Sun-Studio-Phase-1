@@ -8,6 +8,8 @@ import TextWriter from "../scores/TextWriter";
 import ScoreManager from "../ScoreManager";
 import PrimativeRenderer from "../../engine/components/renderers/PremadeRenderer";
 import Button from "../../engine/components/ui/Button";
+import RendererTextureSwapButton from "../ui/RendererTextureSwapButton";
+import SceneManager from "../../engine/scenes/SceneManager";
 
 class GameOverSceneContent extends DoodleJumpSceneContent{
 
@@ -41,15 +43,19 @@ class GameOverSceneContent extends DoodleJumpSceneContent{
     public create(): GameObject[] {
         let sceneGameObjects: GameObject[] = [];
     
-        // Add Camera
-        sceneGameObjects.push(this.camera);
+        
+        // Create Camera
+        let camera = this.createCamera();
+        sceneGameObjects.push(camera);
 
         // Add Background
         let paperBackground = this.createBackground();
-        sceneGameObjects.push(paperBackground);
+        paperBackground.transform.setParent(camera.transform);
+        
 
         // Add Score Panel
         let scorePanel = this.createScorePanel();
+        scorePanel.transform.setParent(camera.transform);
         sceneGameObjects.push(scorePanel);
 
 
@@ -69,8 +75,8 @@ class GameOverSceneContent extends DoodleJumpSceneContent{
         vec3.set(playAgainGameObject.transform.scale, 7, 5, 1);
         let playAgainImageElements = this.imageLoader.getImageElements([this.PLAY_AGAIN_1_URL, this.PLAY_AGAIN_2_URL]);
         playAgainGameObject.addComponent(new PrimativeRenderer(this.quad, playAgainImageElements, this.vectorArtTextureInfo));
-        playAgainGameObject.addComponent(new Button(220,540, 220,50, ()=>{
-            console.log('Play Again');
+        playAgainGameObject.addComponent(new RendererTextureSwapButton(0,1, 220,520, 220,70, ()=>{
+            SceneManager.getInstance().setNextSceneByName('main');
         }))
         sceneGameObjects.push(playAgainGameObject);
 
@@ -81,7 +87,7 @@ class GameOverSceneContent extends DoodleJumpSceneContent{
         vec3.set(menuGameObject.transform.scale, 7, 5, 1);
         let menuImageElements = this.imageLoader.getImageElements([this.MENU_1_URL, this.MENU_2_URL]);
         menuGameObject.addComponent(new PrimativeRenderer(this.quad, menuImageElements, this.vectorArtTextureInfo));
-        menuGameObject.addComponent(new Button(340,610, 220,50, ()=>{
+        menuGameObject.addComponent(new RendererTextureSwapButton(0,1,340,610, 220,70, ()=>{
             console.log('Menu');
         }))
         sceneGameObjects.push(menuGameObject);

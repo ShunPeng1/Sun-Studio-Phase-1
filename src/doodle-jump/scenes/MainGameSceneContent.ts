@@ -87,15 +87,21 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         
 
         // Add components
-        this.camera.addComponent(new XBoundTeleportation(playerGameObject, 0, 25));
-        this.camera.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
-        sceneGameObjects.push(this.camera);
+        
+        // Create Camera
+        let camera = this.createCamera();
+        
+        camera.addComponent(new XBoundTeleportation(playerGameObject, 0, 25));
+        camera.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
+        sceneGameObjects.push(camera);
 
         // Add Background
         let paperBackground = this.createBackground();
+        paperBackground.transform.setParent(camera.transform);
 
         // Add UI
         let scorePanel = this.createScorePanel();
+        scorePanel.transform.setParent(camera.transform);
 
         // Platform
         let greenPlatform = new GameObject("Green Platform");

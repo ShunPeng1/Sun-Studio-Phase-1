@@ -3,6 +3,13 @@ import Component from "../../engine/components/Component";
 import Platform from "./Platform";
 
 class PlatformDestroyer extends Component{
+    private boundDestroyPlatform: (event: Collider) => void;
+
+    constructor(){
+        super();
+        this.boundDestroyPlatform = this.destroyPlatform.bind(this);
+    }
+
     public clone(): Component {
         return new PlatformDestroyer();
     }
@@ -10,15 +17,21 @@ class PlatformDestroyer extends Component{
     public awake(): void {
         let collider = this.gameObject.getComponent<Collider>(Collider)!;
         
-        collider.subcribeToCollisionEnter(this.destroyPlatform.bind(this));
-        collider.subcribeToCollisionStay(this.destroyPlatform.bind(this));
-
+        collider.subcribeToCollisionEnter(this.boundDestroyPlatform);
+        collider.subcribeToCollisionStay(this.boundDestroyPlatform);
     }
 
     private destroyPlatform(other : Collider) : void {
         if (other.gameObject.getComponent<Platform>(Platform)) {
             other.gameObject.destroy();
         }
+    }
+
+    public destroy(): void {
+        let collider = this.gameObject.getComponent<Collider>(Collider)!;
+        
+        collider.unsubcribeToCollisionEnter(this.boundDestroyPlatform);
+        collider.unsubcribeToCollisionStay(this.boundDestroyPlatform);
     }
 }
 

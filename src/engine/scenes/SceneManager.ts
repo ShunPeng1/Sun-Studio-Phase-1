@@ -4,7 +4,8 @@ class SceneManager {
     private static instance: SceneManager ;
     private scenes: Scene[] = [];
     private currentScene: Scene | null = null;
-    private startScene: Scene | null = null;
+
+    private nextScene: Scene | null = null;
 
     private constructor() {
         this.scenes = [];
@@ -20,10 +21,6 @@ class SceneManager {
 
     public addScene(scene: Scene) {
         this.scenes.push(scene);
-    }
-
-    public setStartScene(scene: Scene) {
-        this.startScene = scene;
     }
 
     public getCurrentScene() {
@@ -46,31 +43,34 @@ class SceneManager {
         return this.scenes.findIndex(scene => scene.getName() === name);
     }
 
-    public loadSceneByName(sceneName: string) {
+    public setNextSceneByName(sceneName: string) {
         const scene = this.getSceneByName(sceneName);
         if (scene) {
-            this.loadScene(scene);
+            this.nextScene = scene;
         }
     }
 
-    public loadStartScene() {
-        if (this.startScene) {
-            this.loadScene(this.startScene);
-        }
-        else{
-            this.loadScene(this.scenes[0]);
-        }
+    public setNextScene(scene: Scene) {
+        this.nextScene = scene;
     }
 
 
-    public loadScene(scene: Scene) {
+    private loadScene(scene: Scene) {
         if (this.currentScene){
             this.currentScene.unload();
         }
 
+        scene.createContent();
         scene.load();
         
         this.currentScene = scene;
+    }
+
+    public loadNextScene() {
+        if (this.nextScene) {
+            this.loadScene(this.nextScene);
+            this.nextScene = null;
+        }
     }
 
     public removeScene(scene: Scene) {
@@ -88,19 +88,12 @@ class SceneManager {
     }
 
 
-    private async downloadScenesContent() {
+    public async downloadScenesContent() {
         const downloadPromises = this.scenes.map(scene => scene.downloadContent());
         
         await Promise.all(downloadPromises.flat());
     }
 
-    public async createScenesContent() {
-        await this.downloadScenesContent();
-    
-        this.scenes.forEach(scene => {
-            scene.createContent();
-        })
-    };
 }
 
 export default SceneManager;

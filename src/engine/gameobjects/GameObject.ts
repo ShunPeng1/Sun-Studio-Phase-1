@@ -28,6 +28,8 @@ class GameObject {
     }
 
     public awake() {
+        console.log("Awake: " , this.id, this.name);
+
         for (let i = 0; i < this.components.length; i++) {
             this.components[i].tryAwake();
         }
@@ -74,6 +76,8 @@ class GameObject {
     }
 
     public fixedUpdate(fixedLastTime: number, fixedDeltaTime : number) {
+        this.start();
+
         for (let i = 0; i < this.components.length; i++) {
             this.components[i].fixedUpdate(fixedLastTime, fixedDeltaTime);
         }
@@ -169,16 +173,19 @@ class GameObject {
     }
 
     public destroy() {
+
+        console.log("Destroying: ", this.id, this.name);
         this.isMarkedForDestruction = true;
         for (let i = 0; i < this.components.length; i++) {
             this.components[i].destroy();
         }
-        this.scene.removeGameObject(this);
 
         let children = this.transform.getChildren();
         for (let i = 0; i < children.length; i++) {
             children[i].gameObject.destroy();
         }
+        
+        this.scene.removeGameObject(this);
         this.isDestroyed = true;
     }
 

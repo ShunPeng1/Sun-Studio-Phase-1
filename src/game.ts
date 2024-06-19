@@ -52,21 +52,18 @@ class Game {
         // TOOO: Add your scene here
 
         
-        //this.sceneManager.addScene(new Scene('main', new MainGameSceneContent()));
+        this.sceneManager.addScene(new Scene('main', new MainGameSceneContent()));
         this.sceneManager.addScene(new Scene('gameover', new GameOverSceneContent()));
         // wait for all images to load
 
-        this.sceneManager.setStartScene(this.sceneManager.getSceneByName('gameover')!);
+        this.sceneManager.setNextScene(this.sceneManager.getSceneByName('main')!);
 
-        await this.sceneManager.createScenesContent();
+        await this.sceneManager.downloadScenesContent();
 
         this.startGameLoop();
     }
 
     private startGameLoop() {
-        // Load the main scene
-        this.sceneManager.loadStartScene();
-
         // Start the game loop
         this.lastTime = performance.now()/1000;
         this.fixedLastTime = this.lastTime;
@@ -75,6 +72,8 @@ class Game {
 
 
     private gameLoop = () : void => {
+        this.sceneManager.loadNextScene();
+
         let time = performance.now()/1000;
         
         let deltaFixedTime = time - this.fixedLastTime;

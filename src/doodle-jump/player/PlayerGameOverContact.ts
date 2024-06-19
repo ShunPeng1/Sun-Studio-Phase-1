@@ -1,12 +1,18 @@
 import Component from "../../engine/components/Component";
 import Collider from "../../engine/components/physics/Collider";
 import SceneManager from "../../engine/scenes/SceneManager";
+import ScoreManager from "../ScoreManager";
 import Player from "./Player";
 
 class PlayerGameOverContact extends Component{
     private collider: Collider;
+
+    private boundLoseGame: (event: Collider) => void;
+
     constructor(){
         super();
+
+        this.boundLoseGame = this.loseGame.bind(this);
     }
 
     public awake(): void {
@@ -14,18 +20,19 @@ class PlayerGameOverContact extends Component{
     }
 
     public start(): void {
-        this.collider.subcribeToCollisionEnter(this.loseGame.bind(this));
+        this.collider.subcribeToCollisionEnter(this.boundLoseGame);
     }
 
     private loseGame(other : Collider): void {
         if (other.gameObject.getComponent<Player>(Player))
         {
-            SceneManager.getInstance().loadSceneByName('gameover');
+            SceneManager.getInstance().setNextSceneByName('gameover');
+            ScoreManager.getInstance().saveHighScore();
         }
     }
 
     public destroy(): void {
-        this.collider.unsubcribeToCollisionEnter(this.loseGame.bind(this));
+        this.collider.unsubcribeToCollisionEnter(this.boundLoseGame);
     }
     
     

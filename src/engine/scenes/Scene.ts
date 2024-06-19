@@ -52,9 +52,14 @@ class Scene{
     }
 
     public unload() {
-        this.gameObjects.forEach((gameObject) => {
+
+        let gameObjects = this.gameObjects.slice();
+        gameObjects.forEach((gameObject) => {
+            console.log("Destroy ", gameObject.name)
             gameObject.destroy();
         });
+
+        this.gameObjects = [];
     }
 
 }

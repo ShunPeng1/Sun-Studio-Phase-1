@@ -10,6 +10,9 @@ class Button extends Component{
 
     private isPressed: boolean = false;
 
+    private boundMouseDown: (event: MouseEvent) => void;
+    private boundMouseUp: (event: MouseEvent) => void;
+
     constructor(x : number, y : number, width : number, height : number, onClick: () => void = ()=>{}) {
         super();
         this.onClick = onClick;
@@ -19,13 +22,17 @@ class Button extends Component{
         this.width = width;
         this.height = height;
 
+        this.boundMouseDown = this.mouseDown.bind(this);
+        this.boundMouseUp = this.mouseUp.bind(this);
+
     }
 
     public start(): void {
         // Add to UI Manager
 
-        InputManager.getInstance().subscribeMouseDown(this.mouseDown.bind(this));
-        InputManager.getInstance().subscribeMouseUp(this.mouseUp.bind(this));
+        InputManager.getInstance().subscribeMouseDown(this.boundMouseDown);
+        InputManager.getInstance().subscribeMouseUp(this.boundMouseUp);
+    
     }
 
     private mouseDown(event : MouseEvent): void {
@@ -65,8 +72,9 @@ class Button extends Component{
     }
 
     public destroy(): void {
-        InputManager.getInstance().unsubscribeMouseDown(this.mouseDown.bind(this));
-        InputManager.getInstance().unsubscribeMouseUp(this.mouseUp.bind(this));
+        InputManager.getInstance().unsubscribeMouseDown(this.boundMouseDown);
+        InputManager.getInstance().unsubscribeMouseUp(this.boundMouseUp);
+    
     }
     
 

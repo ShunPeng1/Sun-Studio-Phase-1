@@ -4,7 +4,7 @@ import Ray from "./Ray";
 class PhysicManager {
     private static instance: PhysicManager;
     private colliders: Collider[] = [];
-    private collisionStates: Map<string, boolean> = new Map();
+    private collisionStates: Map<Collider[], boolean> = new Map();
 
     private constructor() {}
 
@@ -23,17 +23,30 @@ class PhysicManager {
         const index = this.colliders.indexOf(collider);
         if (index > -1) {
             this.colliders.splice(index, 1);
+            this.removeCollisionStates(collider);
+        }
+        else{
+            console.error("Collider not found");
+        }
+    }
+
+    private removeCollisionStates(collider: Collider): void {
+        for (let key of this.collisionStates.keys()) {
+            if (key.includes(collider)) {
+                this.collisionStates.delete(key);
+            }
         }
     }
 
     public checkCollisions(): void {
-        let newCollisionStates: Map<string, boolean> = new Map();
+        let newCollisionStates: Map<Collider[], boolean> = new Map();
 
         for (let i = 0; i < this.colliders.length; i++) {
             for (let j = i + 1; j < this.colliders.length; j++) {
                 let collider1 = this.colliders[i];
                 let collider2 = this.colliders[j];
-                let key = `${collider1.id}-${collider2.id}`;
+                let key = [collider1, collider2].sort();
+
 
                 let isColliding = collider1.collidesWith(collider2);
                 newCollisionStates.set(key, isColliding);

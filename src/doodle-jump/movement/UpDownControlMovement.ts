@@ -55,6 +55,12 @@ class UpDownControlMovement extends Component {
         this.isPressingDown = false;
     }
 
+    public destroy(): void {
+        InputManager.getInstance().unsubscribeKeyDown("ArrowUp" , this.moveUp);
+        InputManager.getInstance().unsubscribeKeyDown("ArrowDown" , this.moveDown);
+        InputManager.getInstance().unsubscribeKeyUp("ArrowUp" , this.stopUp);
+        InputManager.getInstance().unsubscribeKeyUp("ArrowDown" , this.stopDown);
+    }
     
     public  clone() {
         return new UpDownControlMovement(this.speed);

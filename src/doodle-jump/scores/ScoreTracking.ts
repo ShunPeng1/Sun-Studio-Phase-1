@@ -29,7 +29,6 @@ class ScoreTracking extends Component {
         this.currentScore = Math.floor(Math.max(this.maxFollwerMovement.transform.position[1] - this.yOffSet, this.currentScore));
         ScoreManager.getInstance().setScore(this.currentScore * this.modifer);
 
-        console.log(ScoreManager.getInstance().getScore());
     }
     
     public end(): void {
