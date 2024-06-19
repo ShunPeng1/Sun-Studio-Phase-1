@@ -42,8 +42,8 @@ class MenuSceneContent extends DoodleJumpSceneContent{
 
         // Add Background
         let background = new GameObject('Background');
-        vec3.set(background.transform.position, 0, 70, -65);
-        vec3.set(background.transform.scale, 55, 140, 1);
+        vec3.set(background.transform.position, 0, 40, -65);
+        vec3.set(background.transform.scale, 28, 80, 1);
         let backgroundElements = this.imageLoader.getImageElements(this.BACKGROUND_MENU_URL);
         background.addComponent(new MeshRenderer(this.quad, backgroundElements, this.vectorArtTextureInfo));
         sceneGameObjects.push(background);
