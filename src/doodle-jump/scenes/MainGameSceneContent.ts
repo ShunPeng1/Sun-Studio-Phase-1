@@ -165,9 +165,9 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         // Add Spring
         let spring = new GameObject("Spring");
 
-        vec3.set(spring.transform.scale, 1, 2, 1);
+        vec3.set(spring.transform.scale, 1.5, 2, 1);
         spring.addComponent(new Spring())
-        spring.addComponent(new BoxCollider(true, 0, 1, 1, 1));
+        spring.addComponent(new BoxCollider(true, 0, 1, 2, 1));
         spring.addComponent(new BounceUpPlatform(8000));
 
         let springImageElements = this.imageLoader.getImageElements([this.SPRING0_URL, this.SPRING1_URL]);
@@ -184,7 +184,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
             new PlatformSpawnInfo(bluePlatform, 3, false, true),
             new PlatformSpawnInfo(whitePlatform, 1, false, false)
         ], 60, [-20,20], [4,14], [
-            new PlatformItemSpawnInfo(spring, 100,[-0.8,0.8], 0.8)
+            new PlatformItemSpawnInfo(spring, 100,[-0.2,0.2], 0.8)
         ], 0));
         spawner.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         spawner.transform.position[1] = -30;

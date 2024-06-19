@@ -152,7 +152,7 @@ class PlatformSpawner extends Component{
                 
                 platformItem.gameObject.transform.setParent(platform.transform);
                 //vec3.set(platformItem.transform.position,  platform.transform.position[0] + Math.random() * (itemInfo.varianceX[1] - itemInfo.varianceX[0]) + itemInfo.varianceX[0], platform.transform.position[1] + itemInfo.offsetY, 2)
-                vec3.set(platformItem.transform.position,  Math.random() * (itemInfo.varianceX[1] - itemInfo.varianceX[0]) + itemInfo.varianceX[0], itemInfo.offsetY, 0.1)
+                vec3.set(platformItem.transform.position,  Math.random() * (itemInfo.varianceX[1] - itemInfo.varianceX[0]) + itemInfo.varianceX[0], itemInfo.offsetY, -0.1)
                 
                 vec3.set(platformItem.transform.scale, platformItem.transform.scale[0]/ platform.transform.scale[0] ,platformItem.transform.scale[1]/ platform.transform.scale[1], 1);
                 
