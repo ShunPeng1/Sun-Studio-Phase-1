@@ -1,4 +1,4 @@
-import { vec2 } from "gl-matrix";
+import { vec2, vec3 } from "gl-matrix";
 import Component from "../../engine/components/Component";
 import PlatformSpawnInfo from "./PlatformSpawnInfo";
 import PlatformItemSpawnInfo from "../platform-items/PlatformItemSpawnInfo";
@@ -130,7 +130,7 @@ class PlatformSpawner extends Component{
         
         platform.transform.position[0] = Math.random() * (this.varianceX[1] - this.varianceX[0]) + this.varianceX[0];
         platform.transform.position[1] = this.accumulateY + Math.random() * ((this.accumulateNonBreakableY - this.accumulateY + this.varianceY[1] ) - this.varianceY[0]) + this.varianceY[0];
-    
+        platform.transform.position[2] = 0;
         if (platformSpawnInfo.isBreakable){
 
             this.accumulateY = platform.transform.position[1];
@@ -147,9 +147,15 @@ class PlatformSpawner extends Component{
 
             if (itemInfo != null){
                 let platformItem = itemInfo.clonePlatformItem(this.gameObject.getScene());
-                platformItem.transform.position[0] = platform.transform.position[0] + Math.random() * (itemInfo.varianceX[1] - itemInfo.varianceX[0]) + itemInfo.varianceX[0];
-                platformItem.transform.position[1] = platform.transform.position[1] + itemInfo.offsetY;
-                //platformItem.gameObject.transform.setParent(platform.transform);
+                //platformItem.transform.position[0] = platform.transform.position[0] + Math.random() * (itemInfo.varianceX[1] - itemInfo.varianceX[0]) + itemInfo.varianceX[0];
+                //platformItem.transform.position[1] = platform.transform.position[1] + itemInfo.offsetY;
+                
+                platformItem.gameObject.transform.setParent(platform.transform);
+                //vec3.set(platformItem.transform.position,  platform.transform.position[0] + Math.random() * (itemInfo.varianceX[1] - itemInfo.varianceX[0]) + itemInfo.varianceX[0], platform.transform.position[1] + itemInfo.offsetY, 2)
+                vec3.set(platformItem.transform.position,  Math.random() * (itemInfo.varianceX[1] - itemInfo.varianceX[0]) + itemInfo.varianceX[0], itemInfo.offsetY, 2)
+                
+                vec3.set(platformItem.transform.scale, platformItem.transform.scale[0]/ platform.transform.scale[0] ,platformItem.transform.scale[1]/ platform.transform.scale[1], 0.01);
+                
             }
         }
         

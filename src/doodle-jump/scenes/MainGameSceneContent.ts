@@ -167,7 +167,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
 
         vec3.set(spring.transform.scale, 1, 2, 1);
         spring.addComponent(new Spring())
-        spring.addComponent(new BoxCollider(false, 0, 1, 2, 1));
+        spring.addComponent(new BoxCollider(true, 0, 1, 1, 1));
         spring.addComponent(new BounceUpPlatform(8000));
 
         let springImageElements = this.imageLoader.getImageElements([this.SPRING0_URL, this.SPRING1_URL]);
@@ -184,7 +184,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
             new PlatformSpawnInfo(bluePlatform, 3, false, false),
             new PlatformSpawnInfo(whitePlatform, 1, false, false)
         ], 60, [-20,20], [4,14], [
-            new PlatformItemSpawnInfo(spring, 100,[-1,1], 1.5)
+            new PlatformItemSpawnInfo(spring, 100,[-1,1], 1)
         ], 0));
         spawner.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         spawner.transform.position[1] = -30;
@@ -195,7 +195,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         sceneGameObjects.push(destroyer);
 
         let destroyerFollwerMovement = new MaxFollowerMovement(playerGameObject, false, true, false);
-        destroyer.addComponent(new BoxCollider(true, 0,-132, 1000, 200));
+        destroyer.addComponent(new BoxCollider(true, 0,-140, 1000, 200));
         destroyer.addComponent(new PlatformDestroyer());
         destroyer.addComponent(destroyerFollwerMovement);
         destroyer.addComponent(new ScoreTracking(destroyerFollwerMovement, 18));

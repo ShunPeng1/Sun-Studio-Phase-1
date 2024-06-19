@@ -107,7 +107,7 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
         vec3.set(camera.transform.rotation, 0, 0, 0);
         vec3.set(camera.transform.scale, 1, 1, 1);
         
-        camera.addComponent(new CameraRenderer());
+        camera.addComponent(new CameraRenderer(true));
 
         return camera;
     }
@@ -131,8 +131,8 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
         // Add UI
         let scoreText = new GameObject('Score Text');
 
-        vec3.set(scoreText.transform.position, 0, 29, -50);
-        vec3.set(scoreText.transform.scale, 30, 5, 1);
+        vec3.set(scoreText.transform.position, 0, 37, -55);
+        vec3.set(scoreText.transform.scale, 30, 7, 1);
         let topImageElements = this.imageLoader.getImageElements(this.TOP_URL);
         scoreText.addComponent(new MeshRenderer(this.quad, topImageElements, this.vectorArtTextureInfo));
         

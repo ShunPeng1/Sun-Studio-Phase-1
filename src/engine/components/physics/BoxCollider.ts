@@ -22,23 +22,32 @@ class BoxCollider extends Collider{
     }
 
     public getMinX(): number {
-        return (this.transform.position[0] + this.x) - this.width/2 *this.transform.scale[0] ;
+        let worldPosition = this.transform.getWorldPosition();
+        let worldScale = this.transform.getWorldScale();
+        return (worldPosition[0] + this.x) - this.width/2 * worldScale[0];
     }
 
     public getMaxX(): number {
-        return (this.transform.position[0] + this.x) + this.width/2 * this.transform.scale[0];
+        let worldPosition = this.transform.getWorldPosition();
+        let worldScale = this.transform.getWorldScale();
+        return (worldPosition[0] + this.x) + this.width/2 * worldScale[0];
     }
 
     public getMinY(): number {
-        return (this.transform.position[1] + this.y) - this.height/2 * this.transform.scale[1];
+        let worldPosition = this.transform.getWorldPosition();
+        let worldScale = this.transform.getWorldScale();
+        return (worldPosition[1] + this.y) - this.height/2 * worldScale[1];
     }
 
     public getMaxY(): number {
-        return (this.transform.position[1] + this.y) + this.height/2 * this.transform.scale[1];
+        let worldPosition = this.transform.getWorldPosition();
+        let worldScale = this.transform.getWorldScale();
+        return (worldPosition[1] + this.y) + this.height/2 * worldScale[1];
     }
 
     public getCenter(): number[] {
-        return [(this.transform.position[0] + this.x), (this.transform.position[1] + this.y), 0] ;
+        let worldPosition = this.transform.getWorldPosition();
+        return [worldPosition[0] + this.x, worldPosition[1] + this.y, 0];
     }
 
 

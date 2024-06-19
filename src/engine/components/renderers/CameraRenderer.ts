@@ -9,11 +9,15 @@ class CameraRenderer extends WebGLRenderer {
 
     private htmlCanvas: HTMLCanvasElement;
 
-    constructor() {
+    private isOrthographic: boolean;
+
+    constructor(isOrthographic: boolean = false) {
         super();
         this.worldMatrix = mat4.create();
         this.viewMatrix = mat4.create();
         this.projMatrix = mat4.create();
+
+        this.isOrthographic = isOrthographic;
     }
 
     public awake() {
@@ -69,7 +73,18 @@ class CameraRenderer extends WebGLRenderer {
 
         mat4.identity(this.worldMatrix);
         mat4.lookAt(this.viewMatrix, this.transform.position, target, [0, 1, 0]);
-        mat4.perspective(this.projMatrix, glMatrix.toRadian(60), this.htmlCanvas.width / this.htmlCanvas.height, 0.1, 1000.0);
+        
+        if (this.isOrthographic) {
+            // Create an orthographic projection matrix
+            let aspectRatio = this.htmlCanvas.width / this.htmlCanvas.height;
+            let orthoWidth = this.transform.position[2]; // Define the width of the orthographic view
+            let orthoHeight = orthoWidth / aspectRatio;
+            mat4.ortho(this.projMatrix, -orthoWidth/2, orthoWidth/2, -orthoHeight/2, orthoHeight/2, 0.1, 1000.0);
+
+        }
+        else{
+            mat4.perspective(this.projMatrix, glMatrix.toRadian(60), this.htmlCanvas.width / this.htmlCanvas.height, 0.1, 1000.0);
+        }
     }
 
     public getRayFromMouse(mouseX: number, mouseY: number): vec3 {

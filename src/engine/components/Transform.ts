@@ -82,6 +82,30 @@ class Transform extends Component{
         return this.scale;
     }
 
+    public getWorldPosition(): vec3 {
+        let worldPosition = vec3.clone(this.position);
+
+        let parent = this.parent;
+        while (parent) {
+            vec3.add(worldPosition, worldPosition, parent.position);
+            parent = parent.parent;
+        }
+
+        return worldPosition;
+    }
+
+    public getWorldScale(): vec3 {
+        let worldScale = vec3.clone(this.scale);
+
+        let parent = this.parent;
+        while (parent) {
+            vec3.multiply(worldScale, worldScale, parent.scale);
+            parent = parent.parent;
+        }
+
+        return worldScale;
+    }
+
     public getXYScale(): vec2{
         return vec2.fromValues(this.scale[0], this.scale[1]);
     }
