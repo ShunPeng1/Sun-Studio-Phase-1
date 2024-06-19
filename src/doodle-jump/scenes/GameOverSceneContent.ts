@@ -8,6 +8,7 @@ import MeshRenderer from "../../engine/components/renderers/PremadeRenderer";
 
 import SceneManager from "../../engine/scenes/SceneManager";
 import RendererTextureSwapButton from "../../engine/components/ui/RendererTextureSwapButton";
+import DoodleJumpSceneCollection from "./DoodleJumpSceneCollection";
 
 class GameOverSceneContent extends DoodleJumpSceneContent{
 
@@ -74,7 +75,7 @@ class GameOverSceneContent extends DoodleJumpSceneContent{
         let playAgainImageElements = this.imageLoader.getImageElements([this.PLAY_AGAIN_1_URL, this.PLAY_AGAIN_2_URL]);
         playAgainGameObject.addComponent(new MeshRenderer(this.quad, playAgainImageElements, this.vectorArtTextureInfo));
         playAgainGameObject.addComponent(new RendererTextureSwapButton(0,1, 220,520, 220,70, ()=>{
-            SceneManager.getInstance().setNextSceneByName('main');
+            SceneManager.getInstance().setNextSceneByName(DoodleJumpSceneCollection.MAIN_SCENE_NAME);
         }))
         sceneGameObjects.push(playAgainGameObject);
 
@@ -86,7 +87,7 @@ class GameOverSceneContent extends DoodleJumpSceneContent{
         let menuImageElements = this.imageLoader.getImageElements([this.MENU_1_URL, this.MENU_2_URL]);
         menuGameObject.addComponent(new MeshRenderer(this.quad, menuImageElements, this.vectorArtTextureInfo));
         menuGameObject.addComponent(new RendererTextureSwapButton(0,1,340,610, 220,70, ()=>{
-            SceneManager.getInstance().setNextSceneByName('menu');
+            SceneManager.getInstance().setNextSceneByName(DoodleJumpSceneCollection.MENU_SCENE_NAME);
         }))
         sceneGameObjects.push(menuGameObject);
 

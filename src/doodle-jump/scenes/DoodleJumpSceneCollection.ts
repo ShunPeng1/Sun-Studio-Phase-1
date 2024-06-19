@@ -9,15 +9,15 @@ class DoodleJumpSceneCollection implements IGameSceneCollection{
     private menuScene: Scene;
     private gameOverScene: Scene;
 
-    public MAIN_SCENE_NAME: string = 'main';
-    public MENU_SCENE_NAME: string = 'menu';
-    public GAME_OVER_SCENE_NAME: string = 'gameover';
+    public static MAIN_SCENE_NAME: string = 'main';
+    public static MENU_SCENE_NAME: string = 'menu';
+    public static GAME_OVER_SCENE_NAME: string = 'gameover';
 
 
     constructor(){
-        this.menuScene = new Scene(this.MENU_SCENE_NAME, new MenuSceneContent(this));
-        this.mainScene = new Scene(this.MAIN_SCENE_NAME, new MainGameSceneContent(this));
-        this.gameOverScene = new Scene(this.GAME_OVER_SCENE_NAME, new GameOverSceneContent(this));
+        this.menuScene = new Scene(DoodleJumpSceneCollection.MENU_SCENE_NAME, new MenuSceneContent(this));
+        this.mainScene = new Scene(DoodleJumpSceneCollection.MAIN_SCENE_NAME, new MainGameSceneContent(this));
+        this.gameOverScene = new Scene(DoodleJumpSceneCollection.GAME_OVER_SCENE_NAME, new GameOverSceneContent(this));
     }
 
     createScenes(): Scene[] {

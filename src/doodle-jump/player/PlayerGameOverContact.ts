@@ -2,6 +2,7 @@ import Component from "../../engine/components/Component";
 import Collider from "../../engine/components/physics/Collider";
 import SceneManager from "../../engine/scenes/SceneManager";
 import ScoreManager from "../ScoreManager";
+import DoodleJumpSceneCollection from "../scenes/DoodleJumpSceneCollection";
 import Player from "./Player";
 
 class PlayerGameOverContact extends Component{
@@ -26,7 +27,7 @@ class PlayerGameOverContact extends Component{
     private loseGame(other : Collider): void {
         if (other.gameObject.getComponent<Player>(Player))
         {
-            SceneManager.getInstance().setNextSceneByName('gameover');
+            SceneManager.getInstance().setNextSceneByName(DoodleJumpSceneCollection.GAME_OVER_SCENE_NAME);
             ScoreManager.getInstance().saveHighScore();
         }
     }
