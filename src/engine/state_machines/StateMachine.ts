@@ -12,8 +12,6 @@ class BaseStateMachine {
     private nodes: Map<any, StateNode> = new Map();
     private anyStateTransitions: Set<IStateTransition> = new Set();
 
-    private lastTransitionData: IStateTransitionData | null = null;
-
     protected stateHistoryStrategy: IStateMomentoStrategy;
 
     protected constructor(initialStateNode: StateNode | null = null, onEnterCall: boolean = false, enterData: IStateTransitionData | null = null) {

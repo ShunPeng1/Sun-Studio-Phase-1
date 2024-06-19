@@ -24,7 +24,6 @@ class WebGLManager {
     private projMatrix: GLM.mat4;
 
     private constructor() {
-        this.webglCanvas = CanvasManager.getInstance().getWebglCanvas();
         this.gl = CanvasManager.getInstance().getWebglCanvasRenderingContext();
 
        

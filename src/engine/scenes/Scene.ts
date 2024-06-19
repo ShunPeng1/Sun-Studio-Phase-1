@@ -55,7 +55,6 @@ class Scene{
 
         let gameObjects = this.gameObjects.slice();
         gameObjects.forEach((gameObject) => {
-            console.log("Destroy ", gameObject.name)
             gameObject.destroy();
         });
 

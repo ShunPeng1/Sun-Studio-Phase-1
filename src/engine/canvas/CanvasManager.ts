@@ -12,7 +12,7 @@ class CanvasManager {
     private height : number;
 
     private constructor(width: number = 800, height: number = 600) {
-
+        console.log("Creating Canvas Manager", width, height);
         this.webglCanvas = new Canvas("Webgl Canvas", width, height, 0);
         this.html2dCanvas = new Canvas("2d Canvas", width, height, 1);
 

@@ -28,7 +28,6 @@ class GameObject {
     }
 
     public awake() {
-        console.log("Awake: " , this.id, this.name);
 
         for (let i = 0; i < this.components.length; i++) {
             this.components[i].tryAwake();
@@ -173,8 +172,6 @@ class GameObject {
     }
 
     public destroy() {
-
-        console.log("Destroying: ", this.id, this.name);
         this.isMarkedForDestruction = true;
         for (let i = 0; i < this.components.length; i++) {
             this.components[i].destroy();

@@ -17,7 +17,7 @@ class InputManager{
                 callbacks.forEach(callback => callback());
             }
             
-            console.log('Key pressed: ' + event.key);
+            //console.log('Key pressed: ' + event.key);
         });
 
         window.addEventListener('keypress', (event) => {
@@ -26,7 +26,7 @@ class InputManager{
                 callbacks.forEach(callback => callback());
             }
             
-            console.log('Key continuously pressed: ' + event.key);
+            //console.log('Key continuously pressed: ' + event.key);
         });
 
         window.addEventListener('keyup', (event) => {
@@ -35,27 +35,27 @@ class InputManager{
                 callbacks.forEach(callback => callback());
             }
             
-            console.log('Key released: ' + event.key);
+            //console.log('Key released: ' + event.key);
         });
 
         window.addEventListener('click', (event) => {
             this.mouseClickInputMap.forEach(callback => callback(event));
-            console.log('Mouse clicked at position:', event.clientX, event.clientY);
+            //console.log('Mouse clicked at position:', event.clientX, event.clientY);
         });
         
         window.addEventListener('mousedown', (event) => {
             this.mouseDownInputMap.forEach(callback => callback(event));
-            console.log('Mouse down at position:', event.clientX, event.clientY);
+            //console.log('Mouse down at position:', event.clientX, event.clientY);
         });
         
         window.addEventListener('mouseup', (event) => {
             this.mouseUpInputMap.forEach(callback => callback(event));
-            console.log('Mouse up at position:', event.clientX, event.clientY);
+            //console.log('Mouse up at position:', event.clientX, event.clientY);
         });
         
         window.addEventListener('mousemove', (event) => {
             this.mouseMoveInputMap.forEach(callback => callback(event));
-            console.log('Mouse moved to position:', event.clientX, event.clientY);
+            //console.log('Mouse moved to position:', event.clientX, event.clientY);
         });
     }
 

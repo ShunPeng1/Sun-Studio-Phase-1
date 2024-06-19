@@ -20,6 +20,7 @@ class RendererTextureSwapButton extends Button {
     }
 
     public start(): void {
+        super.start();
         this.swapTexture(this.mouseUpTextureIndex);
     }
 

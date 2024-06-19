@@ -2,7 +2,6 @@ import { vec3 } from "gl-matrix";
 import CameraRenderer from "../../engine/components/renderers/CameraRenderer";
 import GameObject from "../../engine/gameobjects/GameObject";
 import ISceneContent from "../../engine/scenes/ISceneContent";
-import Shape from "../../engine/webgl/shapes/Shape";
 import ImageLoader from "../../engine/webgl/textures/ImageLoader";
 import TextureInfo from "../../engine/webgl/textures/TextureInfo";
 import MeshRenderer from "../../engine/components/renderers/PremadeRenderer";
@@ -13,15 +12,17 @@ import TextWriter from "../scores/TextWriter";
 import ScoreManager from "../ScoreManager";
 import BoxCollider from "../../engine/components/physics/BoxCollider";
 import Rigidbody from "../../engine/components/physics/Rigidbody";
-import LeftRightControlMovement from "../movement/LeftRightControlMovement";
-import InitialForce from "../movement/InitialForce";
-import JumpPlatformIgnorance from "../movement/JumpPlatformIgnorance";
+
 import Player from "../player/Player";
 import Mesh from "../../engine/webgl/shapes/Mesh";
 import MeshFactory from "../../engine/webgl/factories/MeshFactory";
+import IGameSceneCollection from "../../engine/scenes/IGameSceneCollection";
 
 abstract class DoodleJumpSceneContent implements ISceneContent{
 
+    public sceneCollection: IGameSceneCollection;
+    
+    // Loaders
     protected imageLoader: ImageLoader;
     protected quad: Mesh;
     protected vectorArtTextureInfo: TextureInfo;
@@ -54,7 +55,9 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
     protected PLAYER_TILE_URL = `${this.PLAYER_URL}/tile000.png`;
 
 
-    constructor(){
+    constructor(sceneCollection : IGameSceneCollection){
+        this.sceneCollection = sceneCollection;
+
         let vectorArtTextureInfo = new TextureInfo(true, WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.CLAMP_TO_EDGE, WebGLRenderingContext.CLAMP_TO_EDGE,
             WebGLRenderingContext.LINEAR, WebGLRenderingContext.LINEAR);
         this.vectorArtTextureInfo = vectorArtTextureInfo;
