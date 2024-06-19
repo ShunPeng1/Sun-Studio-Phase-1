@@ -1,5 +1,5 @@
-import WebGLRenderer from "../../engine/components/renderers/WebGLRenderer";
-import Button from "../../engine/components/ui/Button";
+import WebGLRenderer from "../renderers/WebGLRenderer";
+import Button from "./Button";
 
 class RendererTextureSwapButton extends Button {
     private renderer: WebGLRenderer;

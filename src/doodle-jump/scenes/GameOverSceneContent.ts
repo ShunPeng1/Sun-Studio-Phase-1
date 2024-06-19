@@ -8,8 +8,9 @@ import TextWriter from "../scores/TextWriter";
 import ScoreManager from "../ScoreManager";
 import PrimativeRenderer from "../../engine/components/renderers/PremadeRenderer";
 import Button from "../../engine/components/ui/Button";
-import RendererTextureSwapButton from "../ui/RendererTextureSwapButton";
+
 import SceneManager from "../../engine/scenes/SceneManager";
+import RendererTextureSwapButton from "../../engine/components/ui/RendererTextureSwapButton";
 
 class GameOverSceneContent extends DoodleJumpSceneContent{
 
