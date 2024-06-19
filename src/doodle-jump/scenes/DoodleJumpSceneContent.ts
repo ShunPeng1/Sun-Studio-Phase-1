@@ -114,6 +114,28 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
             return ScoreManager.getInstance().getScore().toString();
         }))
 
+        let fpstextRenderer = new TextRenderer('FPS: 0', 350, 40, 'black', '30px Arial');
+        scoreText.addComponent(fpstextRenderer);
+    
+        let lastUpdateTime = Date.now();
+        let frameCount = 0;
+    
+        scoreText.addComponent(new TextWriter(fpstextRenderer, () => {
+            let currentTime = Date.now();
+            let deltaTime = currentTime - lastUpdateTime;
+    
+            if (deltaTime >= 1000) {
+                lastUpdateTime = currentTime;
+                let fps = frameCount;
+                frameCount = 0;
+                return 'FPS: ' + fps;
+            }
+    
+            frameCount++;
+            return fpstextRenderer.getText();
+        }));
+
+
         return scoreText;
     }
 
