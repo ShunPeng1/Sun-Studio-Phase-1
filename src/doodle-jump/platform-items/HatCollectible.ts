@@ -1,4 +1,4 @@
-import Player from "../player/PlayerWear";
+import PlayerEquipment from "../player/PlayerEquipment";
 import Collectible from "./Collectible";
 
 class HatCollectible extends Collectible {
@@ -15,7 +15,7 @@ class HatCollectible extends Collectible {
     }
 
 
-    public onCollect(player : Player): void {
+    public onCollect(player : PlayerEquipment): void {
         player.equipHat(this.maxVelocity, this.duration, this.force);
 
     }

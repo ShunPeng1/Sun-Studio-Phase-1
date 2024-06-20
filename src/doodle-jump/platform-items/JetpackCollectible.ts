@@ -1,4 +1,4 @@
-import Player from "../player/PlayerWear";
+import PlayerEquipment from "../player/PlayerEquipment";
 import Collectible from "./Collectible";
 
 class JetpackCollectible extends Collectible {
@@ -15,7 +15,7 @@ class JetpackCollectible extends Collectible {
     }
 
 
-    public onCollect(player : Player): void {
+    public onCollect(player : PlayerEquipment): void {
         player.equipJetpack(this.maxVelocity, this.duration, this.force);
 
     }

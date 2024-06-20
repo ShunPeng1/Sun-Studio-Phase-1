@@ -4,6 +4,7 @@ import GameObject from "../../engine/gameobjects/GameObject";
 import InputManager from "../../engine/inputs/InputManager";
 
 class PlayerTrunk extends Component{
+    
     private playerTrunk : GameObject;
     private bulletOffset : vec3;
     private bulletPrefab : GameObject;
@@ -12,9 +13,11 @@ class PlayerTrunk extends Component{
     private shootAngle : number = 0;
     private originalPosition : vec3 ;
     private trunkZOffset : number = 0.1;
-    private originalTrunkScale : number = 1;
 
-    constructor(playerTrunk : GameObject, bulletPrefab : GameObject, bulletOffset : vec3, bulletVelocity : number, trunkZOffset : number = 0.1){
+    private currentTrunkShowTime : number = 0;
+    private trunkShowDuration : number;
+
+    constructor(playerTrunk : GameObject, bulletPrefab : GameObject, bulletOffset : vec3, bulletVelocity : number, trunkShowDuration : number, trunkZOffset : number = 0.1){
         super();
     
         this.playerTrunk = playerTrunk;
@@ -23,10 +26,11 @@ class PlayerTrunk extends Component{
         this.bulletPrefab = bulletPrefab;
         this.bulletVelocity = bulletVelocity;
         this.trunkZOffset = trunkZOffset;
+        
+        this.trunkShowDuration = trunkShowDuration;
 
         this.originalPosition = vec3.clone(this.playerTrunk.transform.position);
 
-        this.originalTrunkScale = this.playerTrunk.transform.scale[0];
     }
 
     public awake(): void {
@@ -37,14 +41,23 @@ class PlayerTrunk extends Component{
     }
 
     public update(time: number, deltaTime: number): void {
-    
-        this.updateTrunkPosition();
+        if ( this.playerTrunk.getEnable() ){
+            this.currentTrunkShowTime += deltaTime;
+            
+            this.updateTrunkPosition();
+
+            if(this.currentTrunkShowTime >= this.trunkShowDuration){
+                this.playerTrunk.setEnable(false);
+                this.currentTrunkShowTime = 0;
+            }
+        }
+
     }
 
     public shoot(angle : number = Math.PI/2) {
     
         this.shootAngle = angle;
-
+        this.currentTrunkShowTime = 0;
 
         const bullet = this.bulletPrefab.clone();
         vec3.add(bullet.transform.position, this.playerTrunk.transform.getWorldPosition(), this.bulletOffset); 
@@ -73,8 +86,12 @@ class PlayerTrunk extends Component{
     
     }
 
+    public getIsShooting(): boolean {
+        return this.playerTrunk.getEnable();
+    }
+
     public clone(): Component {
-        return new PlayerTrunk(this.playerTrunk, this.bulletPrefab, this.bulletOffset, this.bulletVelocity);
+        return new PlayerTrunk(this.playerTrunk, this.bulletPrefab, this.bulletOffset, this.bulletVelocity, this.trunkShowDuration, this.trunkZOffset);
     }
 
 }

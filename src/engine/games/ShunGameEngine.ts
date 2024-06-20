@@ -18,7 +18,6 @@ class ShunGameEngine {
 
     // Time variables
     private lastTime : number = 0;
-    private deltaTime : number = 0;
     
     // Managers
     private canvasManager: CanvasManager;
@@ -105,13 +104,16 @@ class ShunGameEngine {
 
         let time = performance.now()/1000;
         
-        this.deltaTime = time - this.lastTime;
+        let deltaTime = time - this.lastTime;
+        // if (deltaTime <= 1/60) {
+        //     requestAnimationFrame(this.gameLoop);
+        //     return
+        // }
         this.lastTime = time;
         
-        this.stateMachine.setToState(new FixedUpdateGameState(), new TimeGameTransitionData(time, this.deltaTime));
-        this.stateMachine.setToState(new UpdateGameState(), new TimeGameTransitionData(time, this.deltaTime));
-        this.stateMachine.setToState(new RenderGameState(), new TimeGameTransitionData(time, this.deltaTime));
-        
+        this.stateMachine.setToState(new FixedUpdateGameState(), new TimeGameTransitionData(time, deltaTime));
+        this.stateMachine.setToState(new UpdateGameState(), new TimeGameTransitionData(time, deltaTime));
+        this.stateMachine.setToState(new RenderGameState(), new TimeGameTransitionData(time, deltaTime));
         requestAnimationFrame(this.gameLoop);
     }
 

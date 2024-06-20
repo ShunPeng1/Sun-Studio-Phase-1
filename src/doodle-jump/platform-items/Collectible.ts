@@ -3,7 +3,7 @@ import Transform from "../../engine/components/Transform";
 import Collider from "../../engine/components/physics/Collider";
 import GameObject from "../../engine/gameobjects/GameObject";
 import Platform from "../platforms/Platform";
-import Player from "../player/PlayerWear";
+import PlayerEquipment from "../player/PlayerEquipment";
 import PlatformItem from "./PlatformItem";
 
 abstract class Collectible extends PlatformItem {
@@ -34,10 +34,10 @@ abstract class Collectible extends PlatformItem {
         this.collider.unsubcribeToCollisionEnter(this.collect);
     }
 
-    protected abstract onCollect(player : Player): void;
+    protected abstract onCollect(player : PlayerEquipment): void;
 
     protected collect(other : Collider): void{
-        let player = other.gameObject.getComponent<Player>(Player);
+        let player = other.gameObject.getComponent<PlayerEquipment>(PlayerEquipment);
         if (player) {
             this.onCollect(player);
             this.gameObject.destroy();

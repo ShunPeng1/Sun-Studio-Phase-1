@@ -193,6 +193,11 @@ class GameObject {
 
     }
 
+    public getEnable() {
+        return this.isEnable;
+    }
+    
+
     public clone(parent : Transform | null = null): GameObject {
         let gameObject = new GameObject(this.name+" (Clone)");
         gameObject.transform.setScaleFromVec3(this.transform.getScale());

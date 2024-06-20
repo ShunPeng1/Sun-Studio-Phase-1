@@ -2,7 +2,7 @@ import Collider from "../../engine/components/physics/Collider";
 import Component from "../../engine/components/Component";
 import Rigidbody from "../../engine/components/physics/Rigidbody";
 import Transform from "../../engine/components/Transform";
-import Player from "../player/PlayerWear";
+import PlayerEquipment from "../player/PlayerEquipment";
 import Platform from "./Platform";
 import PhysicManager from "../../engine/physics/PhysicManager";
 import PlatformDestroyer from "./PlatformDestroyer";
@@ -23,7 +23,7 @@ class WoodenPlatform extends Platform {
 
 
     protected onContact(other: Collider): void {
-        if (other.gameObject.getComponent<Player>(Player) && !this.isBroken) {
+        if (other.gameObject.getComponent<PlayerEquipment>(PlayerEquipment) && !this.isBroken) {
             
             this.isBroken = true;
         }

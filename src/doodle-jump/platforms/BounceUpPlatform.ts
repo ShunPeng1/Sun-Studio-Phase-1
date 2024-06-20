@@ -2,9 +2,10 @@ import Collider from "../../engine/components/physics/Collider";
 import Component from "../../engine/components/Component";
 import Rigidbody from "../../engine/components/physics/Rigidbody";
 import Transform from "../../engine/components/Transform";
-import Player from "../player/PlayerWear";
+import PlayerEquipment from "../player/PlayerEquipment";
 import Platform from "./Platform";
 import { EventEmitter } from 'events';
+import PlayerFeet from "../player/PlayerFeet";
 
 
 class BounceUpPlatform extends Platform {
@@ -21,8 +22,10 @@ class BounceUpPlatform extends Platform {
     }
 
     protected onContact(other : Collider): void {
-        if (other.gameObject.getComponent<Player>(Player)) {
+        let playerFeet = other.gameObject.getComponent<PlayerFeet>(PlayerFeet);
+        if (playerFeet) {
             this.bounce(other);
+            playerFeet.jump();
         }
     }
 

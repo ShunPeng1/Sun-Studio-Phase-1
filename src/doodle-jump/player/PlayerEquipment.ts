@@ -5,7 +5,7 @@ import Rigidbody from "../../engine/components/physics/Rigidbody";
 import GameObject from "../../engine/gameobjects/GameObject";
 import JumpPlatformIgnorance from "./JumpPlatformIgnorance";
 
-class Player extends Component{
+class PlayerEquipment extends Component{
     
     private headWearable : GameObject;
     private backWearable : GameObject;
@@ -19,6 +19,9 @@ class Player extends Component{
     private duration : number = 0;
 
     private zOffset : number = 0;
+
+    private jumpSubscribers: Array<() => void> = [];
+
     
     constructor(headWearable : GameObject, backWearable : GameObject, zOffset : number = 0.1) {
         super();
@@ -105,11 +108,28 @@ class Player extends Component{
         this.jumpPlatformIgnorance.setEnable(false);
     }
 
+    public subscribeJump(callback: () => void): void {
+        this.jumpSubscribers.push(callback);
+    }
+
+    public unsubscribeJump(callback: () => void): void {
+        const index = this.jumpSubscribers.indexOf(callback);
+        if (index !== -1) {
+            this.jumpSubscribers.splice(index, 1);
+        }
+    }
+
+    public invokeJump(): void {
+        // Notify all subscribers
+        for (const callback of this.jumpSubscribers) {
+            callback();
+        }
+    }
 
     public clone(): Component {
-        return new Player(this.headWearable, this.backWearable);    
+        return new PlayerEquipment(this.headWearable, this.backWearable);    
     }
 }
 
 
-export default Player;
+export default PlayerEquipment;

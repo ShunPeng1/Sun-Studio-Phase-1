@@ -13,7 +13,7 @@ import ScoreManager from "../ScoreManager";
 import BoxCollider from "../../engine/components/physics/BoxCollider";
 import Rigidbody from "../../engine/components/physics/Rigidbody";
 
-import PlayerWear from "../player/PlayerWear";
+import PlayerWear from "../player/PlayerEquipment";
 import Mesh from "../../engine/webgl/shapes/Mesh";
 import MeshFactory from "../../engine/webgl/factories/MeshFactory";
 import IGameSceneCollection from "../../engine/scenes/IGameSceneCollection";
@@ -22,6 +22,8 @@ import JetpackWearableAnimator from "../animators/JetpackWearableAnimator";
 import PlayerTrunk from "../player/PlayerTrunk";
 import ForwardMovement from "../movement/ForwardMovement";
 import TimeoutSelfDestruction from "../player/TimeoutSelfDestruction";
+import PlayerFeet from "../player/PlayerFeet";
+import PlayerAnimator from "../animators/playerAnimator";
 
 abstract class DoodleJumpSceneContent implements ISceneContent{
 
@@ -57,7 +59,10 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
     
 
     // Player images
-    protected PLAYER_TILE_URL = `${this.PLAYER_URL}/tile000.png`;
+    protected PLAYER_IDLE_URL = `${this.PLAYER_URL}/tile000.png`;
+    protected PLAYER_JUMP_URL = `${this.PLAYER_URL}/tile001.png`;
+    protected PLAYER_SHOOT_URL = `${this.PLAYER_URL}/tile002.png`;
+    protected PLAYER_SHOOT_JUMP_URL = `${this.PLAYER_URL}/tile003.png`;
 
     protected TRUNK_URL = `${this.ATLAS_URL}/trunk.png`;
     protected BULLET_URL = `${this.ATLAS_URL}/bullet.png`;
@@ -107,7 +112,7 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
 
     protected downloadPlayerImages(): Promise<any>[]{
         let promises: Promise<any>[] = [];
-        promises.push(this.imageLoader.loadImageFromUrls(this.PLAYER_TILE_URL));
+        promises.push(this.imageLoader.loadImageFromUrls([this.PLAYER_IDLE_URL, this.PLAYER_JUMP_URL, this.PLAYER_SHOOT_URL, this.PLAYER_SHOOT_JUMP_URL]));
         return promises;
     }
 
@@ -201,7 +206,8 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
         vec3.set(playerGameObject.transform.rotation, 0, 0, 0);
         vec3.set(playerGameObject.transform.scale, 4, 4, 1);
         playerGameObject.addComponent(new BoxCollider(false, 0, -0.5, 1, 0.25));
-        playerGameObject.addComponent(new Rigidbody(1.1, 140))
+        playerGameObject.addComponent(new Rigidbody(1.1, 140));
+        playerGameObject.addComponent(new PlayerFeet(0.2));
 
         // Add Player Parts
         
@@ -228,10 +234,7 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
         playerBack.addComponent(new JetpackWearableAnimator(3))
 
 
-        
-        let playerImageElements = this.imageLoader.getImageElements(this.PLAYER_TILE_URL);
-        playerGameObject.addComponent(new MeshRenderer(this.quad, playerImageElements, this.vectorArtTextureInfo));
-        
+
         // Add Trunk
         let playerTrunk = new GameObject("Trunk");
 
@@ -252,12 +255,16 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
         bulletPrefab.addComponent(new MeshRenderer(this.quad, bulletImageElements, this.vectorArtTextureInfo));
         bulletPrefab.addComponent(new ForwardMovement(200));
         bulletPrefab.addComponent(new TimeoutSelfDestruction(1));
-        
-        playerGameObject.addComponent(new PlayerTrunk(playerTrunk, bulletPrefab, [0, 2, 0], 10));
 
+        
+        // Combine all player parts
+        playerGameObject.addComponent(new PlayerTrunk(playerTrunk, bulletPrefab, [0, 2, 0], 10, 0.4));
         playerGameObject.addComponent(new PlayerWear(playerHead, playerBack, 0.1));
+
         
-        
+        let playerImageElements = this.imageLoader.getImageElements([this.PLAYER_IDLE_URL, this.PLAYER_JUMP_URL, this.PLAYER_SHOOT_URL, this.PLAYER_SHOOT_JUMP_URL]);
+        playerGameObject.addComponent(new MeshRenderer(this.quad, playerImageElements, this.vectorArtTextureInfo));
+        playerGameObject.addComponent(new PlayerAnimator());     
 
 
         return playerGameObject;
