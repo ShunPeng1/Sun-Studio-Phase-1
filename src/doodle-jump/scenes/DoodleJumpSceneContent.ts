@@ -20,6 +20,7 @@ import IGameSceneCollection from "../../engine/scenes/IGameSceneCollection";
 import HatWearableAnimator from "../animators/HatWearableAnimator";
 import JetpackWearableAnimator from "../animators/JetpackWearableAnimator";
 import PlayerTrunk from "../player/PlayerTrunk";
+import ForwardMovement from "../movement/ForwardMovement";
 
 abstract class DoodleJumpSceneContent implements ISceneContent{
 
@@ -58,6 +59,7 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
     protected PLAYER_TILE_URL = `${this.PLAYER_URL}/tile000.png`;
 
     protected TRUNK_URL = `${this.ATLAS_URL}/trunk.png`;
+    protected BULLET_URL = `${this.ATLAS_URL}/bullet.png`;
 
     // Hat images
     protected HAT_WEARABLE1_URL = `${this.ATLAS_URL}/propeller_02.png`;
@@ -198,7 +200,7 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
         vec3.set(playerGameObject.transform.rotation, 0, 0, 0);
         vec3.set(playerGameObject.transform.scale, 4, 4, 1);
         playerGameObject.addComponent(new BoxCollider(false, 0, -0.5, 1, 0.25));
-        playerGameObject.addComponent(new Rigidbody(1.1, 110))
+        playerGameObject.addComponent(new Rigidbody(1.1, 140))
 
         // Add Player Parts
         
@@ -245,9 +247,10 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
         // Add bullet prefab
         let bulletPrefab = new GameObject("Bullet");
         vec3.set(bulletPrefab.transform.scale, 0.1, 0.1, 1);
-        let bulletImageElements = this.imageLoader.getImageElements(this.PLAYER_TILE_URL);
+        let bulletImageElements = this.imageLoader.getImageElements(this.BULLET_URL);
         bulletPrefab.addComponent(new MeshRenderer(this.quad, bulletImageElements, this.vectorArtTextureInfo));
-        
+        bulletPrefab.addComponent(new ForwardMovement(1));
+        //  bulletPrefab.addComponent(new TimeoutSelfDestruction());
         
         playerGameObject.addComponent(new PlayerTrunk(playerTrunk, bulletPrefab, vec3.fromValues(0, 0.5, 0), 10));
 

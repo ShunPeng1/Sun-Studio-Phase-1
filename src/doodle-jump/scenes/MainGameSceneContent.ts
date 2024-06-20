@@ -76,7 +76,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
 
         imageLoadPromises.push(imageLoader.loadImageFromUrls([this.HAT_WEARABLE1_URL, this.HAT_WEARABLE2_URL, this.HAT_WEARABLE3_URL]));
         imageLoadPromises.push(imageLoader.loadImageFromUrls([this.JETPACK_WEARABLE0_URL, this.JETPACK_WEARABLE1_URL, this.JETPACK_WEARABLE2_URL, this.JETPACK_WEARABLE3_URL, this.JETPACK_WEARABLE4_URL, this.JETPACK_WEARABLE5_URL, this.JETPACK_WEARABLE6_URL, this.JETPACK_WEARABLE7_URL, this.JETPACK_WEARABLE8_URL, this.JETPACK_WEARABLE9_URL]));
-        
+        imageLoadPromises.push(imageLoader.loadImageFromUrls([this.BULLET_URL]));
         return imageLoadPromises;
     }
 
@@ -92,7 +92,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         vec3.set(playerGameObject.transform.position, 0, -20, 1);
         vec3.set(playerGameObject.transform.rotation, 0, 0, 0);
         vec3.set(playerGameObject.transform.scale, 4, 4, 1);
-        playerGameObject.addComponent(new LeftRightControlMovement(45));
+        playerGameObject.addComponent(new LeftRightControlMovement(48));
         playerGameObject.addComponent(new InitialForce([0, 5000, 0]))
         playerGameObject.addComponent(new JumpPlatformIgnorance());
         playerGameObject.addComponent(new PlayerShoot(vec2.fromValues(-0.1, 0.1)))
@@ -100,7 +100,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         // Create Camera
         let camera = this.createCamera();
         
-        camera.addComponent(new XBoundTeleportation(playerGameObject, 0, 25));
+        camera.addComponent(new XBoundTeleportation(playerGameObject, 0, 27));
         camera.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         sceneGameObjects.push(camera);
 
@@ -116,8 +116,8 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         let greenPlatform = new GameObject("Green Platform");
 
         vec3.set(greenPlatform.transform.scale, 4, 2, 1);
-        greenPlatform.addComponent(new BoxCollider(true, 0, 1, 2, 1));
-        greenPlatform.addComponent(new BounceUpPlatform(4000));
+        greenPlatform.addComponent(new BoxCollider(true, 0, 3.5, 2, 0.25));
+        greenPlatform.addComponent(new BounceUpPlatform(5000));
         
         let greenPlatfromImageElements = this.imageLoader.getImageElements(this.PLATFORM0_URL);
         greenPlatform.addComponent(new MeshRenderer(this.quad, greenPlatfromImageElements, this.vectorArtTextureInfo));
@@ -128,8 +128,8 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
 
         vec3.set(bluePlatform.transform.position, 0, 5, 1);
         vec3.set(bluePlatform.transform.scale, 4, 2, 1);
-        bluePlatform.addComponent(new BoxCollider(true, 0, 1, 2, 1));
-        bluePlatform.addComponent(new BounceUpPlatform(4000));
+        bluePlatform.addComponent(new BoxCollider(true, 0, 3.5, 2, 0.25));
+        bluePlatform.addComponent(new BounceUpPlatform(5000));
 
         // Waypoints
         let wayPoints = [
@@ -151,7 +151,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         let brownPlatform = new GameObject("Brown Platform");
 
         vec3.set(brownPlatform.transform.scale, 4, 4, 1);
-        brownPlatform.addComponent(new BoxCollider(true, 0, 1, 2, 1));
+        brownPlatform.addComponent(new BoxCollider(true, 0, 2, 2, 1));
         brownPlatform.addComponent(new WoodenPlatform(40,1));
 
         let brownPlatfromImageElements = this.imageLoader.getImageElements(
@@ -173,8 +173,8 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         let whitePlatform = new GameObject("White Platform");
         
         vec3.set(whitePlatform.transform.scale, 4, 2, 1);
-        whitePlatform.addComponent(new BoxCollider(true, 0, 1, 2, 1));
-        whitePlatform.addComponent(new BounceUpPlatform(4000));
+        whitePlatform.addComponent(new BoxCollider(true, 0, 3.5, 2, 0.25));
+        whitePlatform.addComponent(new BounceUpPlatform(5000));
         whitePlatform.addComponent(new CloudPlatform());
  
         let whitePlatformImageElements = this.imageLoader.getImageElements(this.PLATFORM3_URL);
@@ -185,7 +185,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         vec3.set(spring.transform.position, -3, 0, 1);
         vec3.set(spring.transform.scale, 1.5, 2, 1);
         spring.addComponent(new Spring())
-        spring.addComponent(new BoxCollider(true, 0, 1, 2, 1));
+        spring.addComponent(new BoxCollider(true, 0, 3, 2.5, 2));
         spring.addComponent(new BounceUpPlatform(8000));
 
         let springImageElements = this.imageLoader.getImageElements([this.SPRING0_URL, this.SPRING1_URL]);
@@ -224,10 +224,10 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
             new PlatformSpawnInfo(bluePlatform, 3, false, true),
             new PlatformSpawnInfo(whitePlatform, 1, false, false)
         ], 60, [-20,20], [4,14], [
-            new PlatformItemSpawnInfo(spring, 300,[-0.2,0.2], 0.8),
-            new PlatformItemSpawnInfo(jetpack, 100,[-0.2,0.2], 2),
-            new PlatformItemSpawnInfo(hat, 100,[-0.2,0.2], 1.8)
-        ], 2000));
+            new PlatformItemSpawnInfo(spring, 6,[-0.2,0.2], 0.8),
+            new PlatformItemSpawnInfo(jetpack, 2,[-0.2,0.2], 2),
+            new PlatformItemSpawnInfo(hat, 1,[-0.2,0.2], 1.8)
+        ], 60));
         spawner.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         spawner.transform.position[1] = -30;
         
@@ -237,7 +237,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         sceneGameObjects.push(destroyer);
 
         let destroyerFollwerMovement = new MaxFollowerMovement(playerGameObject, false, true, false);
-        destroyer.addComponent(new BoxCollider(true, 0,-140, 1000, 200));
+        destroyer.addComponent(new BoxCollider(true, 0,-136, 1000, 200));
         destroyer.addComponent(new PlatformDestroyer());
         destroyer.addComponent(destroyerFollwerMovement);
         destroyer.addComponent(new ScoreTracking(destroyerFollwerMovement, 18));

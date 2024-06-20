@@ -31,7 +31,6 @@ class PlayerTrunk extends Component{
     }
 
 
-
     public shoot(angle : number = Math.PI/2) {
     
         const bullet = this.bulletPrefab.clone();
@@ -45,7 +44,6 @@ class PlayerTrunk extends Component{
         this.playerTrunk.transform.position[1] = this.originalPosition[1] - Math.abs(Math.cos(angle)) * 0.45;
 
         console.log(Math.cos(angle),  Math.cos(Math.PI /2 - angle));
-        // Randomize the angle
         
         bullet.transform.rotation[1] = angle;
     }
