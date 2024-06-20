@@ -7,7 +7,6 @@ import Mesh from "../../webgl/shapes/Mesh";
 
 
 class WebGLRenderer extends Component {
-    protected isEnable : boolean = true;
 
     protected webgl : WebGLManager;
 

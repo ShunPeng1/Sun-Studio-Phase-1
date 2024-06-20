@@ -13,7 +13,6 @@ class Collider extends Component{
     public isTrigger : boolean = false;
     public onCollisionEvent: EventEmitter = new EventEmitter();
     public id: number;
-    public isEnable: boolean = true;
 
     private COLLISION_ENTER = "Collision Enter";
     private COLLISION_STAY = "Collision Stay";
@@ -29,7 +28,7 @@ class Collider extends Component{
     }
     
     
-    public awake(): void {
+    public onEnable(): void {
         //console.log("Awake Collider ", this.id, this.gameObject.name);
         PhysicManager.getInstance().addCollider(this);
     }
@@ -127,7 +126,7 @@ class Collider extends Component{
         return new Collider(this.isTrigger);
     }
 
-    public destroy(): void {
+    public onDisable(): void {
         //console.log("Destroying Collider ", this.id, this.gameObject.name);
         PhysicManager.getInstance().removeCollider(this);
     }

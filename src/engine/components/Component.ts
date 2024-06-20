@@ -8,6 +8,8 @@ abstract class Component {
     private isAwaked: boolean = false;
     private isStarted: boolean = false;
 
+    protected isEnable: boolean = false;
+
     public setGameObject(gameObject: GameObject) {
         this.gameObject = gameObject;
         this.transform = gameObject.transform;
@@ -27,6 +29,8 @@ abstract class Component {
     }
 
     public tryStart() {
+        this.setEnable(true);
+
         if (!this.isStarted) {
             this.isStarted = true;
             this.start();
@@ -35,6 +39,7 @@ abstract class Component {
             return;
         }
     }
+
 
     protected start() {
         
@@ -49,9 +54,34 @@ abstract class Component {
     public render(time: number, deltaTime : number) {
     }
 
-    public destroy() {
+    public tryDestroy() {
+        this.setEnable(false);
+        this.destroy();
+    }
+
+    protected destroy() {
     }
     
+    public setEnable(isEnable: boolean) {
+        if (this.isEnable == isEnable) {
+            return;
+        }
+        this.isEnable = isEnable;
+        if (isEnable) {
+            this.onEnable();
+        }
+        else {
+            this.onDisable();
+        }
+    }
+
+    protected onEnable() {
+        
+    }
+
+    protected onDisable() {
+    
+    }
 
     public abstract clone(): Component;
 }

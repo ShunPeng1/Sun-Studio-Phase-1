@@ -27,7 +27,7 @@ class Button extends Component{
 
     }
 
-    public start(): void {
+    public onEnable(): void {
         // Add to UI Manager
 
         InputManager.getInstance().subscribeMouseDown(this.boundMouseDown);
@@ -71,10 +71,9 @@ class Button extends Component{
         event.clientY <= this.y + this.height;
     }
 
-    public destroy(): void {
+    protected onDisable(): void {
         InputManager.getInstance().unsubscribeMouseDown(this.boundMouseDown);
         InputManager.getInstance().unsubscribeMouseUp(this.boundMouseUp);
-    
     }
     
 

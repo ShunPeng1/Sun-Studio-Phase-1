@@ -55,10 +55,22 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
     // Player images
     protected PLAYER_TILE_URL = `${this.PLAYER_URL}/tile000.png`;
 
+    // Hat images
     protected HAT_WEARABLE1_URL = `${this.ATLAS_URL}/propeller_02.png`;
     protected HAT_WEARABLE2_URL = `${this.ATLAS_URL}/propeller_03.png`;
     protected HAT_WEARABLE3_URL = `${this.ATLAS_URL}/propeller_04.png`;
 
+    // Jetpack images
+    protected JETPACK1_URL = `${this.ATLAS_URL}/bonus2anim_01.png`;
+    protected JETPACK2_URL = `${this.ATLAS_URL}/bonus2anim_02.png`;
+    protected JETPACK3_URL = `${this.ATLAS_URL}/bonus2anim_03.png`;
+    protected JETPACK4_URL = `${this.ATLAS_URL}/bonus2anim_04.png`;
+    protected JETPACK5_URL = `${this.ATLAS_URL}/bonus2anim_05.png`;
+    protected JETPACK6_URL = `${this.ATLAS_URL}/bonus2anim_06.png`;
+    protected JETPACK7_URL = `${this.ATLAS_URL}/bonus2anim_07.png`;
+    protected JETPACK8_URL = `${this.ATLAS_URL}/bonus2anim_08.png`;
+    protected JETPACK9_URL = `${this.ATLAS_URL}/bonus2anim_09.png`;
+    protected JETPACK10_URL = `${this.ATLAS_URL}/bonus2anim_10.png`;
 
     constructor(sceneCollection : IGameSceneCollection){
         this.sceneCollection = sceneCollection;

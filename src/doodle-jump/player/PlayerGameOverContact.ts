@@ -32,7 +32,7 @@ class PlayerGameOverContact extends Component{
         }
     }
 
-    public destroy(): void {
+    protected destroy(): void {
         this.collider.unsubcribeToCollisionEnter(this.boundLoseGame);
     }
     

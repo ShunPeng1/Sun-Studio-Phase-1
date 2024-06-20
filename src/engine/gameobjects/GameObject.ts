@@ -176,7 +176,21 @@ class GameObject {
     }
 
     public setEnable(isEnable: boolean) {
+        if (this.isEnable == isEnable) {
+            return;
+        }
+
         this.isEnable = isEnable;
+
+        for (let i = 0; i < this.components.length; i++) {
+            this.components[i].setEnable(isEnable);
+        }
+
+        let children = this.transform.getChildren();
+        for (let i = 0; i < children.length; i++) {
+            children[i].gameObject.setEnable(isEnable);
+        }
+
     }
 
     public clone(parent : Transform | null = null): GameObject {
@@ -206,7 +220,7 @@ class GameObject {
         }
         this.isMarkedForDestruction = true;
         for (let i = 0; i < this.components.length; i++) {
-            this.components[i].destroy();
+            this.components[i].tryDestroy();
         }
 
         let children = this.transform.getChildren();

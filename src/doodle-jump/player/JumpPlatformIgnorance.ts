@@ -6,7 +6,6 @@ import Platform from "../platforms/Platform";
 import PlatformItem from "../platform-items/PlatformItem";
 
 class JumpPlatformIgnorance extends Component{
-    private isEnable: boolean = true;    
     
     private isFalling: boolean = true;
     private isJumping: boolean = false;
@@ -62,11 +61,11 @@ class JumpPlatformIgnorance extends Component{
     }
 
     public disablePlayerCollider() {
-        this.collider.isEnable = false;   
+        this.collider.setEnable(false);   
     }
 
     public enablePlayerCollider() {
-        this.collider.isEnable = true;   
+        this.collider.setEnable(true); 
     }
 
     // public disablePlatformCollider() {
