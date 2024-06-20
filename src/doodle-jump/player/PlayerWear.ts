@@ -20,7 +20,7 @@ class Player extends Component{
 
     private zOffset : number = 0;
     
-    constructor(headWearable : GameObject, backWearable : GameObject, zOffset : number = 0.1) {
+    constructor(headWearable : GameObject, backWearable : GameObject, zOffset : number = 0) {
         super();
         this.headWearable = headWearable;
         this.backWearable = backWearable;

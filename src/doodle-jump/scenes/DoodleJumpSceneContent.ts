@@ -13,7 +13,7 @@ import ScoreManager from "../ScoreManager";
 import BoxCollider from "../../engine/components/physics/BoxCollider";
 import Rigidbody from "../../engine/components/physics/Rigidbody";
 
-import Player from "../player/Player";
+import PlayerWear from "../player/PlayerWear";
 import Mesh from "../../engine/webgl/shapes/Mesh";
 import MeshFactory from "../../engine/webgl/factories/MeshFactory";
 import IGameSceneCollection from "../../engine/scenes/IGameSceneCollection";
@@ -55,6 +55,8 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
 
     // Player images
     protected PLAYER_TILE_URL = `${this.PLAYER_URL}/tile000.png`;
+
+    protected TRUNK_URL = `${this.ATLAS_URL}/trunk.png`;
 
     // Hat images
     protected HAT_WEARABLE1_URL = `${this.ATLAS_URL}/propeller_02.png`;
@@ -209,7 +211,7 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
         playerHead.addComponent(new MeshRenderer(this.quad, hatWearableImageElements, this.vectorArtTextureInfo));
         playerHead.addComponent(new HatWearableAnimator())
         
-
+        
 
         let playerBack = new GameObject("Player Back");
         playerBack.transform.setParent(playerGameObject.transform);
@@ -222,11 +224,27 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
         playerBack.addComponent(new JetpackWearableAnimator(3))
 
 
-        playerGameObject.addComponent(new Player(playerHead, playerBack));
         
         let playerImageElements = this.imageLoader.getImageElements(this.PLAYER_TILE_URL);
         playerGameObject.addComponent(new MeshRenderer(this.quad, playerImageElements, this.vectorArtTextureInfo));
         
+        // Add Trunk
+        let playerTrunk = new GameObject("Trunk");
+
+        vec3.set(playerTrunk.transform.position, 0, 1, 0.1);
+        vec3.set(playerTrunk.transform.scale, 0.25,2,1)
+
+        playerTrunk.transform.setParent(playerGameObject.transform);
+
+        let trunkImageElements = this.imageLoader.getImageElements(this.TRUNK_URL);
+        playerTrunk.addComponent(new MeshRenderer(this.quad, trunkImageElements, this.vectorArtTextureInfo));
+
+        
+        playerGameObject.addComponent(new PlayerWear(playerHead, playerBack, 0.1));
+        pla
+        
+
+
         return playerGameObject;
     }
 

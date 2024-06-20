@@ -1,6 +1,6 @@
 import Collider from "../../engine/components/physics/Collider";
 import Component from "../../engine/components/Component";
-import Player from "../player/Player";
+import Player from "../player/PlayerWear";
 import Platform from "./Platform";
 
 class CloudPlatform extends Platform {

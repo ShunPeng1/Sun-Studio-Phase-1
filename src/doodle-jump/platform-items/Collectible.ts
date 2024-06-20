@@ -3,7 +3,7 @@ import Transform from "../../engine/components/Transform";
 import Collider from "../../engine/components/physics/Collider";
 import GameObject from "../../engine/gameobjects/GameObject";
 import Platform from "../platforms/Platform";
-import Player from "../player/Player";
+import Player from "../player/PlayerWear";
 import PlatformItem from "./PlatformItem";
 
 abstract class Collectible extends PlatformItem {

@@ -3,7 +3,7 @@ import Collider from "../../engine/components/physics/Collider";
 import SceneManager from "../../engine/scenes/SceneManager";
 import ScoreManager from "../ScoreManager";
 import DoodleJumpSceneCollection from "../scenes/DoodleJumpSceneCollection";
-import Player from "./Player";
+import Player from "./PlayerWear";
 
 class PlayerGameOverContact extends Component{
     private collider: Collider;

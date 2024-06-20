@@ -16,7 +16,7 @@ import Rigidbody from "../../engine/components/physics/Rigidbody";
 import LeftRightControlMovement from "../movement/LeftRightControlMovement";
 import InitialForce from "../movement/InitialForce";
 import JumpPlatformIgnorance from "../player/JumpPlatformIgnorance";
-import Player from "../player/Player";
+import Player from "../player/PlayerWear";
 import PlatformSpawner from "../platforms/PlatformSpawner";
 import PlatformSpawnInfo from "../platforms/PlatformSpawnInfo";
 import MaxFollowerMovement from "../movement/MaxFollowerMovement";
@@ -60,9 +60,13 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
             this.PLATFORM_SHEET_04_URL,
         ]));
         imageLoadPromises.push(imageLoader.loadImageFromUrls(this.PLATFORM3_URL));
-        imageLoadPromises.push(imageLoader.loadImageFromUrls(this.PLAYER_TILE_URL));
+
         imageLoadPromises.push(imageLoader.loadImageFromUrls(this.BACKGROUND_URL));
         imageLoadPromises.push(imageLoader.loadImageFromUrls(this.TOP_URL));
+
+        
+        imageLoadPromises.push(imageLoader.loadImageFromUrls(this.PLAYER_TILE_URL));
+        imageLoadPromises.push(imageLoader.loadImageFromUrls(this.TRUNK_URL));
 
         imageLoadPromises.push(imageLoader.loadImageFromUrls(this.SPRING0_URL));
         imageLoadPromises.push(imageLoader.loadImageFromUrls(this.SPRING1_URL));

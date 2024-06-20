@@ -2,7 +2,7 @@ import Collider from "../../engine/components/physics/Collider";
 import Component from "../../engine/components/Component";
 import Rigidbody from "../../engine/components/physics/Rigidbody";
 import Transform from "../../engine/components/Transform";
-import Player from "../player/Player";
+import Player from "../player/PlayerWear";
 import Platform from "./Platform";
 import { EventEmitter } from 'events';
 
