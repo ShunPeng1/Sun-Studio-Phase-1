@@ -1,4 +1,4 @@
-import { vec3 } from "gl-matrix";
+import { vec2, vec3 } from "gl-matrix";
 import CameraRenderer from "../../engine/components/renderers/CameraRenderer";
 import GameObject from "../../engine/gameobjects/GameObject";
 import ISceneContent from "../../engine/scenes/ISceneContent";
@@ -19,6 +19,7 @@ import MeshFactory from "../../engine/webgl/factories/MeshFactory";
 import IGameSceneCollection from "../../engine/scenes/IGameSceneCollection";
 import HatWearableAnimator from "../animators/HatWearableAnimator";
 import JetpackWearableAnimator from "../animators/JetpackWearableAnimator";
+import PlayerTrunk from "../player/PlayerTrunk";
 
 abstract class DoodleJumpSceneContent implements ISceneContent{
 
@@ -237,9 +238,19 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
         playerTrunk.transform.setParent(playerGameObject.transform);
 
         let trunkImageElements = this.imageLoader.getImageElements(this.TRUNK_URL);
-        //playerTrunk.addComponent(new MeshRenderer(this.quad, trunkImageElements, this.vectorArtTextureInfo));
+        playerTrunk.addComponent(new MeshRenderer(this.quad, trunkImageElements, this.vectorArtTextureInfo));
 
         
+        
+        // Add bullet prefab
+        let bulletPrefab = new GameObject("Bullet");
+        vec3.set(bulletPrefab.transform.scale, 0.1, 0.1, 1);
+        let bulletImageElements = this.imageLoader.getImageElements(this.PLAYER_TILE_URL);
+        bulletPrefab.addComponent(new MeshRenderer(this.quad, bulletImageElements, this.vectorArtTextureInfo));
+        
+        
+        playerGameObject.addComponent(new PlayerTrunk(playerTrunk, bulletPrefab, vec3.fromValues(0, 0.5, 0), 10));
+
         playerGameObject.addComponent(new PlayerWear(playerHead, playerBack, 0.1));
         
         

@@ -1,4 +1,4 @@
-import { vec3 } from "gl-matrix";
+import { vec2, vec3 } from "gl-matrix";
 import GameObject from "../../engine/gameobjects/GameObject";
 import ModelReaderFactory from "../../engine/webgl/factories/ModelReaderFactory";
 import MeshType from "../../engine/webgl/shapes/MeshType";
@@ -13,7 +13,7 @@ import PlatformWayPoint from "../platforms/PlatformWayPoint";
 import WoodenPlatformAnimator from "../animators/WoodenPlatformAnimator";
 import CloudPlatform from "../platforms/CloudPlatform";
 import Rigidbody from "../../engine/components/physics/Rigidbody";
-import LeftRightControlMovement from "../movement/LeftRightControlMovement";
+import LeftRightControlMovement from "../player/LeftRightControlMovement";
 import InitialForce from "../movement/InitialForce";
 import JumpPlatformIgnorance from "../player/JumpPlatformIgnorance";
 import Player from "../player/PlayerWear";
@@ -35,6 +35,7 @@ import Spring from "../platform-items/Spring";
 import JetpackCollectible from "../platform-items/JetpackCollectible";
 import HatCollectible from "../platform-items/HatCollectible";
 import SpringAnimator from "../animators/SpringAnimator";
+import PlayerShoot from "../player/PlayerShoot";
 
 class MainGameSceneContent extends DoodleJumpSceneContent{
     
@@ -94,6 +95,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         playerGameObject.addComponent(new LeftRightControlMovement(45));
         playerGameObject.addComponent(new InitialForce([0, 5000, 0]))
         playerGameObject.addComponent(new JumpPlatformIgnorance());
+        playerGameObject.addComponent(new PlayerShoot(vec2.fromValues(-0.1, 0.1)))
         
         // Create Camera
         let camera = this.createCamera();

@@ -57,6 +57,13 @@ class CanvasManager {
         return this.html2dCanvasContext;
     }
     
+    public getWidth(): number {
+        return this.width;
+    }
+
+    public getHeight(): number {
+        return this.height;
+    }
 }
 
 export default CanvasManager;
