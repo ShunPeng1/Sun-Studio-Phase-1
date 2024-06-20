@@ -11,6 +11,7 @@ class GameObject {
 
     private components: Component[] = []; 
     
+    private isEnable: boolean = true;
     private isDestroyed: boolean = false;
     private isMarkedForDestruction: boolean = false;
     private scene: Scene;
@@ -29,6 +30,7 @@ class GameObject {
 
     public awake() {
 
+
         for (let i = 0; i < this.components.length; i++) {
             this.components[i].tryAwake();
         }
@@ -40,6 +42,11 @@ class GameObject {
     }
     
     private start() {
+        
+        if (this.isEnable == false) {
+            return;
+        }
+
         for (let i = 0; i < this.components.length; i++) {
             this.components[i].tryStart();
         }
@@ -51,6 +58,11 @@ class GameObject {
     }
 
     public update(time: number, deltaTime : number) {
+        
+        if (this.isEnable == false) {
+            return;
+        }
+
         this.start();
 
         for (let i = 0; i < this.components.length; i++) {
@@ -64,6 +76,11 @@ class GameObject {
     }
 
     public render(time: number, deltaTime : number) {
+        
+        if (this.isEnable == false) {
+            return;
+        }
+
         for (let i = 0; i < this.components.length; i++) {
             this.components[i].render(time, deltaTime);
         }
@@ -75,6 +92,11 @@ class GameObject {
     }
 
     public fixedUpdate(fixedLastTime: number, fixedDeltaTime : number) {
+        
+        if (this.isEnable == false) {
+            return;
+        }
+
         this.start();
 
         for (let i = 0; i < this.components.length; i++) {
@@ -151,6 +173,10 @@ class GameObject {
         if (index > -1) {
             this.components.splice(index, 1);
         }
+    }
+
+    public setEnable(isEnable: boolean) {
+        this.isEnable = isEnable;
     }
 
     public clone(parent : Transform | null = null): GameObject {

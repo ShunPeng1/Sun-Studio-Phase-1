@@ -17,6 +17,7 @@ import Player from "../player/Player";
 import Mesh from "../../engine/webgl/shapes/Mesh";
 import MeshFactory from "../../engine/webgl/factories/MeshFactory";
 import IGameSceneCollection from "../../engine/scenes/IGameSceneCollection";
+import HatWearableAnimator from "../animators/HatWearableAnimator";
 
 abstract class DoodleJumpSceneContent implements ISceneContent{
 
@@ -53,6 +54,10 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
 
     // Player images
     protected PLAYER_TILE_URL = `${this.PLAYER_URL}/tile000.png`;
+
+    protected HAT_WEARABLE1_URL = `${this.ATLAS_URL}/propeller_02.png`;
+    protected HAT_WEARABLE2_URL = `${this.ATLAS_URL}/propeller_03.png`;
+    protected HAT_WEARABLE3_URL = `${this.ATLAS_URL}/propeller_04.png`;
 
 
     constructor(sceneCollection : IGameSceneCollection){
@@ -183,14 +188,24 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
         
         let playerHead = new GameObject("Player Head");
         playerHead.transform.setParent(playerGameObject.transform);
+
+        vec3.set(playerHead.transform.position, 0, 1.2, 0.1);
+        vec3.set(playerHead.transform.scale, 0.5,1,1)
+
+        let hatWearableImageElements = this.imageLoader.getImageElements([this.HAT_WEARABLE1_URL, this.HAT_WEARABLE2_URL, this.HAT_WEARABLE3_URL]);
+        playerHead.addComponent(new MeshRenderer(this.quad, hatWearableImageElements, this.vectorArtTextureInfo));
+        playerHead.addComponent(new HatWearableAnimator())
         
+
         let playerBack = new GameObject("Player Back");
         playerBack.transform.setParent(playerGameObject.transform);
+
+
 
         playerGameObject.addComponent(new Player(playerHead, playerBack));
         
         let playerImageElements = this.imageLoader.getImageElements(this.PLAYER_TILE_URL);
-        playerHead.addComponent(new MeshRenderer(this.quad, playerImageElements, this.vectorArtTextureInfo));
+        playerGameObject.addComponent(new MeshRenderer(this.quad, playerImageElements, this.vectorArtTextureInfo));
         
         return playerGameObject;
     }

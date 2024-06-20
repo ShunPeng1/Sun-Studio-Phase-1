@@ -68,6 +68,8 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         imageLoadPromises.push(imageLoader.loadImageFromUrls(this.SPRING1_URL));
         imageLoadPromises.push(imageLoader.loadImageFromUrls(this.JETPACK_URL));
         imageLoadPromises.push(imageLoader.loadImageFromUrls(this.HAT_URL));
+
+        imageLoadPromises.push(imageLoader.loadImageFromUrls([this.HAT_WEARABLE1_URL, this.HAT_WEARABLE2_URL, this.HAT_WEARABLE3_URL]));
         return imageLoadPromises;
     }
 
@@ -214,9 +216,9 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
             new PlatformSpawnInfo(bluePlatform, 3, false, true),
             new PlatformSpawnInfo(whitePlatform, 1, false, false)
         ], 60, [-20,20], [4,14], [
-            new PlatformItemSpawnInfo(spring, 100,[-0.2,0.2], 0.8),
+            //new PlatformItemSpawnInfo(spring, 100,[-0.2,0.2], 0.8),
             //new PlatformItemSpawnInfo(jetpack, 100,[-0.2,0.2], 2),
-            //new PlatformItemSpawnInfo(hat, 100,[-0.2,0.2], 1.8)
+            new PlatformItemSpawnInfo(hat, 100,[-0.2,0.2], 1.8)
         ], 0));
         spawner.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         spawner.transform.position[1] = -30;

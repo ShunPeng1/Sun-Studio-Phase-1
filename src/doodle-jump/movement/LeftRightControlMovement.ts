@@ -8,6 +8,9 @@ class LeftRightControlMovement extends Component {
     private headingXPosition : number
     private isPressingLeft : boolean = false;
     private isPressingRight : boolean = false;
+
+    
+    
     constructor(speed : number) {
         super();
         this.speed = speed;
@@ -19,6 +22,7 @@ class LeftRightControlMovement extends Component {
     }
     public awake(): void {
         this.headingXPosition = 0;
+        
 
         InputManager.getInstance().subscribeKeyDown("ArrowLeft" , this.moveLeft);
         InputManager.getInstance().subscribeKeyDown("ArrowRight" , this.moveRight);
@@ -41,6 +45,7 @@ class LeftRightControlMovement extends Component {
         // Only rotate the player if it's moving
         if (this.headingXPosition !== 0) {
             this.gameObject.transform.rotation[1] = (this.headingXPosition == 1 ? 1 : 0) * Math.PI; 
+       
         }
     }
 
