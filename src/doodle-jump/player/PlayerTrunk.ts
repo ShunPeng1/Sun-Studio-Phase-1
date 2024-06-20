@@ -4,7 +4,7 @@ import GameObject from "../../engine/gameobjects/GameObject";
 import InputManager from "../../engine/inputs/InputManager";
 
 class PlayerTrunk extends Component{
-    
+    private canShoot : boolean = true;
     private playerTrunk : GameObject;
     private bulletOffset : vec3;
     private bulletPrefab : GameObject;
@@ -46,7 +46,7 @@ class PlayerTrunk extends Component{
             
             this.updateTrunkPosition();
 
-            if(this.currentTrunkShowTime >= this.trunkShowDuration){
+            if(this.currentTrunkShowTime >= this.trunkShowDuration || !this.canShoot){
                 this.playerTrunk.setEnable(false);
                 this.currentTrunkShowTime = 0;
             }
@@ -55,7 +55,11 @@ class PlayerTrunk extends Component{
     }
 
     public shoot(angle : number = Math.PI/2) {
-    
+        if (!this.canShoot){
+            return;
+        }
+
+
         this.shootAngle = angle;
         this.currentTrunkShowTime = 0;
 
@@ -81,13 +85,21 @@ class PlayerTrunk extends Component{
 
         
         this.playerTrunk.transform.position[0] = -Math.cos(this.shootAngle) * 0.7 * frontOrBack;
-        this.playerTrunk.transform.position[1] = this.originalPosition[1] - (Math.pow((Math.abs(Math.cos(this.shootAngle)) + 1),2.7) - 1) * 0.1;
+        this.playerTrunk.transform.position[1] = this.originalPosition[1] - (Math.pow((Math.abs(Math.cos(this.shootAngle)) + 1),2.8) - 1) * 0.1;
 
         
     }
 
     public getIsShooting(): boolean {
         return this.playerTrunk.getEnable();
+    }
+
+    public getCanShoot(): boolean {
+        return this.canShoot;
+    }
+
+    public setCanShoot(value : boolean) {
+        this.canShoot = value;
     }
 
     public clone(): Component {

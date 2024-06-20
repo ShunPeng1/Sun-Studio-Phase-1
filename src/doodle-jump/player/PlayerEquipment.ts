@@ -4,6 +4,7 @@ import Transform from "../../engine/components/Transform";
 import Rigidbody from "../../engine/components/physics/Rigidbody";
 import GameObject from "../../engine/gameobjects/GameObject";
 import JumpPlatformIgnorance from "./JumpPlatformIgnorance";
+import PlayerTrunk from "./PlayerTrunk";
 
 class PlayerEquipment extends Component{
     
@@ -13,6 +14,7 @@ class PlayerEquipment extends Component{
     private isEquipping : boolean = false;
     private rigidbody : Rigidbody;
     private jumpPlatformIgnorance : JumpPlatformIgnorance ;
+    private playerTrunk : PlayerTrunk;
 
     private maxUpVelocity : number = 10;
     private upForce : number = 10;
@@ -34,6 +36,8 @@ class PlayerEquipment extends Component{
     public awake(): void {
         this.rigidbody = this.gameObject.getComponent<Rigidbody>(Rigidbody)!;
         this.jumpPlatformIgnorance = this.gameObject.getComponent<JumpPlatformIgnorance>(JumpPlatformIgnorance)!;
+        this.playerTrunk = this.gameObject.getComponent<PlayerTrunk>(PlayerTrunk)!;
+
 
         this.headWearable.setEnable(false);
         this.backWearable.setEnable(false);
@@ -59,6 +63,7 @@ class PlayerEquipment extends Component{
                 
                 this.jumpPlatformIgnorance.enablePlayerCollider();
                 this.jumpPlatformIgnorance.setEnable(true);
+                this.playerTrunk.setCanShoot(true);
 
                 this.headWearable.setEnable(false);
                 this.backWearable.setEnable(false);
@@ -77,37 +82,30 @@ class PlayerEquipment extends Component{
     }
 
 
-    public equipJetpack(maxVelocity : number, duration : number, force : number) {
+    private equipWearable(wearable: GameObject, maxVelocity: number, duration: number, force: number) {
         if (this.isEquipping) {
             return;
         }
-
+    
         this.maxUpVelocity = maxVelocity;
         this.duration = duration;
         this.upForce = force;
         this.isEquipping = true;
-        
-        this.backWearable.setEnable(true);
+    
+        wearable.setEnable(true);
         this.jumpPlatformIgnorance.disablePlayerCollider();
         this.jumpPlatformIgnorance.setEnable(false);
-    }    
-
-
-    public equipHat(maxVelocity : number, duration : number, force : number) {
-        if (this.isEquipping) {
-            return;
-        }
-
-        this.maxUpVelocity = maxVelocity;
-        this.duration = duration;
-        this.upForce = force;
-        this.isEquipping = true;
-
-        this.headWearable.setEnable(true);
-        this.jumpPlatformIgnorance.disablePlayerCollider();
-        this.jumpPlatformIgnorance.setEnable(false);
+        this.playerTrunk.setCanShoot(false);
     }
-
+    
+    public equipJetpack(maxVelocity: number, duration: number, force: number) {
+        this.equipWearable(this.backWearable, maxVelocity, duration, force);
+    }
+    
+    public equipHat(maxVelocity: number, duration: number, force: number) {
+        this.equipWearable(this.headWearable, maxVelocity, duration, force);
+    }
+    
     public subscribeJump(callback: () => void): void {
         this.jumpSubscribers.push(callback);
     }
