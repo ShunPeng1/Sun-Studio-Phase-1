@@ -75,7 +75,7 @@ class BaseStateMachine {
             transitionData = new StateTransitionData();
             transitionData.fromState = this.currentState.state;
             transitionData.transition = transition;
-            this.SetToState(transition.toState, null);
+            this.setToState(transition.toState, null);
             return;
         }
         this.currentState?.state.update(deltaTime, transitionData);
@@ -135,7 +135,7 @@ class BaseStateMachine {
         return node;
     }
 
-    public SetToState(toState: IState | null, transitionData: IStateTransitionData | null = null): void {
+    public setToState(toState: IState | null, transitionData: IStateTransitionData | null = null): void {
         if (!toState || toState === this.currentState.state) return;
 
         const nextState = this.nodes.get(toState.constructor);
@@ -159,10 +159,10 @@ class BaseStateMachine {
         if (!this.stateHistoryStrategy) return;
         const [enterState, exitOldStateParameters] = this.stateHistoryStrategy.restore();
         if (enterState) {
-            this.SetToState(enterState, exitOldStateParameters);
+            this.setToState(enterState, exitOldStateParameters);
         } else {
             console.warn("No state to restore.");
-            this.SetToState(null);
+            this.setToState(null);
         }
     }
 

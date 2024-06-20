@@ -4,14 +4,19 @@ import Rigidbody from "../../engine/components/physics/Rigidbody";
 import Transform from "../../engine/components/Transform";
 import Player from "../player/Player";
 import Platform from "./Platform";
+import { EventEmitter } from 'events';
+
 
 class BounceUpPlatform extends Platform {
     
     private force : number;
+    private eventEmitter: EventEmitter;
 
     constructor(force : number) {
         super();
         this.force = force;
+
+        this.eventEmitter = new EventEmitter();
 
     }
 
@@ -29,10 +34,16 @@ class BounceUpPlatform extends Platform {
 
 
         playerRigidbody?.addForce?.([0, this.force,0]);
-    
+
+        // Emit the bounce event
+        this.eventEmitter.emit('bounce', other);
+        
     }
 
-
+    // Method to subscribe to the bounce event
+    public onBounce(listener: (other: Collider) => void): void {
+        this.eventEmitter.on('bounce', listener);
+    }
 
     public clone(): Component {
         return new BounceUpPlatform(this.force);        

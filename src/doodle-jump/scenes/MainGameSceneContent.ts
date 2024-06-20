@@ -34,6 +34,7 @@ import PlatformItemSpawnInfo from "../platform-items/PlatformItemSpawnInfo";
 import Spring from "../platform-items/Spring";
 import JetpackCollectible from "../platform-items/JetpackCollectible";
 import HatCollectible from "../platform-items/HatCollectible";
+import SpringAnimator from "../animators/SpringAnimator";
 
 class MainGameSceneContent extends DoodleJumpSceneContent{
     
@@ -171,7 +172,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         
         // Add Spring
         let spring = new GameObject("Spring");
-
+        vec3.set(spring.transform.position, -3, 0, 1);
         vec3.set(spring.transform.scale, 1.5, 2, 1);
         spring.addComponent(new Spring())
         spring.addComponent(new BoxCollider(true, 0, 1, 2, 1));
@@ -179,6 +180,9 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
 
         let springImageElements = this.imageLoader.getImageElements([this.SPRING0_URL, this.SPRING1_URL]);
         spring.addComponent(new MeshRenderer(this.quad, springImageElements, this.vectorArtTextureInfo));
+        spring.addComponent(new SpringAnimator());
+
+
 
         // Add Jetpack
         let jetpack = new GameObject("Jetpack");
@@ -210,9 +214,9 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
             new PlatformSpawnInfo(bluePlatform, 3, false, true),
             new PlatformSpawnInfo(whitePlatform, 1, false, false)
         ], 60, [-20,20], [4,14], [
-            //new PlatformItemSpawnInfo(spring, 100,[-0.2,0.2], 0.8),
-            new PlatformItemSpawnInfo(jetpack, 100,[-0.2,0.2], 2),
-            new PlatformItemSpawnInfo(hat, 100,[-0.2,0.2], 1.8)
+            new PlatformItemSpawnInfo(spring, 100,[-0.2,0.2], 0.8),
+            //new PlatformItemSpawnInfo(jetpack, 100,[-0.2,0.2], 2),
+            //new PlatformItemSpawnInfo(hat, 100,[-0.2,0.2], 1.8)
         ], 0));
         spawner.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         spawner.transform.position[1] = -30;

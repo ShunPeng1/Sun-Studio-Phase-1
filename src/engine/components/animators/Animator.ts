@@ -4,7 +4,7 @@ import StateMachine from "../../state_machines/StateMachine";
 import Component from "../Component";
 
 abstract class Animator extends Component {
-    private stateMachine : StateMachine 
+    protected stateMachine : StateMachine 
     constructor(){
         super();
 
@@ -12,7 +12,7 @@ abstract class Animator extends Component {
             .build();
     }
 
-    public awake(): void {
+    public start(): void {
         this.stateMachine = this.createStateMachine();
     }
 

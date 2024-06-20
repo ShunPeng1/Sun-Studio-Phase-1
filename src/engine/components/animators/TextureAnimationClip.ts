@@ -29,6 +29,7 @@ class TextureAnimationClip implements IAnimationClip{
 
     public setAnimationState(animationState: AnimationState) {
         this.animationState = animationState;
+        this.animationState.subscribeOnEnter(this.play.bind(this));
     }
 
     public play(): void {

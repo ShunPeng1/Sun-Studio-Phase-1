@@ -108,9 +108,9 @@ class ShunGameEngine {
         this.deltaTime = time - this.lastTime;
         this.lastTime = time;
         
-        this.stateMachine.SetToState(new FixedUpdateGameState(), new TimeGameTransitionData(time, this.deltaTime));
-        this.stateMachine.SetToState(new UpdateGameState(), new TimeGameTransitionData(time, this.deltaTime));
-        this.stateMachine.SetToState(new RenderGameState(), new TimeGameTransitionData(time, this.deltaTime));
+        this.stateMachine.setToState(new FixedUpdateGameState(), new TimeGameTransitionData(time, this.deltaTime));
+        this.stateMachine.setToState(new UpdateGameState(), new TimeGameTransitionData(time, this.deltaTime));
+        this.stateMachine.setToState(new RenderGameState(), new TimeGameTransitionData(time, this.deltaTime));
         
         requestAnimationFrame(this.gameLoop);
     }
