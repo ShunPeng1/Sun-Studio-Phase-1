@@ -56,7 +56,7 @@ class WoodenPlatformAnimator extends Animator {
 
 class WoodenIdleState extends AnimationState {
     constructor(renderer : WebGLRenderer) {
-        let clip = new TextureAnimationClip( [0], 5, false);
+        let clip = new TextureAnimationClip( [0], 5, false, "Wooden Idle");
         clip.setRenderer(renderer);
         super(clip, 1, true, true, false, false);
         clip.setAnimationState(this);
@@ -65,7 +65,7 @@ class WoodenIdleState extends AnimationState {
 
 class WoodenBreakingState extends AnimationState {
     constructor(renderer : WebGLRenderer) {
-        let clip = new TextureAnimationClip([0,1,2,3],10, false);
+        let clip = new TextureAnimationClip([0,1,2,3],10, false, "Wooden Breaking");
         clip.setRenderer(renderer);
         super(clip, 1, true, false, false, false);
         clip.setAnimationState(this);

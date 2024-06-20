@@ -47,7 +47,7 @@ class HatWearableAnimator extends Animator {
 
 class HatWearableIdleState extends AnimationState {
     constructor(renderer : WebGLRenderer) {
-        let clip = new TextureAnimationClip( [0,1,2], 10, true);
+        let clip = new TextureAnimationClip( [0,1,2], 10, true,  "Hat Idle");
         clip.setRenderer(renderer);
         super(clip, 1, true, true, false, false);
         clip.setAnimationState(this);

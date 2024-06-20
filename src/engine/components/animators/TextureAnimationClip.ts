@@ -7,6 +7,9 @@ import IAnimationClip from "./IAnimationClip";
 class TextureAnimationClip implements IAnimationClip{
     private animationState: AnimationState;
     private renderer: WebGLRenderer;
+
+    private clipName: string;
+
     private sequenceIndexes : number[];
     private frameRate: number;
 
@@ -16,11 +19,15 @@ class TextureAnimationClip implements IAnimationClip{
     private currentFrame : number = 0;
     private elapsedTime: number = 0;
 
+    private currentTime: number = 0;
+    private maxDuration: number = 0;
     
-    constructor(sequenceIndexes : number[], frameRate: number, isLoop : boolean = true){
+    constructor(sequenceIndexes : number[], frameRate: number, isLoop : boolean = true,clipName :string = "",  maxDuration : number = Infinity){
         this.sequenceIndexes = sequenceIndexes;
         this.frameRate = frameRate;
+        this.clipName = clipName;
         this.isLoop = isLoop;
+        this.maxDuration = maxDuration;
     }
     
     public setRenderer(renderer : WebGLRenderer) {
@@ -35,12 +42,13 @@ class TextureAnimationClip implements IAnimationClip{
     public play(): void {
         this.currentFrame = 0;
         this.elapsedTime = 0;
+        this.isStop = false;
+        this.currentTime = 0;
         this.renderer.useTexture(this.sequenceIndexes[this.currentFrame]);
     }
 
     public run(deltaTime: number): void {
-        if (!this.isLoop && this.currentFrame == this.sequenceIndexes.length - 1) {
-            this.stop();
+        if (this.isStop) {
             return;
         }
 
@@ -52,7 +60,17 @@ class TextureAnimationClip implements IAnimationClip{
                 this.currentFrame = 0;
             }
         }
+
         this.renderer.useTexture(this.sequenceIndexes[this.currentFrame]);
+
+        if (!this.isLoop && this.currentFrame == this.sequenceIndexes.length - 1 ) {
+            this.stop();
+        }
+        
+        this.currentTime += deltaTime;
+        if (this.currentTime >= this.maxDuration) {
+            this.stop();
+        }
     }
 
 
@@ -62,7 +80,14 @@ class TextureAnimationClip implements IAnimationClip{
         }
         
         this.isStop = true;
-        this.animationState.exitState(null);
+    }
+
+    public getIsStop(): boolean {
+        return this.isStop;
+    }
+
+    public getEstimatedDuration(): number {
+        return this.sequenceIndexes.length / this.frameRate;
     }
 }
 

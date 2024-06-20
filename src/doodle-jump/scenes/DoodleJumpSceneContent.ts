@@ -18,6 +18,7 @@ import Mesh from "../../engine/webgl/shapes/Mesh";
 import MeshFactory from "../../engine/webgl/factories/MeshFactory";
 import IGameSceneCollection from "../../engine/scenes/IGameSceneCollection";
 import HatWearableAnimator from "../animators/HatWearableAnimator";
+import JetpackWearableAnimator from "../animators/JetpackWearableAnimator";
 
 abstract class DoodleJumpSceneContent implements ISceneContent{
 
@@ -61,16 +62,16 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
     protected HAT_WEARABLE3_URL = `${this.ATLAS_URL}/propeller_04.png`;
 
     // Jetpack images
-    protected JETPACK1_URL = `${this.ATLAS_URL}/bonus2anim_01.png`;
-    protected JETPACK2_URL = `${this.ATLAS_URL}/bonus2anim_02.png`;
-    protected JETPACK3_URL = `${this.ATLAS_URL}/bonus2anim_03.png`;
-    protected JETPACK4_URL = `${this.ATLAS_URL}/bonus2anim_04.png`;
-    protected JETPACK5_URL = `${this.ATLAS_URL}/bonus2anim_05.png`;
-    protected JETPACK6_URL = `${this.ATLAS_URL}/bonus2anim_06.png`;
-    protected JETPACK7_URL = `${this.ATLAS_URL}/bonus2anim_07.png`;
-    protected JETPACK8_URL = `${this.ATLAS_URL}/bonus2anim_08.png`;
-    protected JETPACK9_URL = `${this.ATLAS_URL}/bonus2anim_09.png`;
-    protected JETPACK10_URL = `${this.ATLAS_URL}/bonus2anim_10.png`;
+    protected JETPACK_WEARABLE0_URL = `${this.ATLAS_URL}/bonus2anim_01.png`;
+    protected JETPACK_WEARABLE1_URL = `${this.ATLAS_URL}/bonus2anim_02.png`;
+    protected JETPACK_WEARABLE2_URL = `${this.ATLAS_URL}/bonus2anim_03.png`;
+    protected JETPACK_WEARABLE3_URL = `${this.ATLAS_URL}/bonus2anim_04.png`;
+    protected JETPACK_WEARABLE4_URL = `${this.ATLAS_URL}/bonus2anim_05.png`;
+    protected JETPACK_WEARABLE5_URL = `${this.ATLAS_URL}/bonus2anim_06.png`;
+    protected JETPACK_WEARABLE6_URL = `${this.ATLAS_URL}/bonus2anim_07.png`;
+    protected JETPACK_WEARABLE7_URL = `${this.ATLAS_URL}/bonus2anim_08.png`;
+    protected JETPACK_WEARABLE8_URL = `${this.ATLAS_URL}/bonus2anim_09.png`;
+    protected JETPACK_WEARABLE9_URL = `${this.ATLAS_URL}/bonus2anim_10.png`;
 
     constructor(sceneCollection : IGameSceneCollection){
         this.sceneCollection = sceneCollection;
@@ -209,9 +210,16 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
         playerHead.addComponent(new HatWearableAnimator())
         
 
+
         let playerBack = new GameObject("Player Back");
         playerBack.transform.setParent(playerGameObject.transform);
+        
+        vec3.set(playerBack.transform.position, 0.7, 0.3, 0.1);
+        vec3.set(playerBack.transform.scale, 0.7,2,1)
 
+        let jetpackImageElements = this.imageLoader.getImageElements([this.JETPACK_WEARABLE0_URL, this.JETPACK_WEARABLE1_URL, this.JETPACK_WEARABLE2_URL, this.JETPACK_WEARABLE3_URL, this.JETPACK_WEARABLE4_URL, this.JETPACK_WEARABLE5_URL, this.JETPACK_WEARABLE6_URL, this.JETPACK_WEARABLE7_URL, this.JETPACK_WEARABLE8_URL, this.JETPACK_WEARABLE9_URL]);
+        playerBack.addComponent(new MeshRenderer(this.quad, jetpackImageElements, this.vectorArtTextureInfo));
+        playerBack.addComponent(new JetpackWearableAnimator(3))
 
 
         playerGameObject.addComponent(new Player(playerHead, playerBack));
