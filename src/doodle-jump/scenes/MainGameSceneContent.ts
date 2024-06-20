@@ -95,7 +95,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         playerGameObject.addComponent(new LeftRightControlMovement(48));
         playerGameObject.addComponent(new InitialForce([0, 5000, 0]))
         playerGameObject.addComponent(new JumpPlatformIgnorance());
-        playerGameObject.addComponent(new PlayerShoot(vec2.fromValues(-0.1, 0.1)))
+        playerGameObject.addComponent(new PlayerShoot())
         
         // Create Camera
         let camera = this.createCamera();

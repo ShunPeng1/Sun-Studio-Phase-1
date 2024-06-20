@@ -6,7 +6,6 @@ import PlayerTrunk from "./PlayerTrunk";
 import CanvasManager from "../../engine/canvas/CanvasManager";
 
 class PlayerShoot extends Component{
-    private angleVariance : vec2;
 
     private playerTrunk : PlayerTrunk;
 
@@ -15,10 +14,9 @@ class PlayerShoot extends Component{
     private spaceShoot : () => void;
     private mouseShoot : (event : MouseEvent) => void;
 
-    constructor(angleVariance : vec2){
+    constructor(){
         super();
     
-        this.angleVariance = angleVariance;
         
 
         this.spaceShoot = this.onSpaceShoot.bind(this);
@@ -50,6 +48,11 @@ class PlayerShoot extends Component{
     private onMouseShoot(event : MouseEvent) {
         let gameWitdh = CanvasManager.getInstance().getWidth();
         let gameHeight = CanvasManager.getInstance().getHeight();
+
+        if (event.clientX < 0 || event.clientX > gameWitdh || event.clientY < 0 || event.clientY > gameHeight){
+            return;
+        }
+
         let angle = Math.acos( (gameWitdh/2 - event.clientX)/ ( gameWitdh/2) )  ;
         
         this.shoot(angle);
@@ -60,7 +63,7 @@ class PlayerShoot extends Component{
     }
 
     public clone(): Component {
-        return new PlayerShoot(this.angleVariance);
+        return new PlayerShoot();
     }
 
 }

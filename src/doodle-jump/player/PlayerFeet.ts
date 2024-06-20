@@ -47,8 +47,6 @@ class PlayerFeet extends Component{
 
 
     public getIsJumping(): boolean {
-
-        console.log(this.isJumping);
         return this.isJumping;
     }
 

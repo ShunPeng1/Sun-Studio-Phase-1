@@ -80,10 +80,10 @@ class PlayerTrunk extends Component{
         this.playerTrunk.transform.setWorldRotation(0, 0,-this.shootAngle + Math.PI/2);
 
         
-        this.playerTrunk.transform.position[0] = -Math.cos(this.shootAngle) * 0.75 * frontOrBack;
-        this.playerTrunk.transform.position[1] = this.originalPosition[1] - Math.abs(Math.cos(this.shootAngle)) * 0.45;
+        this.playerTrunk.transform.position[0] = -Math.cos(this.shootAngle) * 0.7 * frontOrBack;
+        this.playerTrunk.transform.position[1] = this.originalPosition[1] - (Math.pow((Math.abs(Math.cos(this.shootAngle)) + 1),2.7) - 1) * 0.1;
 
-    
+        
     }
 
     public getIsShooting(): boolean {
