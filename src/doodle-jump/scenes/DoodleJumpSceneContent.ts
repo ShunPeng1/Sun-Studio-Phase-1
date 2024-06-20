@@ -237,11 +237,11 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
         playerTrunk.transform.setParent(playerGameObject.transform);
 
         let trunkImageElements = this.imageLoader.getImageElements(this.TRUNK_URL);
-        playerTrunk.addComponent(new MeshRenderer(this.quad, trunkImageElements, this.vectorArtTextureInfo));
+        //playerTrunk.addComponent(new MeshRenderer(this.quad, trunkImageElements, this.vectorArtTextureInfo));
 
         
         playerGameObject.addComponent(new PlayerWear(playerHead, playerBack, 0.1));
-        pla
+        
         
 
 
