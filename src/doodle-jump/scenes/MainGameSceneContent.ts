@@ -110,7 +110,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         let greenPlatform = new GameObject("Green Platform");
 
         vec3.set(greenPlatform.transform.scale, 4, 2, 1);
-        greenPlatform.addComponent(new BoxCollider(false, 0, 1, 2, 1));
+        greenPlatform.addComponent(new BoxCollider(true, 0, 1, 2, 1));
         greenPlatform.addComponent(new BounceUpPlatform(4000));
         
         let greenPlatfromImageElements = this.imageLoader.getImageElements(this.PLATFORM0_URL);
@@ -122,7 +122,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
 
         vec3.set(bluePlatform.transform.position, 0, 5, 1);
         vec3.set(bluePlatform.transform.scale, 4, 2, 1);
-        bluePlatform.addComponent(new BoxCollider(false, 0, 1, 2, 1));
+        bluePlatform.addComponent(new BoxCollider(true, 0, 1, 2, 1));
         bluePlatform.addComponent(new BounceUpPlatform(4000));
 
         // Waypoints
@@ -167,7 +167,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         let whitePlatform = new GameObject("White Platform");
         
         vec3.set(whitePlatform.transform.scale, 4, 2, 1);
-        whitePlatform.addComponent(new BoxCollider(false, 0, 1, 2, 1));
+        whitePlatform.addComponent(new BoxCollider(true, 0, 1, 2, 1));
         whitePlatform.addComponent(new BounceUpPlatform(4000));
         whitePlatform.addComponent(new CloudPlatform());
  
@@ -202,7 +202,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         let hat = new GameObject("Hat");
         vec3.set(hat.transform.scale, 2, 4, 1);
         hat.addComponent(new BoxCollider(true, 0, 1, 2, 1));
-        hat.addComponent(new HatCollectible(4,2,2000));
+        hat.addComponent(new HatCollectible(4,3,2000));
 
         let hatImageElements = this.imageLoader.getImageElements(this.HAT_URL);
         hat.addComponent(new MeshRenderer(this.quad, hatImageElements, this.vectorArtTextureInfo));
@@ -218,10 +218,10 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
             new PlatformSpawnInfo(bluePlatform, 3, false, true),
             new PlatformSpawnInfo(whitePlatform, 1, false, false)
         ], 60, [-20,20], [4,14], [
-            //new PlatformItemSpawnInfo(spring, 100,[-0.2,0.2], 0.8),
+            new PlatformItemSpawnInfo(spring, 300,[-0.2,0.2], 0.8),
             new PlatformItemSpawnInfo(jetpack, 100,[-0.2,0.2], 2),
-            //new PlatformItemSpawnInfo(hat, 100,[-0.2,0.2], 1.8)
-        ], 0));
+            new PlatformItemSpawnInfo(hat, 100,[-0.2,0.2], 1.8)
+        ], 2000));
         spawner.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         spawner.transform.position[1] = -30;
         
