@@ -44,7 +44,7 @@ class PlayerShoot extends Component{
     }
 
     private onSpaceShoot() {
-        this.shoot();
+        this.shoot(Math.PI/2);  
     }
 
     private onMouseShoot(event : MouseEvent) {

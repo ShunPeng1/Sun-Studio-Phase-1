@@ -9,9 +9,12 @@ class PlayerTrunk extends Component{
     private bulletPrefab : GameObject;
     private bulletVelocity : number;
 
+    private shootAngle : number = 0;
     private originalPosition : vec3 ;
+    private trunkZOffset : number = 0.1;
+    private originalTrunkScale : number = 1;
 
-    constructor(playerTrunk : GameObject, bulletPrefab : GameObject, bulletOffset : vec3, bulletVelocity : number){
+    constructor(playerTrunk : GameObject, bulletPrefab : GameObject, bulletOffset : vec3, bulletVelocity : number, trunkZOffset : number = 0.1){
         super();
     
         this.playerTrunk = playerTrunk;
@@ -19,8 +22,11 @@ class PlayerTrunk extends Component{
         this.bulletOffset = bulletOffset;
         this.bulletPrefab = bulletPrefab;
         this.bulletVelocity = bulletVelocity;
+        this.trunkZOffset = trunkZOffset;
 
         this.originalPosition = vec3.clone(this.playerTrunk.transform.position);
+
+        this.originalTrunkScale = this.playerTrunk.transform.scale[0];
     }
 
     public awake(): void {
@@ -30,22 +36,41 @@ class PlayerTrunk extends Component{
         this.bulletPrefab.setScene(this.gameObject.getScene()!);
     }
 
+    public update(time: number, deltaTime: number): void {
+    
+        this.updateTrunkPosition();
+    }
 
     public shoot(angle : number = Math.PI/2) {
     
+        this.shootAngle = angle;
+
+
         const bullet = this.bulletPrefab.clone();
+        vec3.add(bullet.transform.position, this.playerTrunk.transform.getWorldPosition(), this.bulletOffset); 
+        bullet.transform.rotation[2] = -angle + Math.PI;
         
-        vec3.scaleAndAdd(bullet.transform.position, this.playerTrunk.transform.position, this.bulletOffset, 1);
         
         this.playerTrunk.setEnable(true);
-        this.playerTrunk.transform.rotation[2] = -angle + Math.PI/2 ;
+        this.playerTrunk.transform.setWorldRotation(0, 0,-angle + Math.PI/2);
+        //this.playerTrunk.transform.rotation[2] =  -angle + Math.PI/2 ;
         
-        this.playerTrunk.transform.position[0] = -Math.cos(angle) * 0.75 ;
-        this.playerTrunk.transform.position[1] = this.originalPosition[1] - Math.abs(Math.cos(angle)) * 0.45;
+        this.updateTrunkPosition();
+        
+    }
 
-        console.log(Math.cos(angle),  Math.cos(Math.PI /2 - angle));
+    private updateTrunkPosition(){
+        let frontOrBack = this.gameObject.transform.rotation[1] == 0 ? 1 : -1;
+        this.playerTrunk.transform.position[2] = this.trunkZOffset * frontOrBack;
+
         
-        bullet.transform.rotation[1] = angle;
+        this.playerTrunk.transform.setWorldRotation(0, 0,-this.shootAngle + Math.PI/2);
+
+        
+        this.playerTrunk.transform.position[0] = -Math.cos(this.shootAngle) * 0.75 * frontOrBack;
+        this.playerTrunk.transform.position[1] = this.originalPosition[1] - Math.abs(Math.cos(this.shootAngle)) * 0.45;
+
+    
     }
 
     public clone(): Component {

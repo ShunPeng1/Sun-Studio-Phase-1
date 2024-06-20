@@ -21,6 +21,7 @@ import HatWearableAnimator from "../animators/HatWearableAnimator";
 import JetpackWearableAnimator from "../animators/JetpackWearableAnimator";
 import PlayerTrunk from "../player/PlayerTrunk";
 import ForwardMovement from "../movement/ForwardMovement";
+import TimeoutSelfDestruction from "../player/TimeoutSelfDestruction";
 
 abstract class DoodleJumpSceneContent implements ISceneContent{
 
@@ -246,13 +247,13 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
         
         // Add bullet prefab
         let bulletPrefab = new GameObject("Bullet");
-        vec3.set(bulletPrefab.transform.scale, 0.1, 0.1, 1);
+        vec3.set(bulletPrefab.transform.scale, 1, 1.5, 1);
         let bulletImageElements = this.imageLoader.getImageElements(this.BULLET_URL);
         bulletPrefab.addComponent(new MeshRenderer(this.quad, bulletImageElements, this.vectorArtTextureInfo));
-        bulletPrefab.addComponent(new ForwardMovement(1));
-        //  bulletPrefab.addComponent(new TimeoutSelfDestruction());
+        bulletPrefab.addComponent(new ForwardMovement(200));
+        bulletPrefab.addComponent(new TimeoutSelfDestruction(1));
         
-        playerGameObject.addComponent(new PlayerTrunk(playerTrunk, bulletPrefab, vec3.fromValues(0, 0.5, 0), 10));
+        playerGameObject.addComponent(new PlayerTrunk(playerTrunk, bulletPrefab, [0, 2, 0], 10));
 
         playerGameObject.addComponent(new PlayerWear(playerHead, playerBack, 0.1));
         

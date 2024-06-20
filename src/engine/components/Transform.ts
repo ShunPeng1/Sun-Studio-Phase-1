@@ -93,6 +93,18 @@ class Transform extends Component{
 
         return worldPosition;
     }
+    
+    public getWorldRotation(): vec3 {
+        let worldRotation = vec3.clone(this.rotation);
+    
+        let parent = this.parent;
+        while (parent) {
+            vec3.add(worldRotation, worldRotation, parent.rotation);
+            parent = parent.parent;
+        }
+    
+        return worldRotation;
+    }
 
     public getWorldScale(): vec3 {
         let worldScale = vec3.clone(this.scale);
@@ -106,6 +118,32 @@ class Transform extends Component{
         return worldScale;
     }
 
+    public setWorldPosition(x: number, y: number, z: number) {
+        if (this.parent) {
+            let parentWorldPosition = this.parent.getWorldPosition();
+            vec3.set(this.position, x - parentWorldPosition[0], y - parentWorldPosition[1], z - parentWorldPosition[2]);
+        } else {
+            vec3.set(this.position, x, y, z);
+        }
+    }
+    
+    public setWorldRotation(x: number, y: number, z: number) {
+        if (this.parent) {
+            let parentWorldRotation = this.parent.getWorldRotation();
+            vec3.set(this.rotation, x - parentWorldRotation[0], y - parentWorldRotation[1], z - parentWorldRotation[2]);
+        } else {
+            vec3.set(this.rotation, x, y, z);
+        }
+    }
+    
+    public setWorldScale(x: number, y: number, z: number) {
+        if (this.parent) {
+            let parentWorldScale = this.parent.getWorldScale();
+            vec3.set(this.scale, x / parentWorldScale[0], y / parentWorldScale[1], z / parentWorldScale[2]);
+        } else {
+            vec3.set(this.scale, x, y, z);
+        }
+    }
     public getXYScale(): vec2{
         return vec2.fromValues(this.scale[0], this.scale[1]);
     }
