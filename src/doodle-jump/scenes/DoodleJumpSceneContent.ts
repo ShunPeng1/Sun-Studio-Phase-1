@@ -21,9 +21,11 @@ import HatWearableAnimator from "../animators/HatWearableAnimator";
 import JetpackWearableAnimator from "../animators/JetpackWearableAnimator";
 import PlayerTrunk from "../player/PlayerTrunk";
 import ForwardMovement from "../movement/ForwardMovement";
-import TimeoutSelfDestruction from "../player/TimeoutSelfDestruction";
+import TimeoutSelfDestruction from "../monsters/TimeoutSelfDestruction";
 import PlayerFeet from "../player/PlayerFeet";
 import PlayerAnimator from "../animators/playerAnimator";
+import Player from "../player/Player";
+import StarAnimator from "../animators/StarAnimator";
 
 abstract class DoodleJumpSceneContent implements ISceneContent{
 
@@ -83,6 +85,11 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
     protected JETPACK_WEARABLE7_URL = `${this.ATLAS_URL}/bonus2anim_08.png`;
     protected JETPACK_WEARABLE8_URL = `${this.ATLAS_URL}/bonus2anim_09.png`;
     protected JETPACK_WEARABLE9_URL = `${this.ATLAS_URL}/bonus2anim_10.png`;
+
+    // Star images
+    protected STAR0_URL = `${this.ATLAS_URL}/stars_01.png`;
+    protected STAR1_URL = `${this.ATLAS_URL}/stars_02.png`;
+    protected STAR2_URL = `${this.ATLAS_URL}/stars_03.png`;
 
     constructor(sceneCollection : IGameSceneCollection){
         this.sceneCollection = sceneCollection;
@@ -205,6 +212,7 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
         vec3.set(playerGameObject.transform.position, 0, -20, 1);
         vec3.set(playerGameObject.transform.rotation, 0, 0, 0);
         vec3.set(playerGameObject.transform.scale, 4, 4, 1);
+        playerGameObject.addComponent(new Player());
         playerGameObject.addComponent(new BoxCollider(false, 0, -0.5, 1, 0.25));
         playerGameObject.addComponent(new Rigidbody(1.1, 140));
         playerGameObject.addComponent(new PlayerFeet(0.2));
@@ -234,6 +242,18 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
         playerBack.addComponent(new JetpackWearableAnimator(3))
 
 
+        // Add Star
+        let star = new GameObject("Star");
+        star.transform.setParent(playerGameObject.transform);
+        vec3.set(star.transform.position, 0, 1, 0.1);
+        vec3.set(star.transform.scale, 1,1,1)
+
+        let starImageElements = this.imageLoader.getImageElements([this.STAR0_URL, this.STAR1_URL, this.STAR2_URL]);
+        star.addComponent(new MeshRenderer(this.quad, starImageElements, this.vectorArtTextureInfo));
+        star.addComponent(new StarAnimator())
+        
+        
+
 
         // Add Trunk
         let playerTrunk = new GameObject("Trunk");
@@ -259,7 +279,7 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
         
         // Combine all player parts
         playerGameObject.addComponent(new PlayerTrunk(playerTrunk, bulletPrefab, [0, 2, 0], 10, 0.4));
-        playerGameObject.addComponent(new PlayerWear(playerHead, playerBack, 0.1));
+        playerGameObject.addComponent(new PlayerWear(playerHead, playerBack, star, 0.1));
 
         
         let playerImageElements = this.imageLoader.getImageElements([this.PLAYER_IDLE_URL, this.PLAYER_JUMP_URL, this.PLAYER_SHOOT_URL, this.PLAYER_SHOOT_JUMP_URL]);

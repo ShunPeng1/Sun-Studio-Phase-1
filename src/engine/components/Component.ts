@@ -29,10 +29,10 @@ abstract class Component {
     }
 
     public tryStart() {
-        this.setEnable(true);
-
         if (!this.isStarted) {
             this.isStarted = true;
+            this.setEnable(true);
+
             this.start();
         }
         else{
@@ -73,6 +73,10 @@ abstract class Component {
         else {
             this.onDisable();
         }
+    }
+
+    public getIsEnable() {
+        return this.isEnable;
     }
 
     protected onEnable() {

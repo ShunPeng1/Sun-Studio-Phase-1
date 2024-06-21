@@ -13,7 +13,6 @@ import PlatformWayPoint from "../platforms/PlatformWayPoint";
 import WoodenPlatformAnimator from "../animators/WoodenPlatformAnimator";
 import CloudPlatform from "../platforms/CloudPlatform";
 import Rigidbody from "../../engine/components/physics/Rigidbody";
-import LeftRightControlMovement from "../player/LeftRightControlMovement";
 import InitialForce from "../movement/InitialForce";
 import JumpPlatformIgnorance from "../player/JumpPlatformIgnorance";
 import PlayerEquipment from "../player/PlayerEquipment";
@@ -36,6 +35,8 @@ import JetpackCollectible from "../platform-items/JetpackCollectible";
 import HatCollectible from "../platform-items/HatCollectible";
 import SpringAnimator from "../animators/SpringAnimator";
 import PlayerShoot from "../player/PlayerShoot";
+import Monster from "../monsters/Monster";
+import PlayerMovementController from "../player/PlayerMovementController";
 
 class MainGameSceneContent extends DoodleJumpSceneContent{
     
@@ -44,6 +45,10 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
 
     private JETPACK_URL = `${this.ATLAS_URL}/bonus2.png`;
     private HAT_URL = `${this.ATLAS_URL}/bonus3.png`;
+
+
+    // Monster
+    private PURPLE_MONSTER_URL = `${this.ATLAS_URL}/obstacle7.png`;
 
     download(): Promise<any>[]{
         
@@ -76,7 +81,10 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
 
         imageLoadPromises.push(imageLoader.loadImageFromUrls([this.HAT_WEARABLE1_URL, this.HAT_WEARABLE2_URL, this.HAT_WEARABLE3_URL]));
         imageLoadPromises.push(imageLoader.loadImageFromUrls([this.JETPACK_WEARABLE0_URL, this.JETPACK_WEARABLE1_URL, this.JETPACK_WEARABLE2_URL, this.JETPACK_WEARABLE3_URL, this.JETPACK_WEARABLE4_URL, this.JETPACK_WEARABLE5_URL, this.JETPACK_WEARABLE6_URL, this.JETPACK_WEARABLE7_URL, this.JETPACK_WEARABLE8_URL, this.JETPACK_WEARABLE9_URL]));
+        imageLoadPromises.push(imageLoader.loadImageFromUrls([this.STAR0_URL, this.STAR1_URL, this.STAR2_URL]));
         imageLoadPromises.push(imageLoader.loadImageFromUrls([this.BULLET_URL]));
+
+        imageLoadPromises.push(imageLoader.loadImageFromUrls(this.PURPLE_MONSTER_URL));
         return imageLoadPromises;
     }
 
@@ -92,7 +100,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         vec3.set(playerGameObject.transform.position, 0, -20, 1);
         vec3.set(playerGameObject.transform.rotation, 0, 0, 0);
         vec3.set(playerGameObject.transform.scale, 4, 4, 1);
-        playerGameObject.addComponent(new LeftRightControlMovement(48));
+        playerGameObject.addComponent(new PlayerMovementController(48, 10000));
         playerGameObject.addComponent(new InitialForce([0, 5000, 0]))
         playerGameObject.addComponent(new JumpPlatformIgnorance());
         playerGameObject.addComponent(new PlayerShoot())
@@ -214,6 +222,18 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         hat.addComponent(new MeshRenderer(this.quad, hatImageElements, this.vectorArtTextureInfo));
 
 
+        // Add Monster
+        let purpleMonster = new GameObject("Monster");
+        vec3.set(purpleMonster.transform.position, 0, 10, 1);
+        vec3.set(purpleMonster.transform.scale, 4, 4, 1);
+        purpleMonster.addComponent(new BoxCollider(true, 0, 2, 2, 1));
+        purpleMonster.addComponent(new Monster());
+        
+        let purpleMonsterImageElements = this.imageLoader.getImageElements(this.PURPLE_MONSTER_URL);
+        purpleMonster.addComponent(new MeshRenderer(this.quad, purpleMonsterImageElements, this.vectorArtTextureInfo));
+
+        sceneGameObjects.push(purpleMonster);
+
         // Add Spawner
         let spawner = new GameObject('Spawner');
         sceneGameObjects.push(spawner);
@@ -227,7 +247,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
             new PlatformItemSpawnInfo(spring, 6,[-0.2,0.2], 0.8),
             new PlatformItemSpawnInfo(jetpack, 2,[-0.2,0.2], 2),
             new PlatformItemSpawnInfo(hat, 1,[-0.2,0.2], 1.8)
-        ], 60));
+        ], 80));
         spawner.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         spawner.transform.position[1] = -30;
         

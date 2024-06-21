@@ -5,16 +5,19 @@ import Rigidbody from "../../engine/components/physics/Rigidbody";
 import GameObject from "../../engine/gameobjects/GameObject";
 import JumpPlatformIgnorance from "./JumpPlatformIgnorance";
 import PlayerTrunk from "./PlayerTrunk";
+import Player from "./Player";
 
 class PlayerEquipment extends Component{
     
-    private headWearable : GameObject;
-    private backWearable : GameObject;
+    private isEquippingItem : boolean = false;
+    private hatWearable : GameObject;
+    private jetpackWearable : GameObject;
+    private starWearable : GameObject;
     
-    private isEquipping : boolean = false;
     private rigidbody : Rigidbody;
     private jumpPlatformIgnorance : JumpPlatformIgnorance ;
     private playerTrunk : PlayerTrunk;
+    private player : Player;
 
     private maxUpVelocity : number = 10;
     private upForce : number = 10;
@@ -22,13 +25,12 @@ class PlayerEquipment extends Component{
 
     private zOffset : number = 0;
 
-    private jumpSubscribers: Array<() => void> = [];
-
     
-    constructor(headWearable : GameObject, backWearable : GameObject, zOffset : number = 0.1) {
+    constructor(hatWearable : GameObject, jetpackWearable : GameObject, starWearable : GameObject, zOffset : number = 0.1) {
         super();
-        this.headWearable = headWearable;
-        this.backWearable = backWearable;
+        this.hatWearable = hatWearable;
+        this.jetpackWearable = jetpackWearable;
+        this.starWearable = starWearable;
 
         this.zOffset = zOffset;
     }
@@ -37,44 +39,60 @@ class PlayerEquipment extends Component{
         this.rigidbody = this.gameObject.getComponent<Rigidbody>(Rigidbody)!;
         this.jumpPlatformIgnorance = this.gameObject.getComponent<JumpPlatformIgnorance>(JumpPlatformIgnorance)!;
         this.playerTrunk = this.gameObject.getComponent<PlayerTrunk>(PlayerTrunk)!;
+        this.player = this.gameObject.getComponent<Player>(Player)!;
 
-
-        this.headWearable.setEnable(false);
-        this.backWearable.setEnable(false);
+        this.hatWearable.setEnable(false);
+        this.jetpackWearable.setEnable(false);
+        this.starWearable.setEnable(false);
     }
 
+    protected onEnable(): void {
+        this.player.subscribeStun((duration: number) => {
+            this.equipStar(duration);
+        });
+        
+    }
+
+    protected onDisable(): void {
+        this.player.unsubscribeStun((duration: number) => {
+            this.equipStar(duration);
+        });
+    }
 
     public update(time: number, deltaTime: number): void {
-        if (this.isEquipping) {
+        if (this.isEquippingItem) {
 
-            this.rigidbody.addForce([0,this.upForce,0]); // Add the force to the rigidbody
 
             // Cap the velocity
             const velocity = this.rigidbody.velocity;
-            const speed = vec3.length(velocity);
+            const speed = Math.abs(velocity[1]);
             if (speed > this.maxUpVelocity) {
-                vec3.set(this.rigidbody.velocity, 0, this.maxUpVelocity, 0); // Cap the velocity
+                vec3.set(this.rigidbody.velocity, velocity[0], this.maxUpVelocity, velocity[2]); // Cap the velocity
             }
+
+            //console.log("Equipping item" , this.rigidbody.velocity, this.rigidbody.transform.position, this.rigidbody.acceleration, this.upForce, this.maxUpVelocity, this.duration);
+            this.rigidbody.addForce([0,this.upForce,0]); // Add the force to the rigidbody
+
 
             // Decrease the duration
             this.duration -= deltaTime;
             if (this.duration <= 0) {
-                this.isEquipping = false;
+                this.isEquippingItem = false;
                 
                 this.jumpPlatformIgnorance.enablePlayerCollider();
                 this.jumpPlatformIgnorance.setEnable(true);
                 this.playerTrunk.setCanShoot(true);
 
-                this.headWearable.setEnable(false);
-                this.backWearable.setEnable(false);
+                this.hatWearable.setEnable(false);
+                this.jetpackWearable.setEnable(false);
             }            
 
 
             // Update the rotation of wearables
             //console.log( "Wearable rotation: ", this.gameObject.transform.rotation[1], this.headWearable.transform.rotation[1], this.backWearable.transform.rotation[1])
             let frontOrBack = this.gameObject.transform.rotation[1] == 0 ? 1 : -1;
-            this.headWearable.transform.position[2] = this.zOffset * frontOrBack;
-            this.backWearable.transform.position[2] = this.zOffset * frontOrBack;
+            this.hatWearable.transform.position[2] = this.zOffset * frontOrBack;
+            this.jetpackWearable.transform.position[2] = this.zOffset * frontOrBack;
 
         }
 
@@ -83,49 +101,36 @@ class PlayerEquipment extends Component{
 
 
     private equipWearable(wearable: GameObject, maxVelocity: number, duration: number, force: number) {
-        if (this.isEquipping) {
+        if (this.isEquippingItem) {
             return;
         }
     
         this.maxUpVelocity = maxVelocity;
         this.duration = duration;
         this.upForce = force;
-        this.isEquipping = true;
+        this.isEquippingItem = true;
     
         wearable.setEnable(true);
         this.jumpPlatformIgnorance.disablePlayerCollider();
         this.jumpPlatformIgnorance.setEnable(false);
         this.playerTrunk.setCanShoot(false);
     }
+
     
     public equipJetpack(maxVelocity: number, duration: number, force: number) {
-        this.equipWearable(this.backWearable, maxVelocity, duration, force);
+        this.equipWearable(this.jetpackWearable, maxVelocity, duration, force);
     }
     
     public equipHat(maxVelocity: number, duration: number, force: number) {
-        this.equipWearable(this.headWearable, maxVelocity, duration, force);
+        this.equipWearable(this.hatWearable, maxVelocity, duration, force);
     }
     
-    public subscribeJump(callback: () => void): void {
-        this.jumpSubscribers.push(callback);
+    public equipStar(duration: number) {
+        this.equipWearable(this.starWearable, Infinity, duration, 0);
     }
-
-    public unsubscribeJump(callback: () => void): void {
-        const index = this.jumpSubscribers.indexOf(callback);
-        if (index !== -1) {
-            this.jumpSubscribers.splice(index, 1);
-        }
-    }
-
-    public invokeJump(): void {
-        // Notify all subscribers
-        for (const callback of this.jumpSubscribers) {
-            callback();
-        }
-    }
-
+    
     public clone(): Component {
-        return new PlayerEquipment(this.headWearable, this.backWearable);    
+        return new PlayerEquipment(this.hatWearable, this.jetpackWearable, this.starWearable, this.zOffset);   
     }
 }
 

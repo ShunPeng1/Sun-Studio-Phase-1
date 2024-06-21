@@ -39,7 +39,6 @@ class SpringAnimator extends Animator {
     private setToBounceState() {
         this.stateMachine.setToState(this.bounceState);
         
-        console.log("Setting to bounce state");
     }
     
     protected createStateMachine(): StateMachine {
