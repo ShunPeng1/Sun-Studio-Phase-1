@@ -38,6 +38,7 @@ import PlayerShoot from "../player/PlayerShoot";
 import Monster from "../monsters/Monster";
 import PlayerMovementController from "../player/PlayerMovementController";
 import DoodleJumpSceneCollection from "./DoodleJumpSceneCollection";
+import BatAnimator from "../animators/BatAnimator";
 
 class MainGameSceneContent extends DoodleJumpSceneContent{
     
@@ -50,6 +51,21 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
 
     // Monster
     private PURPLE_MONSTER_URL = `${this.ATLAS_URL}/obstacle7.png`;
+    private RED_MONSTER_URL = `${this.ATLAS_URL}/obstacle8.png`;
+    private BLUE_MONSTER_URL = `${this.ATLAS_URL}/obstacle9.png`;
+
+
+    private BAT_MONSTER0_URL = `${this.ATLAS_URL}/obstacle10.png`;
+    private BAT_MONSTER1_URL = `${this.ATLAS_URL}/but1.png`;
+    private BAT_MONSTER2_URL = `${this.ATLAS_URL}/but2.png`;
+    private BAT_MONSTER3_URL = `${this.ATLAS_URL}/but3.png`;
+    private BAT_MONSTER4_URL = `${this.ATLAS_URL}/but4.png`;
+
+    private GREEN_MONSTER0_URL = `${this.ATLAS_URL}/obstacle11.png`;
+    private GREEN_MONSTER1_URL = `${this.ATLAS_URL}/green0.png`;
+    private GREEN_MONSTER2_URL = `${this.ATLAS_URL}/green1.png`;
+    private GREEN_MONSTER3_URL = `${this.ATLAS_URL}/green2.png`;
+    private GREEN_MONSTER4_URL = `${this.ATLAS_URL}/green3.png`;
 
     download(): Promise<any>[]{
         
@@ -86,6 +102,12 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         imageLoadPromises.push(imageLoader.loadImageFromUrls([this.BULLET_URL]));
 
         imageLoadPromises.push(imageLoader.loadImageFromUrls(this.PURPLE_MONSTER_URL));
+        imageLoadPromises.push(imageLoader.loadImageFromUrls(this.RED_MONSTER_URL));
+        imageLoadPromises.push(imageLoader.loadImageFromUrls(this.BLUE_MONSTER_URL));
+
+        imageLoadPromises.push(imageLoader.loadImageFromUrls([this.BAT_MONSTER0_URL, this.BAT_MONSTER1_URL, this.BAT_MONSTER2_URL, this.BAT_MONSTER3_URL, this.BAT_MONSTER4_URL]));
+        imageLoadPromises.push(imageLoader.loadImageFromUrls([this.GREEN_MONSTER0_URL, this.GREEN_MONSTER1_URL, this.GREEN_MONSTER2_URL, this.GREEN_MONSTER3_URL, this.GREEN_MONSTER4_URL]));
+
         return imageLoadPromises;
     }
 
@@ -195,7 +217,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         vec3.set(spring.transform.scale, 1.5, 2, 1);
         spring.addComponent(new Spring())
         spring.addComponent(new BoxCollider(true, 0, 3, 2.5, 2, DoodleJumpSceneCollection.PLATFORM_LAYER));
-        spring.addComponent(new BounceUpPlatform(8000));
+        spring.addComponent(new BounceUpPlatform(10000));
 
         let springImageElements = this.imageLoader.getImageElements([this.SPRING0_URL, this.SPRING1_URL]);
         spring.addComponent(new MeshRenderer(this.quad, springImageElements, this.vectorArtTextureInfo));
@@ -223,7 +245,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         hat.addComponent(new MeshRenderer(this.quad, hatImageElements, this.vectorArtTextureInfo));
 
 
-        // Add Monster
+        // Add Purple Monster
         let purpleMonster = new GameObject("Purple Monster");
         vec3.set(purpleMonster.transform.position, -18, 10, 1);
         vec3.set(purpleMonster.transform.scale, 4, 6, 1);
@@ -245,8 +267,100 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         purpleMonster.addComponent(new WayPointMovement(4, false));
 
         
+        // Add Red Monster
+        let redMonster = new GameObject("Red Monster");
+        vec3.set(redMonster.transform.position, 18, 18, 1);
+        vec3.set(redMonster.transform.scale, 4, 6, 1);
+        redMonster.addComponent(new BoxCollider(true, 0, -2, 2, 1, DoodleJumpSceneCollection.MONSTER_LAYER));
+        redMonster.addComponent(new Monster());
 
-        sceneGameObjects.push(purpleMonster);
+        let redMonsterImageElements = this.imageLoader.getImageElements(this.RED_MONSTER_URL);
+        redMonster.addComponent(new MeshRenderer(this.quad, redMonsterImageElements, this.vectorArtTextureInfo));
+
+        let redMonsterWayPoints = [
+            new GameObject("Waypoint 0").transform,
+            new GameObject("Waypoint 1").transform,
+            new GameObject("Waypoint 2").transform,
+            new GameObject("Waypoint 3").transform,
+            new GameObject("Waypoint 4").transform,
+
+        ];
+
+        redMonsterWayPoints[0].gameObject.addComponent(new WayPoint([ 2, 2, 1], false, false, false));
+        redMonsterWayPoints[1].gameObject.addComponent(new WayPoint([ -2, 1 ,1], false, false, false));
+        redMonsterWayPoints[2].gameObject.addComponent(new WayPoint([ 2, 0, 1], false, false, false));
+        redMonsterWayPoints[3].gameObject.addComponent(new WayPoint([ -2, -1 ,1], false, false, false));
+        redMonsterWayPoints[4].gameObject.addComponent(new WayPoint([ 2, -2, 1], false, false, false));
+        
+        
+        redMonsterWayPoints[0].setParent(redMonster.transform);
+        redMonsterWayPoints[1].setParent(redMonster.transform);
+        redMonsterWayPoints[2].setParent(redMonster.transform);
+        redMonsterWayPoints[3].setParent(redMonster.transform);
+        redMonsterWayPoints[4].setParent(redMonster.transform);
+
+        redMonster.addComponent(new WayPointMovement(7, false));
+
+
+        // Add Blue Monster
+        let blueMonster = new GameObject("Blue Monster");
+        vec3.set(blueMonster.transform.position, 18, 18, 1);
+        vec3.set(blueMonster.transform.scale, 3, 6, 1);
+        blueMonster.addComponent(new BoxCollider(true, 0, -4, 2, 1, DoodleJumpSceneCollection.MONSTER_LAYER));
+        blueMonster.addComponent(new Monster());
+
+        let blueMonsterImageElements = this.imageLoader.getImageElements(this.BLUE_MONSTER_URL);
+        blueMonster.addComponent(new MeshRenderer(this.quad, blueMonsterImageElements, this.vectorArtTextureInfo));
+
+        let blueMonsterWayPoints = [
+            new GameObject("Waypoint 0").transform,
+            new GameObject("Waypoint 1").transform,
+        ];
+
+        blueMonsterWayPoints[0].gameObject.addComponent(new WayPoint([ 20, 2, 1], true, false, false));
+        blueMonsterWayPoints[1].gameObject.addComponent(new WayPoint([ -20, 1 ,1], true, false, false));
+        blueMonsterWayPoints[0].setParent(blueMonster.transform);
+        blueMonsterWayPoints[1].setParent(blueMonster.transform);
+
+        blueMonster.addComponent(new WayPointMovement(1, false)); 
+
+        // Add Bat Monster
+        
+        let batMonster = new GameObject("Bat Monster");
+        vec3.set(batMonster.transform.position, 18, 18, 1);
+        vec3.set(batMonster.transform.scale, 6, 6, 1);
+        batMonster.addComponent(new BoxCollider(true, 0, -2, 2, 1, DoodleJumpSceneCollection.MONSTER_LAYER));
+        batMonster.addComponent(new Monster());
+
+        let batMonsterImageElements = this.imageLoader.getImageElements([this.BAT_MONSTER0_URL, this.BAT_MONSTER1_URL, this.BAT_MONSTER2_URL, this.BAT_MONSTER3_URL, this.BAT_MONSTER4_URL]);
+        batMonster.addComponent(new MeshRenderer(this.quad, batMonsterImageElements, this.vectorArtTextureInfo));
+        batMonster.addComponent(new BatAnimator());
+
+        let batMonsterWayPoints = [
+            new GameObject("Waypoint 0").transform,
+            new GameObject("Waypoint 1").transform,
+            new GameObject("Waypoint 2").transform,
+            new GameObject("Waypoint 3").transform,
+            new GameObject("Waypoint 4").transform,
+        ];
+
+        batMonsterWayPoints[0].gameObject.addComponent(new WayPoint([ 2, 4, 1], false, false, false));
+        batMonsterWayPoints[1].gameObject.addComponent(new WayPoint([ -2, 2 ,1], false, false, false));
+        batMonsterWayPoints[2].gameObject.addComponent(new WayPoint([ 2, 0, 1], false, false, false));
+        batMonsterWayPoints[3].gameObject.addComponent(new WayPoint([ -2, -2 ,1], false, false, false));
+        batMonsterWayPoints[4].gameObject.addComponent(new WayPoint([ 2, -4, 1], false, false, false));
+
+        batMonsterWayPoints[0].setParent(batMonster.transform);
+        batMonsterWayPoints[1].setParent(batMonster.transform);
+        batMonsterWayPoints[2].setParent(batMonster.transform);
+        batMonsterWayPoints[3].setParent(batMonster.transform);
+        batMonsterWayPoints[4].setParent(batMonster.transform);
+        
+        batMonster.addComponent(new WayPointMovement(7, false));
+
+        sceneGameObjects.push(batMonster);
+
+
 
         // Add Spawner
         let spawner = new GameObject('Spawner');
@@ -271,7 +385,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         sceneGameObjects.push(destroyer);
 
         let destroyerFollwerMovement = new MaxFollowerMovement(playerGameObject, false, true, false);
-        destroyer.addComponent(new BoxCollider(true, 0,-136, 1000, 200, DoodleJumpSceneCollection.DESTROYER_LAYER));
+        destroyer.addComponent(new BoxCollider(true, 0,-133, 1000, 200, DoodleJumpSceneCollection.DESTROYER_LAYER));
         destroyer.addComponent(new PlatformDestroyer());
         destroyer.addComponent(destroyerFollwerMovement);
         destroyer.addComponent(new ScoreTracking(destroyerFollwerMovement, 18));

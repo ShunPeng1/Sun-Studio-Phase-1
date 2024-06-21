@@ -23,7 +23,7 @@ import PlayerTrunk from "../player/PlayerTrunk";
 import ForwardMovement from "../movement/ForwardMovement";
 import TimeoutSelfDestruction from "../monsters/TimeoutSelfDestruction";
 import PlayerFeet from "../player/PlayerFeet";
-import PlayerAnimator from "../animators/playerAnimator";
+import PlayerAnimator from "../animators/PlayerAnimator";
 import Player from "../player/Player";
 import StarAnimator from "../animators/StarAnimator";
 import DoodleJumpSceneCollection from "./DoodleJumpSceneCollection";

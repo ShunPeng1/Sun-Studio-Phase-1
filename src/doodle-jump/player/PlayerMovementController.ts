@@ -72,8 +72,7 @@ class PlayerMovementController extends Component {
                 this.rigidbody.velocity[0] = -this.rigidbody.velocity[0];
             }
     
-            console.log(this.rigidbody.velocity[0], this.maxSpeed);
-    
+            
             if (this.rigidbody.velocity[0] > this.maxSpeed) {
                 this.rigidbody.velocity[0] = this.maxSpeed;
             } else if (this.rigidbody.velocity[0] < -this.maxSpeed) {

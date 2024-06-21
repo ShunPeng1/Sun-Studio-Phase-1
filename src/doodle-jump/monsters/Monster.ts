@@ -5,13 +5,10 @@ import Player from "../player/Player";
 import PlayerEquipment from "../player/PlayerEquipment";
 import PlayerGameOverContact from "../player/PlayerGameOverContact";
 import Rigidbody from "../../engine/components/physics/Rigidbody";
+import Obstacle from "./Obstacle";
 
 
-class Monster extends Component {
-    
-    private collider : Collider;
-
-    private onColliderHit : (other : Collider) => void ;
+class Monster extends Obstacle {
 
     private stunTime : number;
     private minKnockBackForce : vec3;
@@ -26,23 +23,10 @@ class Monster extends Component {
     }
 
 
-    public awake(): void {
-        this.collider = this.gameObject.getComponent<Collider>(Collider)!;
 
 
-        this.onColliderHit = this.checkPlayerHit.bind(this);
-        
-    }
-    
-    protected onEnable(): void {
-        this.collider.subcribeToCollisionEnter(this.onColliderHit);
-    
-    }  
-
-    checkPlayerHit(other : Collider){
-        let player = other.gameObject.getComponent<Player>(Player);
-        if(player){
-            player.stun(this.stunTime);
+    protected onPlayerHit(player: Player): void {
+        player.stun(this.stunTime);
             
 
             let playerRigidbody = player.gameObject.getComponent<Rigidbody>(Rigidbody)!;
@@ -56,15 +40,7 @@ class Monster extends Component {
             
             playerRigidbody.velocity = vec3.fromValues(0,0,0)
 
-            playerRigidbody.addForce(pushForce);
-        
-        }
-
-    }
-
-
-    protected onDisable(): void {
-        this.collider.unsubcribeToCollisionEnter(this.onColliderHit);
+            playerRigidbody.addForce(pushForce)
     }
     
     public clone(): Component {
