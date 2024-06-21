@@ -11,8 +11,8 @@ class BoxCollider extends Collider{
     private width : number = 0;
     private height : number = 0;
 
-    constructor(isTrigger : boolean, x: number, y: number, width: number, height: number) {
-        super(isTrigger);
+    constructor(isTrigger : boolean, x: number = 0, y: number = 0, width: number = 1, height: number = 1, layer : number = 0) {
+        super(isTrigger, layer);
 
         this.x = x;
         this.y = y;
@@ -203,7 +203,7 @@ class BoxCollider extends Collider{
 
     public clone(): Component {
         // Add your implementation here
-        return new BoxCollider(this.isTrigger, this.x, this.y, this.width, this.height);
+        return new BoxCollider(this.isTrigger, this.x, this.y, this.width, this.height, this.layer);
     }
 }
 

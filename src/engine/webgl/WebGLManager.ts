@@ -80,7 +80,7 @@ class WebGLManager {
     public clearScreen() {
         let gl = this.gl;
         // Clear screen
-        gl.clearColor(0.58, 0.45, 0.65, 1);
+        gl.clearColor(1,1,1,1);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     }
 

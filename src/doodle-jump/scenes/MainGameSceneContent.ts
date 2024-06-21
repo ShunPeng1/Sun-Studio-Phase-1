@@ -37,6 +37,7 @@ import SpringAnimator from "../animators/SpringAnimator";
 import PlayerShoot from "../player/PlayerShoot";
 import Monster from "../monsters/Monster";
 import PlayerMovementController from "../player/PlayerMovementController";
+import DoodleJumpSceneCollection from "./DoodleJumpSceneCollection";
 
 class MainGameSceneContent extends DoodleJumpSceneContent{
     
@@ -124,7 +125,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         let greenPlatform = new GameObject("Green Platform");
 
         vec3.set(greenPlatform.transform.scale, 4, 2, 1);
-        greenPlatform.addComponent(new BoxCollider(true, 0, 3.5, 2, 0.25));
+        greenPlatform.addComponent(new BoxCollider(true, 0, 3.5, 2, 0.25, DoodleJumpSceneCollection.PLATFORM_LAYER));
         greenPlatform.addComponent(new BounceUpPlatform(5000));
         
         let greenPlatfromImageElements = this.imageLoader.getImageElements(this.PLATFORM0_URL);
@@ -136,7 +137,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
 
         vec3.set(bluePlatform.transform.position, 0, 5, 1);
         vec3.set(bluePlatform.transform.scale, 4, 2, 1);
-        bluePlatform.addComponent(new BoxCollider(true, 0, 3.5, 2, 0.25));
+        bluePlatform.addComponent(new BoxCollider(true, 0, 3.5, 2, 0.25, DoodleJumpSceneCollection.PLATFORM_LAYER));
         bluePlatform.addComponent(new BounceUpPlatform(5000));
 
         // Waypoints
@@ -159,7 +160,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         let brownPlatform = new GameObject("Brown Platform");
 
         vec3.set(brownPlatform.transform.scale, 4, 4, 1);
-        brownPlatform.addComponent(new BoxCollider(true, 0, 2, 2, 1));
+        brownPlatform.addComponent(new BoxCollider(true, 0, 2, 2, 1, DoodleJumpSceneCollection.PLATFORM_LAYER));
         brownPlatform.addComponent(new WoodenPlatform(40,1));
 
         let brownPlatfromImageElements = this.imageLoader.getImageElements(
@@ -181,7 +182,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         let whitePlatform = new GameObject("White Platform");
         
         vec3.set(whitePlatform.transform.scale, 4, 2, 1);
-        whitePlatform.addComponent(new BoxCollider(true, 0, 3.5, 2, 0.25));
+        whitePlatform.addComponent(new BoxCollider(true, 0, 3.5, 2, 0.25, DoodleJumpSceneCollection.PLATFORM_LAYER));
         whitePlatform.addComponent(new BounceUpPlatform(5000));
         whitePlatform.addComponent(new CloudPlatform());
  
@@ -193,7 +194,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         vec3.set(spring.transform.position, -3, 0, 1);
         vec3.set(spring.transform.scale, 1.5, 2, 1);
         spring.addComponent(new Spring())
-        spring.addComponent(new BoxCollider(true, 0, 3, 2.5, 2));
+        spring.addComponent(new BoxCollider(true, 0, 3, 2.5, 2, DoodleJumpSceneCollection.PLATFORM_LAYER));
         spring.addComponent(new BounceUpPlatform(8000));
 
         let springImageElements = this.imageLoader.getImageElements([this.SPRING0_URL, this.SPRING1_URL]);
@@ -205,7 +206,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         // Add Jetpack
         let jetpack = new GameObject("Jetpack");
         vec3.set(jetpack.transform.scale, 2, 4, 1);
-        jetpack.addComponent(new BoxCollider(true, 0, 1, 2, 1));
+        jetpack.addComponent(new BoxCollider(true, 0, 1, 2, 1, DoodleJumpSceneCollection.ITEM_LAYER));
         jetpack.addComponent(new JetpackCollectible(5,3,4000));
 
         let jetpackImageElements = this.imageLoader.getImageElements(this.JETPACK_URL);
@@ -215,7 +216,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         // Add Hat 
         let hat = new GameObject("Hat");
         vec3.set(hat.transform.scale, 2, 4, 1);
-        hat.addComponent(new BoxCollider(true, 0, 1, 2, 1));
+        hat.addComponent(new BoxCollider(true, 0, 1, 2, 1, DoodleJumpSceneCollection.ITEM_LAYER));
         hat.addComponent(new HatCollectible(4,3,2000));
 
         let hatImageElements = this.imageLoader.getImageElements(this.HAT_URL);
@@ -226,7 +227,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         let purpleMonster = new GameObject("Monster");
         vec3.set(purpleMonster.transform.position, 0, 10, 1);
         vec3.set(purpleMonster.transform.scale, 4, 4, 1);
-        purpleMonster.addComponent(new BoxCollider(true, 0, 2, 2, 1));
+        purpleMonster.addComponent(new BoxCollider(true, 0, 2, 2, 1, DoodleJumpSceneCollection.MONSTER_LAYER));
         purpleMonster.addComponent(new Monster());
         
         let purpleMonsterImageElements = this.imageLoader.getImageElements(this.PURPLE_MONSTER_URL);
@@ -257,7 +258,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         sceneGameObjects.push(destroyer);
 
         let destroyerFollwerMovement = new MaxFollowerMovement(playerGameObject, false, true, false);
-        destroyer.addComponent(new BoxCollider(true, 0,-136, 1000, 200));
+        destroyer.addComponent(new BoxCollider(true, 0,-136, 1000, 200, DoodleJumpSceneCollection.DESTROYER_LAYER));
         destroyer.addComponent(new PlatformDestroyer());
         destroyer.addComponent(destroyerFollwerMovement);
         destroyer.addComponent(new ScoreTracking(destroyerFollwerMovement, 18));

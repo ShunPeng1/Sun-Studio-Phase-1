@@ -26,6 +26,7 @@ import PlayerFeet from "../player/PlayerFeet";
 import PlayerAnimator from "../animators/playerAnimator";
 import Player from "../player/Player";
 import StarAnimator from "../animators/StarAnimator";
+import DoodleJumpSceneCollection from "./DoodleJumpSceneCollection";
 
 abstract class DoodleJumpSceneContent implements ISceneContent{
 
@@ -90,6 +91,9 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
     protected STAR0_URL = `${this.ATLAS_URL}/stars_01.png`;
     protected STAR1_URL = `${this.ATLAS_URL}/stars_02.png`;
     protected STAR2_URL = `${this.ATLAS_URL}/stars_03.png`;
+
+
+    
 
     constructor(sceneCollection : IGameSceneCollection){
         this.sceneCollection = sceneCollection;
@@ -213,7 +217,7 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
         vec3.set(playerGameObject.transform.rotation, 0, 0, 0);
         vec3.set(playerGameObject.transform.scale, 4, 4, 1);
         playerGameObject.addComponent(new Player());
-        playerGameObject.addComponent(new BoxCollider(false, 0, -0.5, 1, 0.25));
+        playerGameObject.addComponent(new BoxCollider(false, 0, -0.5, 1, 0.25, DoodleJumpSceneCollection.PLAYER_LAYER));
         playerGameObject.addComponent(new Rigidbody(1.1, 140));
         playerGameObject.addComponent(new PlayerFeet(0.2));
 

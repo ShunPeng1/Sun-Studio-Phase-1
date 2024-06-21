@@ -6,7 +6,9 @@ class PhysicManager {
     private colliders: Collider[] = [];
     private collisionStates: Map<Collider[], boolean> = new Map();
     private ignoreCollisionSet: Set<string> = new Set();
+    public layerMatrix: boolean[][] = Array(32).fill(true).map(() => Array(32).fill(true));
 
+    
     private constructor() {}
 
     public static getInstance(): PhysicManager {
@@ -55,14 +57,13 @@ class PhysicManager {
                 let collider1 = this.colliders[i];
                 let collider2 = this.colliders[j];
                 let key = [collider1, collider2].sort();
-                let keyString = [collider1.id, collider2.id].sort().join('-');
-
-                // Skip the collision check if the pair is in the ignore map
-                if (this.ignoreCollisionSet.has(keyString)) {
+                
+                if (!this.shouldInteractWith(collider1, collider2)) {
                     continue;
                 }
 
                 let isColliding = collider1.collidesWith(collider2);
+                
                 newCollisionStates.set(key, isColliding);
 
                 if (isColliding) {
@@ -113,6 +114,29 @@ class PhysicManager {
         this.ignoreCollisionSet.delete(key);
     }
 
+
+    public shouldInteractWith(first : Collider, second: Collider): boolean {
+        let keyString = [first.id, second.id].sort().join('-');
+
+        // Skip the collision check if the pair is in the ignore map
+        if (this.ignoreCollisionSet.has(keyString)) {
+            return false;
+        }
+
+
+        return this.layerMatrix[first.layer][second.layer];
+    }
+
+    // Add static methods to set and unset layer interactions
+    public setLayerInteraction(layer1: number, layer2: number): void {
+        this.layerMatrix[layer1][layer2] = true;
+        this.layerMatrix[layer2][layer1] = true;
+    }
+
+    public unsetLayerInteraction(layer1: number, layer2: number): void {
+        this.layerMatrix[layer1][layer2] = false;
+        this.layerMatrix[layer2][layer1] = false;
+    }
 }
 
 export default PhysicManager;

@@ -79,7 +79,10 @@ class PlayerEquipment extends Component{
             if (this.duration <= 0) {
                 this.isEquippingItem = false;
                 
-                this.jumpPlatformIgnorance.enablePlayerCollider();
+                this.jumpPlatformIgnorance.enablePlayerToPlatformLayer();
+                this.jumpPlatformIgnorance.enablePlayerToItemLayer();
+                this.jumpPlatformIgnorance.enablePlayerToMonsterLayer();
+                
                 this.jumpPlatformIgnorance.setEnable(true);
                 this.playerTrunk.setCanShoot(true);
 
@@ -111,7 +114,9 @@ class PlayerEquipment extends Component{
         this.isEquippingItem = true;
     
         wearable.setEnable(true);
-        this.jumpPlatformIgnorance.disablePlayerCollider();
+        this.jumpPlatformIgnorance.disablePlayerToPlatformLayer();
+        this.jumpPlatformIgnorance.disablePlayerToItemLayer();
+        this.jumpPlatformIgnorance.disablePlayerToMonsterLayer();
         this.jumpPlatformIgnorance.setEnable(false);
         this.playerTrunk.setCanShoot(false);
     }

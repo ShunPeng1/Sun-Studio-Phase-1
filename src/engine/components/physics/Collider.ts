@@ -10,9 +10,12 @@ let idCounter = 0;
 class Collider extends Component{
     
     
-    public isTrigger : boolean = false;
-    public onCollisionEvent: EventEmitter = new EventEmitter();
+    public isTrigger : boolean = false;    
+    public layer: number; 
+
     public id: number;
+
+    public onCollisionEvent: EventEmitter = new EventEmitter();
 
     private COLLISION_ENTER = "Collision Enter";
     private COLLISION_STAY = "Collision Stay";
@@ -21,10 +24,11 @@ class Collider extends Component{
     private TRIGGER_STAY = "Trigger Stay";
     private TRIGGER_EXIT = "Trigger Exit";
     
-    constructor(isTrigger: boolean){
+    constructor(isTrigger: boolean, layer: number = 0){
         super();
         this.id = idCounter++;
         this.isTrigger = isTrigger;
+        this.layer = layer;
     }
     
     

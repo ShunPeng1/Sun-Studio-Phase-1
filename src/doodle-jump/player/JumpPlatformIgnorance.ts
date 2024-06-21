@@ -4,8 +4,10 @@ import Rigidbody from "../../engine/components/physics/Rigidbody";
 import PhysicManager from "../../engine/physics/PhysicManager";
 import Platform from "../platforms/Platform";
 import PlatformItem from "../platform-items/PlatformItem";
+import DoodleJumpSceneCollection from "../scenes/DoodleJumpSceneCollection";
 
 class JumpPlatformIgnorance extends Component{
+    
     
     private isFalling: boolean = true;
     private isJumping: boolean = false;
@@ -25,7 +27,11 @@ class JumpPlatformIgnorance extends Component{
         this.physicsManager = PhysicManager.getInstance();
         this.collider = this.gameObject.getComponent<Collider>(Collider)!;
         this.checkDirection();
+     
         
+        this.enablePlayerToItemLayer();
+        this.enablePlayerToMonsterLayer();
+        this.enablePlayerToPlatformLayer();
     }
 
     public fixedUpdate(time: number, deltaTime: number): void {
@@ -35,11 +41,11 @@ class JumpPlatformIgnorance extends Component{
 
         if (this.checkDirection()) {
             if (this.isFalling) {
-                this.enablePlayerCollider();
+                this.enablePlayerToPlatformLayer();
             }
     
             if (this.isJumping) {
-                this.disablePlayerCollider();
+                this.disablePlayerToPlatformLayer();
             }
         }
     }
@@ -60,75 +66,30 @@ class JumpPlatformIgnorance extends Component{
         return false;
     }
 
-    public disablePlayerCollider() {
-        this.collider.setEnable(false);   
+    public disablePlayerToPlatformLayer() {
+        this.physicsManager.unsetLayerInteraction(DoodleJumpSceneCollection.PLAYER_LAYER, DoodleJumpSceneCollection.PLATFORM_LAYER);
+
     }
 
-    public enablePlayerCollider() {
-        this.collider.setEnable(true); 
+    public enablePlayerToPlatformLayer() {
+        this.physicsManager.setLayerInteraction(DoodleJumpSceneCollection.PLAYER_LAYER, DoodleJumpSceneCollection.PLATFORM_LAYER);
     }
 
-    // public disablePlatformCollider() {
-        
+    public disablePlayerToItemLayer() {
+        this.physicsManager.unsetLayerInteraction(DoodleJumpSceneCollection.PLAYER_LAYER, DoodleJumpSceneCollection.ITEM_LAYER);
+    }
 
-    //     this.physicsManager.queryColliders((collider : Collider) =>{
-    //         if (collider.gameObject.getComponent<Platform>) {
-    //             return true;
-    //         }
-    //         return false;
-    //     }).forEach((collider) => {
-    //         this.physicsManager.ignoreCollisions(this.gameObject.getComponent<Collider>(Collider)!, collider);
-    //     });
+    public enablePlayerToItemLayer() {
+        this.physicsManager.setLayerInteraction(DoodleJumpSceneCollection.PLAYER_LAYER, DoodleJumpSceneCollection.ITEM_LAYER);
+    }
 
-    //     //console.log("disable collider");
-    // }
+    public disablePlayerToMonsterLayer() {
+        this.physicsManager.unsetLayerInteraction(DoodleJumpSceneCollection.PLAYER_LAYER, DoodleJumpSceneCollection.MONSTER_LAYER);    
+    }
 
-    // public enablePlatformCollider() {
-        
-
-    //     this.physicsManager.queryColliders((collider : Collider) =>{
-    //         if (collider.gameObject.getComponent<Platform>) {
-    //             return true;
-    //         }
-    //         return false;
-        
-    //     }).forEach((collider) => {
-    //         this.physicsManager.unignoreCollisions(this.gameObject.getComponent<Collider>(Collider)!, collider);
-    //     });
-
-    //     //console.log("enable collider");
-    // }
-
-    // public disablePlatformAndItemCollider() {
-
-    //     this.physicsManager.queryColliders((collider : Collider) =>{
-    //         if (collider.gameObject.getComponent<Platform>(Platform) || collider.gameObject.getComponent<PlatformItem>(PlatformItem)) {
-    //             return true;
-    //         }
-    //         return false;
-        
-    //     }).forEach((collider) => {
-    //         this.physicsManager.ignoreCollisions(this.gameObject.getComponent<Collider>(Collider)!, collider);
-    //     });
-
-    //     //console.log("disable collider");
-    // }
-
-    // public enablePlatformAndItemCollider() {
-
-    //     this.physicsManager.queryColliders((collider : Collider) =>{
-    //         if (collider.gameObject.getComponent<Platform>(Platform) || collider.gameObject.getComponent<PlatformItem>(PlatformItem)) {
-    //             return true;
-    //         }
-    //         return false;
-        
-    //     }).forEach((collider) => {
-    //         this.physicsManager.unignoreCollisions(this.gameObject.getComponent<Collider>(Collider)!, collider);
-    //     });
-
-    //     //console.log("enable collider");
-    // }
-
+    public enablePlayerToMonsterLayer() {
+        this.physicsManager.setLayerInteraction(DoodleJumpSceneCollection.PLAYER_LAYER, DoodleJumpSceneCollection.MONSTER_LAYER);
+    }
 
     public setEnable(value: boolean) {
         this.isEnable = value;

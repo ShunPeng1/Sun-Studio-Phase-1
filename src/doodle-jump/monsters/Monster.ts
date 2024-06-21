@@ -13,10 +13,16 @@ class Monster extends Component {
 
     private onColliderHit : (other : Collider) => void ;
 
-    constructor() {
+    private stunTime : number;
+    private minKnockBackForce : vec3;
+    private maxKnockBackForce : vec3;
+    constructor( stunTime : number = 2, minKnockBackForce : vec3 = vec3.fromValues(1000, 1000, 0), maxKnockBackForce : vec3 = vec3.fromValues(4000, 4000, 0)) {
         super();
     
-        this.onColliderHit = this.checkPlayerHit.bind(this);
+        this.stunTime = stunTime;
+        this.minKnockBackForce = minKnockBackForce;        
+    
+        this.maxKnockBackForce = maxKnockBackForce;
     }
 
 
@@ -24,6 +30,8 @@ class Monster extends Component {
         this.collider = this.gameObject.getComponent<Collider>(Collider)!;
 
 
+        this.onColliderHit = this.checkPlayerHit.bind(this);
+        
     }
     
     protected onEnable(): void {
@@ -34,18 +42,20 @@ class Monster extends Component {
     checkPlayerHit(other : Collider){
         let player = other.gameObject.getComponent<Player>(Player);
         if(player){
-            player.stun(1);
+            player.stun(this.stunTime);
             
 
             let playerRigidbody = player.gameObject.getComponent<Rigidbody>(Rigidbody)!;
 
-            let pushForceX = (Math.random() - 0.5) * 20;
-            let pushForceY = (Math.random() - 0.5) * 20;
+            let pushForceX = (Math.random() - 0.5) * (this.maxKnockBackForce[0] - this.minKnockBackForce[0]) + this.minKnockBackForce[0];
+            let pushForceY = (Math.random() - 0.5) * (this.maxKnockBackForce[1] - this.minKnockBackForce[1]) + this.minKnockBackForce[1];
     
             let pushForce = vec3.fromValues(pushForceX, pushForceY, 0);
     
             // Apply the force to the player
             
+            playerRigidbody.velocity = vec3.fromValues(0,0,0)
+
             playerRigidbody.addForce(pushForce);
         
         }
@@ -58,7 +68,7 @@ class Monster extends Component {
     }
     
     public clone(): Component {
-        return new Monster();
+        return new Monster(this.stunTime, this.minKnockBackForce, this.maxKnockBackForce);
     }
 
 }
