@@ -5,7 +5,6 @@ import PlatformSpawnInfo from "./PlatformSpawnInfo";
 
 class SpawnSet{
     public setChance : number;
-    public setDuration : number;
 
     public minHeight: number;
     public maxHeight: number;
@@ -26,9 +25,8 @@ class SpawnSet{
     public baseNoItemChance : number;
 
 
-    constructor(setChance : number, setDuration : number, minHeight: number, maxHeight: number, varianceX : vec2, varianceY : vec2, platformSpawnInfos: PlatformSpawnInfo[], platformSpawnChance : number, obstacleSpawnInfos: ObstacleSpawnInfo[], obstacleSpawnChance: number, platformItemSpawnInfos : PlatformItemSpawnInfo[], baseNoItemChance : number) {
+    constructor(setChance : number, minHeight: number, maxHeight: number, varianceX : vec2, varianceY : vec2, platformSpawnInfos: PlatformSpawnInfo[], platformSpawnChance : number, obstacleSpawnInfos: ObstacleSpawnInfo[], obstacleSpawnChance: number, platformItemSpawnInfos : PlatformItemSpawnInfo[], baseNoItemChance : number) {
         this.setChance = setChance;
-        this.setDuration = setDuration;
         
         this.minHeight = minHeight;
         this.maxHeight = maxHeight;
@@ -37,7 +35,7 @@ class SpawnSet{
 
         this.platformSpawnInfos = platformSpawnInfos;
         this.platformSpawnChance = platformSpawnChance;
-        
+
         this.obstacleSpawnInfos = obstacleSpawnInfos;
         this.obstacleSpawnChance = obstacleSpawnChance;
 

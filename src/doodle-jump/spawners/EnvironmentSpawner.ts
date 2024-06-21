@@ -14,32 +14,36 @@ class EnvironmentSpawner extends Component{
     private currentSet: SpawnSet;
     
     private preemptiveSpawnHeight : number;
-    private setTimer: number;
+    private maxPossibleHeight : number;
+    private setDuration : number;
+    private currentSetTime: number;
 
     private accumulateY : number;
-    private accumulateNonBreakableY : number;
+    private accumulateNonBreakableOrObstacleY : number;
 
 
     private canSpawnBreakableAndObstacle : boolean = true;
-
-    private totalItemChanceCount : number = 0;
     
 
     
-    constructor(spawnSets: SpawnSet[], preemptiveSpawnHeight : number) {
+    constructor(spawnSets: SpawnSet[], preemptiveSpawnHeight : number, maxPossibleHeight : number = 14, setDuration : number = 3) {
         super();
 
         this.preemptiveSpawnHeight = preemptiveSpawnHeight;
 
-        
         this.spawnSets = spawnSets;
-        this.currentSet = this.getRandomSpawnSet();
-        this.setTimer = this.currentSet.setDuration;
+        this.maxPossibleHeight = maxPossibleHeight;
+        this.setDuration = setDuration;
+    }
 
-    
+    protected start(): void {
+        this.currentSet = this.getRandomSpawnSet();
+        this.currentSetTime = this.setDuration;
     }
 
     private getSpawnSetsInHeightRange(currentHeight: number): SpawnSet[] {
+        console.log("Get Spawn Set In Height ",currentHeight)
+        console.log(this.spawnSets.filter(set => set.minHeight <= currentHeight && set.maxHeight >= currentHeight))
         return this.spawnSets.filter(set => set.minHeight <= currentHeight && set.maxHeight >= currentHeight);
     }
 
@@ -65,13 +69,14 @@ class EnvironmentSpawner extends Component{
 
     public awake(): void {
         this.accumulateY = this.transform.position[1];
-        this.accumulateNonBreakableY = this.transform.position[1];
+        this.accumulateNonBreakableOrObstacleY = this.transform.position[1];
     }
 
     public update(time: number, deltaTime: number): void {
         this.updateSetTimer(deltaTime);
 
-        if (this.accumulateNonBreakableY - this.accumulateY + this.currentSet.varianceY[1] > this.currentSet.varianceY[0] * 2){
+        //console.log(this.accumulateY - this.transform.position[1], this.preemptiveSpawnHeight, this.accumulateNonBreakableOrObstacleY - this.accumulateY + this.maxPossibleHeight, this.currentSet.varianceY[0] * 2)
+        if (this.accumulateNonBreakableOrObstacleY - this.accumulateY + this.maxPossibleHeight > this.currentSet.varianceY[0]){
             this.canSpawnBreakableAndObstacle = true;
         }
         else{
@@ -88,10 +93,10 @@ class EnvironmentSpawner extends Component{
 
     
     private updateSetTimer(deltaTime: number): void {
-        this.setTimer -= deltaTime;
-        if (this.setTimer <= 0) {
+        this.currentSetTime -= deltaTime;
+        if (this.currentSetTime <= 0) {
             this.currentSet = this.getRandomSpawnSet();
-            this.setTimer = this.currentSet.setDuration;
+            this.currentSetTime = this.setDuration;
         }
     }
 
@@ -112,7 +117,7 @@ class EnvironmentSpawner extends Component{
     }
 
     private getRandomItemSpawnInfo() : PlatformItemSpawnInfo | null{
-        let random = Math.random() * (this.totalItemChanceCount + this.currentSet.baseNoItemChance);
+        let random = Math.random() * (this.currentSet.totalItemChanceCount + this.currentSet.baseNoItemChance);
 
         if (random < this.currentSet.baseNoItemChance) {
             return null;
@@ -174,11 +179,11 @@ class EnvironmentSpawner extends Component{
     private spawnEnvironment() {
 
         if (this.rollPlatformOrObstacleChoice()){
-            console.log("Spawn Platform")
+            //console.log("Spawn Platform")
             this.spawnPlatform();
         }
         else{
-            console.log("Spawn Obstacle")
+            //console.log("Spawn Obstacle")
             this.spawnObstacle();
         }
     }
@@ -191,7 +196,7 @@ class EnvironmentSpawner extends Component{
         let obstacle = obstacleSpawnInfo.cloneObstacle(this.gameObject.getScene());
         
         obstacle.transform.position[0] = Math.random() * (this.currentSet.varianceX[1] - this.currentSet.varianceX[0]) + this.currentSet.varianceX[0];
-        obstacle.transform.position[1] = this.accumulateY + Math.random() * ((this.accumulateNonBreakableY - this.accumulateY + this.currentSet.varianceY[1] ) - this.currentSet.varianceY[0]) + this.currentSet.varianceY[0];
+        obstacle.transform.position[1] = this.accumulateY + Math.random() * ((this.accumulateNonBreakableOrObstacleY - this.accumulateY + this.currentSet.varianceY[1] ) - this.currentSet.varianceY[0]) + this.currentSet.varianceY[0];
         obstacle.transform.position[2] = 0;
         
         this.accumulateY = obstacle.transform.position[1];
@@ -209,7 +214,7 @@ class EnvironmentSpawner extends Component{
         let platform = platformSpawnInfo.clonePlatform(this.gameObject.getScene());
         
         platform.transform.position[0] = Math.random() * (this.currentSet.varianceX[1] - this.currentSet.varianceX[0]) + this.currentSet.varianceX[0];
-        platform.transform.position[1] = this.accumulateY + Math.random() * ((this.accumulateNonBreakableY - this.accumulateY + this.currentSet.varianceY[1] ) - this.currentSet.varianceY[0]) + this.currentSet.varianceY[0];
+        platform.transform.position[1] = this.accumulateY + Math.random() * ((this.accumulateNonBreakableOrObstacleY - this.accumulateY + this.currentSet.varianceY[1] ) - this.currentSet.varianceY[0]) + this.currentSet.varianceY[0];
         platform.transform.position[2] = 0;
 
         if (platformSpawnInfo.isBreakable){
@@ -217,7 +222,7 @@ class EnvironmentSpawner extends Component{
         }
         else{
             this.accumulateY = platform.transform.position[1];    
-            this.accumulateNonBreakableY = this.accumulateY;
+            this.accumulateNonBreakableOrObstacleY = this.accumulateY;
         }
 
         if (platformSpawnInfo.haveItem){
@@ -242,7 +247,7 @@ class EnvironmentSpawner extends Component{
 
 
     public clone(): Component {
-        throw new Error("Method not implemented.");
+        return new EnvironmentSpawner(this.spawnSets, this.preemptiveSpawnHeight, this.maxPossibleHeight, this.setDuration);
     }
 
 

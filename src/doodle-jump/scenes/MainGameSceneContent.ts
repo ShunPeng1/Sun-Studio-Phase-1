@@ -183,9 +183,9 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         // Brown Platform
         let brownPlatform = new GameObject("Brown Platform");
 
-        vec3.set(brownPlatform.transform.scale, 4, 4, 1);
-        brownPlatform.addComponent(new BoxCollider(true, 0, 2, 2, 1, DoodleJumpSceneCollection.PLATFORM_LAYER));
-        brownPlatform.addComponent(new WoodenPlatform(40,1));
+        vec3.set(brownPlatform.transform.scale, 4, 2, 1);
+        brownPlatform.addComponent(new BoxCollider(true, 0, 3.5, 2, 0.25, DoodleJumpSceneCollection.PLATFORM_LAYER));
+        brownPlatform.addComponent(new WoodenPlatform(40));
 
         let brownPlatfromImageElements = this.imageLoader.getImageElements(
             [
@@ -362,7 +362,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
 
 
         // Spawn Set
-        let testSpawnSet = new SpawnSet(1, 60, -20, 20, [-20,20], [4,14], [ 
+        let mixtureSpawnSet = new SpawnSet(1, 50, Infinity, [-20,20], [4,14], [ 
             new PlatformSpawnInfo(greenPlatform, 10, false, true),
             new PlatformSpawnInfo(brownPlatform, 3, true, false),
             new PlatformSpawnInfo(bluePlatform, 3, false, true),
@@ -372,12 +372,31 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
             new ObstacleSpawnInfo(redMonster, 1),
             new ObstacleSpawnInfo(blueMonster, 1),
             new ObstacleSpawnInfo(batMonster, 1)
-            ], 10, [
-                new PlatformItemSpawnInfo(spring, 6,[-0.2,0.2], 0.8),
+            ], 7, [
+                new PlatformItemSpawnInfo(spring, 10,[-0.2,0.2], 0.8),
+                new PlatformItemSpawnInfo(jetpack, 3,[-0.2,0.2], 2),
+                new PlatformItemSpawnInfo(hat, 5,[-0.2,0.2], 1.8)
+            ], 80
+        );
+
+        let startupPopulateSpawnSet = new SpawnSet(1, -100, 50, [-20,20], [3,6], [ 
+            new PlatformSpawnInfo(greenPlatform, 100, false, true),
+            new PlatformSpawnInfo(brownPlatform, 30, true, false),
+            new PlatformSpawnInfo(bluePlatform, 1, false, true),
+            new PlatformSpawnInfo(whitePlatform, 1, false, false)
+            ], 200,[
+            new ObstacleSpawnInfo(purpleMonster, 3),
+            new ObstacleSpawnInfo(redMonster, 1),
+            new ObstacleSpawnInfo(blueMonster, 1),
+            new ObstacleSpawnInfo(batMonster, 1)
+            ], 0, [
+                new PlatformItemSpawnInfo(spring, 20,[-0.2,0.2], 0.8),
                 new PlatformItemSpawnInfo(jetpack, 2,[-0.2,0.2], 2),
                 new PlatformItemSpawnInfo(hat, 1,[-0.2,0.2], 1.8)
             ], 80
         );
+
+        
 
 
         // Add Spawner
@@ -385,7 +404,8 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         sceneGameObjects.push(spawner);
 
         spawner.addComponent(new EnvironmentSpawner([
-            testSpawnSet
+            //startupPopulateSpawnSet,
+            mixtureSpawnSet
         ], 60));
         spawner.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         spawner.transform.position[1] = -30;

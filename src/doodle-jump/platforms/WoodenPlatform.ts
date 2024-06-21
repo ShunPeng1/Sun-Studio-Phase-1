@@ -12,13 +12,10 @@ class WoodenPlatform extends Platform {
     
     public isBroken : boolean = false;
     private fallSpeed : number = 0.1;
-    private fallTimeDestroy : number = 0;
-
-    private fallTime : number = 0;
-    constructor(fallSpeed : number, fallTimeDestroy : number){
+    
+    constructor(fallSpeed : number){
         super();
         this.fallSpeed = fallSpeed;
-        this.fallTimeDestroy = fallTimeDestroy;
     }
 
 
@@ -40,7 +37,7 @@ class WoodenPlatform extends Platform {
 
 
     public clone(): Component {
-        return new WoodenPlatform(this.fallSpeed, this.fallTimeDestroy);        
+        return new WoodenPlatform(this.fallSpeed);        
     }
     
 }
