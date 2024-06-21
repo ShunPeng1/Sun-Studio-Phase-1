@@ -5,6 +5,7 @@ class Scene{
     
     private name: string;
     private gameObjects: GameObject[] = []; 
+    private nextFrameGameObjects: GameObject[] = [];
     private content: ISceneContent;
 
     constructor(name: string, content : ISceneContent) {
@@ -12,9 +13,17 @@ class Scene{
         this.content = content;
     }
 
+    public nextFrame() {
+        for (let gameObject of this.nextFrameGameObjects){
+            this.gameObjects.push(gameObject);
+        }
+
+        this.nextFrameGameObjects = [];
+    }
+
     public addGameObject(gameObject: GameObject) {
         gameObject.setScene(this);
-        this.gameObjects.push(gameObject);
+        this.nextFrameGameObjects.push(gameObject);
     }
 
     public removeGameObject(gameObject: GameObject) {
@@ -22,13 +31,20 @@ class Scene{
         if (index > -1) {
             this.gameObjects.splice(index, 1);
         }
+
+        else{
+            const index = this.nextFrameGameObjects.indexOf(gameObject);
+            if (index > -1) {
+                this.nextFrameGameObjects.splice(index, 1);
+            }
+        }
     }
 
     public getName(): string {
         return this.name;
     }
 
-    public getGameObjects(): GameObject[]{
+    public getCurrentFrameGameObjects(): GameObject[]{
         return this.gameObjects;
     }
 
@@ -45,6 +61,7 @@ class Scene{
 
 
     public load() {
+        this.nextFrame();
         this.gameObjects.forEach((gameObject) => {
             gameObject.awake();
         });

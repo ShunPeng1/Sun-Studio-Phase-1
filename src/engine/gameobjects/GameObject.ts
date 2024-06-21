@@ -41,7 +41,7 @@ class GameObject {
         }
     }
     
-    private start() {
+    public start() {
         
         if (this.isEnable == false) {
             return;
@@ -63,8 +63,6 @@ class GameObject {
             return;
         }
 
-        this.start();
-
         for (let i = 0; i < this.components.length; i++) {
             this.components[i].update(time, deltaTime);
         }
@@ -72,6 +70,22 @@ class GameObject {
         let children = this.transform.getChildren();
         for (let i = 0; i < children.length; i++) {
             children[i].gameObject.update(time, deltaTime);
+        }
+    }
+
+    public lateUpdate(time: number, deltaTime : number) {
+        
+        if (this.isEnable == false) {
+            return;
+        }
+
+        for (let i = 0; i < this.components.length; i++) {
+            this.components[i].lateUpdate(time, deltaTime);
+        }
+
+        let children = this.transform.getChildren();
+        for (let i = 0; i < children.length; i++) {
+            children[i].gameObject.lateUpdate(time, deltaTime);
         }
     }
 
@@ -96,8 +110,6 @@ class GameObject {
         if (this.isEnable == false) {
             return;
         }
-
-        this.start();
 
         for (let i = 0; i < this.components.length; i++) {
             this.components[i].fixedUpdate(fixedLastTime, fixedDeltaTime);

@@ -48,6 +48,10 @@ abstract class Component {
     public update(time: number, deltaTime : number){
     }
 
+    public lateUpdate(time: number, deltaTime : number){
+    
+    }
+
     public fixedUpdate(fixedLastTime: number, fixedDeltaTime : number){
     }
     

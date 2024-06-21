@@ -31,7 +31,7 @@ class JetpackWearableAnimator extends Animator {
         if (!this.stateMachine)
             return;
 
-        console.log("on enable");
+        //console.log("on enable");
         this.stateMachine.setToState(this.accelerateState);
     }
     
@@ -45,7 +45,7 @@ class JetpackWearableAnimator extends Animator {
 
         let runningTime = this.travelingTime - this.accelerateState.clip.getEstimatedDuration() - this.decelerateState.clip.getEstimatedDuration();
         
-        console.log("running time: " + runningTime, this.travelingTime, this.accelerateState.clip.getEstimatedDuration(), this.decelerateState.clip.getEstimatedDuration());
+        //console.log("running time: " + runningTime, this.travelingTime, this.accelerateState.clip.getEstimatedDuration(), this.decelerateState.clip.getEstimatedDuration());
         
         this.runningState = new JetpackWearableRunningState(this.renderer, runningTime);
 

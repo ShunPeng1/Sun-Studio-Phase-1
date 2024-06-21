@@ -89,6 +89,8 @@ class BaseStateMachine {
             }
         }
 
+        if (!this.currentState || !this.currentState.transitions) return null;
+
         for (const transition of this.currentState?.transitions) {
             if (transition.condition.evaluate()) {
                 return transition;

@@ -2,7 +2,7 @@ import SceneManager from "../scenes/SceneManager";
 import GameState from "./GameState";
 import TimeGameTransitionData from "./TimeGameTransitionData";
 
-class UpdateGameState extends GameState {
+class LateUpdateGameState extends GameState {
     private sceneManager: SceneManager;
 
     constructor() {
@@ -15,8 +15,9 @@ class UpdateGameState extends GameState {
         let currentSceneGameObjects = this.sceneManager.getCurrentScene()?.getCurrentFrameGameObjects();
         
         if (currentSceneGameObjects) {
+
             currentSceneGameObjects.forEach(gameObject => {
-                gameObject.update(enterTransitionData.time, enterTransitionData.deltaTime);
+                gameObject.lateUpdate(enterTransitionData.time, enterTransitionData.deltaTime);
             });
         }
 
@@ -25,4 +26,4 @@ class UpdateGameState extends GameState {
     
 }
 
-export default UpdateGameState;
+export default LateUpdateGameState;

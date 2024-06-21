@@ -2,7 +2,7 @@ import SceneManager from "../scenes/SceneManager";
 import GameState from "./GameState";
 import TimeGameTransitionData from "./TimeGameTransitionData";
 
-class UpdateGameState extends GameState {
+class StartGameState extends GameState {
     private sceneManager: SceneManager;
 
     constructor() {
@@ -16,7 +16,7 @@ class UpdateGameState extends GameState {
         
         if (currentSceneGameObjects) {
             currentSceneGameObjects.forEach(gameObject => {
-                gameObject.update(enterTransitionData.time, enterTransitionData.deltaTime);
+                gameObject.start();
             });
         }
 
@@ -25,4 +25,4 @@ class UpdateGameState extends GameState {
     
 }
 
-export default UpdateGameState;
+export default StartGameState;

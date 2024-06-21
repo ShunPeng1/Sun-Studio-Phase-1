@@ -16,7 +16,7 @@ class MaxFollowerMovement extends Component{
     
     }
 
-    public update(time: number, deltaTime: number): void {
+    public lateUpdate(time: number, deltaTime: number): void {
 
         if (this.isFollowX) {
             if (this.gameObjectFollowing.transform.position[0] > this.gameObject.transform.position[0]) {

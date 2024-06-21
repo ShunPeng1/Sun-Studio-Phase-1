@@ -26,7 +26,7 @@ class RenderGameState extends GameState {
         this.webGLManager.clearScreen();
 
         // Render game objects
-        let currentSceneGameObjects = this.sceneManager.getCurrentScene()?.getGameObjects();
+        let currentSceneGameObjects = this.sceneManager.getCurrentScene()?.getCurrentFrameGameObjects();
 
         if (currentSceneGameObjects) {
             currentSceneGameObjects.forEach(gameObject => {

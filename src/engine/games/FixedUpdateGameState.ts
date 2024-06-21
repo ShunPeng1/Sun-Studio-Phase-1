@@ -37,7 +37,7 @@ class FixedUpdateGameState extends GameState {
 
     private fixedUpdate(time: number, deltaTime: number): void {
         // Update game objects
-        let currentSceneGameObjects = this.sceneManager.getCurrentScene()?.getGameObjects();
+        let currentSceneGameObjects = this.sceneManager.getCurrentScene()?.getCurrentFrameGameObjects();
         
         if (currentSceneGameObjects) {
             currentSceneGameObjects.forEach(gameObject => {

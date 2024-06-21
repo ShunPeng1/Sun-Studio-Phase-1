@@ -11,6 +11,8 @@ import RenderGameState from "./RenderGameState";
 import TimeGameTransitionData from "./TimeGameTransitionData";
 import IGameSceneCollection from "../scenes/IGameSceneCollection";
 import InitialGameState from "./InitialGameState";
+import StartGameState from "./StartGameState";
+import LateUpdateGameState from "./LateUpdateGameState";
 
 class ShunGameEngine {
     // Scene
@@ -29,8 +31,10 @@ class ShunGameEngine {
     // State Machine
     private stateMachine: BaseStateMachine;
     private initialGameState: InitialGameState;
+    private startGameState: StartGameState;
     private fixedUpdateGameState: FixedUpdateGameState;
     private updateGameState: UpdateGameState;
+    private lateUpdateGameState: LateUpdateGameState;
     private renderGameState: RenderGameState;
 
 
@@ -49,14 +53,18 @@ class ShunGameEngine {
         // Create State Machine
         this.stateMachine = new BaseStateMachine.Builder().build();
         this.initialGameState = new InitialGameState();
+        this.startGameState = new StartGameState();
         this.fixedUpdateGameState = new FixedUpdateGameState();
         this.updateGameState = new UpdateGameState();
+        this.lateUpdateGameState = new LateUpdateGameState();
         this.renderGameState = new RenderGameState();
 
         this.stateMachine.addOrOverwriteState(this.initialGameState, new Set());
+        this.stateMachine.addOrOverwriteState(this.startGameState, new Set());
         this.stateMachine.addOrOverwriteState(this.fixedUpdateGameState, new Set());
         this.stateMachine.addOrOverwriteState(this.updateGameState, new Set());
         this.stateMachine.addOrOverwriteState(this.renderGameState, new Set());
+        this.stateMachine.addOrOverwriteState(this.lateUpdateGameState, new Set());
 
         this.stateMachine.setInitialState(this.initialGameState, true);
 
@@ -100,7 +108,7 @@ class ShunGameEngine {
 
 
     private gameLoop = () : void => {
-        this.sceneManager.loadNextScene();
+        this.sceneManager.nextFrame();
 
         let time = performance.now()/1000;
         
@@ -111,9 +119,11 @@ class ShunGameEngine {
         // }
         this.lastTime = time;
         
-        this.stateMachine.setToState(new FixedUpdateGameState(), new TimeGameTransitionData(time, deltaTime));
-        this.stateMachine.setToState(new UpdateGameState(), new TimeGameTransitionData(time, deltaTime));
-        this.stateMachine.setToState(new RenderGameState(), new TimeGameTransitionData(time, deltaTime));
+        this.stateMachine.setToState(this.startGameState, new TimeGameTransitionData(time, deltaTime));
+        this.stateMachine.setToState(this.fixedUpdateGameState, new TimeGameTransitionData(time, deltaTime));
+        this.stateMachine.setToState(this.updateGameState, new TimeGameTransitionData(time, deltaTime));
+        this.stateMachine.setToState(this.lateUpdateGameState, new TimeGameTransitionData(time, deltaTime));
+        this.stateMachine.setToState(this.renderGameState, new TimeGameTransitionData(time, deltaTime));
         requestAnimationFrame(this.gameLoop);
     }
 

@@ -66,10 +66,15 @@ class SceneManager {
         this.currentScene = scene;
     }
 
-    public loadNextScene() {
+    
+
+    public nextFrame(){
         if (this.nextScene) {
             this.loadScene(this.nextScene);
             this.nextScene = null;
+        }
+        else{
+            this.currentScene?.nextFrame();
         }
     }
 
