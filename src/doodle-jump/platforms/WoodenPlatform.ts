@@ -5,7 +5,7 @@ import Transform from "../../engine/components/Transform";
 import PlayerEquipment from "../player/PlayerEquipment";
 import Platform from "./Platform";
 import PhysicManager from "../../engine/physics/PhysicManager";
-import PlatformDestroyer from "./PlatformDestroyer";
+import EnvironmentDestroyer from "../spawners/EnvironmentDestroyer";
 
 class WoodenPlatform extends Platform {
     

@@ -1,7 +1,8 @@
 import { vec2 } from "gl-matrix";
 import GameObject from "../../engine/gameobjects/GameObject";
 import Scene from "../../engine/scenes/Scene";
-import PlatformItem from "./PlatformItem";
+import PlatformItem from "../platform-items/PlatformItem";
+
 
 class PlatformItemSpawnInfo{
     private platformItemPrefab : GameObject;

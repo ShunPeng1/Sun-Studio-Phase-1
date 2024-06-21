@@ -1,19 +1,17 @@
 import { vec2, vec3 } from "gl-matrix";
 import Component from "../../engine/components/Component";
 import PlatformSpawnInfo from "./PlatformSpawnInfo";
-import PlatformItemSpawnInfo from "../platform-items/PlatformItemSpawnInfo";
+import PlatformItemSpawnInfo from "./PlatformItemSpawnInfo";
+import SpawnSet from "./SpawnSet";
 
 
-class PlatformSpawner extends Component{
-    private platformSpawnInfos : PlatformSpawnInfo[];
+
+class EnvironmentSpawner extends Component{
+    
     private accumulateY : number;
     private accumulateNonBreakableY : number;
     private preemptiveSpawnHeight : number;
-    private varianceX : vec2;
-    private varianceY : vec2;
-
-    private platformItemSpawnInfos : PlatformItemSpawnInfo[];
-    private baseNoItemChance : number;
+    
 
 
     private totalPlatformChanceCount : number = 0;
@@ -23,31 +21,42 @@ class PlatformSpawner extends Component{
     private totalItemChanceCount : number = 0;
     
     
-    constructor(platformSpawnInfos : PlatformSpawnInfo[], preemptiveSpawnHeight : number, varianceX : vec2, varianceY : vec2, platformItemSpawnInfos : PlatformItemSpawnInfo[], baseNoItemChance : number) {
+    private spawnSets: SpawnSet[];
+    private currentSet: SpawnSet;
+    private setTimer: number;
+    
+    constructor(spawnSets: SpawnSet[], preemptiveSpawnHeight : number) {
         super();
 
         this.preemptiveSpawnHeight = preemptiveSpawnHeight;
-        this.varianceX = varianceX;
-        this.varianceY = varianceY;
 
-        this.platformSpawnInfos = platformSpawnInfos;
-        this.platformItemSpawnInfos = platformItemSpawnInfos;
-
-        this.baseNoItemChance = baseNoItemChance;
-
-        this.platformSpawnInfos.forEach(element => {
-            this.totalPlatformChanceCount += element.spawnChance;
         
-            if (!element.isBreakable){
-                this.totalNonBreakableChanceCount += element.spawnChance;
-            }
-        });
+        this.spawnSets = spawnSets;
+        this.currentSet = this.getRandomSpawnSet();
+        this.setTimer = this.currentSet.setDuration;
 
-
-        this.platformItemSpawnInfos.forEach(element => {
-            this.totalItemChanceCount += element.spawnChance;
-        });
+    
     }
+
+
+
+    private getRandomSpawnSet(): SpawnSet {
+        let totalChance = this.spawnSets.reduce((sum, set) => sum + set.setChance, 0);
+        let random = Math.random() * totalChance;
+
+        let accumulatedChance = 0;
+        for (let set of this.spawnSets) {
+            accumulatedChance += set.setChance;
+            if (random <= accumulatedChance) {
+                return set;
+            }
+        }
+
+        // If no set is selected (due to floating point precision issues), return the last one
+        return this.spawnSets[this.spawnSets.length - 1];
+    }
+
+
 
     public awake(): void {
         this.accumulateY = this.transform.position[1];
@@ -55,10 +64,21 @@ class PlatformSpawner extends Component{
     }
 
     public update(time: number, deltaTime: number): void {
+        this.updateSetTimer(deltaTime);
+
         if (this.accumulateY - this.transform.position[1] <= this.preemptiveSpawnHeight ) {
             this.spawnPlatform();
         }
         
+    }
+
+    
+    private updateSetTimer(deltaTime: number): void {
+        this.setTimer -= deltaTime;
+        if (this.setTimer <= 0) {
+            this.currentSet = this.getRandomSpawnSet();
+            this.setTimer = this.currentSet.setDuration;
+        }
     }
 
     private getRandomPlatformSpawnInfo() : PlatformSpawnInfo {
@@ -66,35 +86,35 @@ class PlatformSpawner extends Component{
 
         let index = 0;
         let accumulatedChance = 0;
-        for (let i = 0; i < this.platformSpawnInfos.length; i++) {
-            accumulatedChance += this.platformSpawnInfos[i].spawnChance;
+        for (let i = 0; i < this.currentSet.platformSpawnInfos.length; i++) {
+            accumulatedChance += this.currentSet.platformSpawnInfos[i].spawnChance;
             if (random <= accumulatedChance) {
                 index = i;
                 break;
             }
         }
 
-        return this.platformSpawnInfos[index];
+        return this.currentSet.platformSpawnInfos[index];
     }
 
     private getRandomItemSpawnInfo() : PlatformItemSpawnInfo | null{
-        let random = Math.random() * (this.totalItemChanceCount + this.baseNoItemChance);
+        let random = Math.random() * (this.totalItemChanceCount + this.currentSet.baseNoItemChance);
 
-        if (random < this.baseNoItemChance) {
+        if (random < this.currentSet.baseNoItemChance) {
             return null;
         }
     
         let index = 0;
-        let accumulatedChance = this.baseNoItemChance;
-        for (let i = 0; i < this.platformItemSpawnInfos.length; i++) {
-            accumulatedChance += this.platformItemSpawnInfos[i].spawnChance;
+        let accumulatedChance = this.currentSet.baseNoItemChance;
+        for (let i = 0; i < this.currentSet.platformItemSpawnInfos.length; i++) {
+            accumulatedChance += this.currentSet.platformItemSpawnInfos[i].spawnChance;
             if (random <= accumulatedChance) {
                 index = i;
                 break;
             }
         }
     
-        return this.platformItemSpawnInfos[index];
+        return this.currentSet.platformItemSpawnInfos[index];
     }
 
 
@@ -103,9 +123,9 @@ class PlatformSpawner extends Component{
 
         let index = 0;
         let accumulatedChance = 0;
-        for (let i = 0; i < this.platformSpawnInfos.length; i++) {
-            if (!this.platformSpawnInfos[i].isBreakable){
-                accumulatedChance += this.platformSpawnInfos[i].spawnChance;
+        for (let i = 0; i < this.currentSet.platformSpawnInfos.length; i++) {
+            if (!this.currentSet.platformSpawnInfos[i].isBreakable){
+                accumulatedChance += this.currentSet.platformSpawnInfos[i].spawnChance;
                 if (random <= accumulatedChance) {
                     index = i;
                     break;
@@ -113,7 +133,7 @@ class PlatformSpawner extends Component{
             }
         }
 
-        return this.platformSpawnInfos[index];
+        return this.currentSet.platformSpawnInfos[index];
     }
 
     private spawnPlatform() {
@@ -128,8 +148,8 @@ class PlatformSpawner extends Component{
         
         let platform = platformSpawnInfo.clonePlatform(this.gameObject.getScene());
         
-        platform.transform.position[0] = Math.random() * (this.varianceX[1] - this.varianceX[0]) + this.varianceX[0];
-        platform.transform.position[1] = this.accumulateY + Math.random() * ((this.accumulateNonBreakableY - this.accumulateY + this.varianceY[1] ) - this.varianceY[0]) + this.varianceY[0];
+        platform.transform.position[0] = Math.random() * (this.currentSet.varianceX[1] - this.currentSet.varianceX[0]) + this.currentSet.varianceX[0];
+        platform.transform.position[1] = this.accumulateY + Math.random() * ((this.accumulateNonBreakableY - this.accumulateY + this.currentSet.varianceY[1] ) - this.currentSet.varianceY[0]) + this.currentSet.varianceY[0];
         platform.transform.position[2] = 0;
         if (platformSpawnInfo.isBreakable){
 
@@ -159,7 +179,7 @@ class PlatformSpawner extends Component{
             }
         }
         
-        if (this.accumulateNonBreakableY - this.accumulateY + this.varianceY[1] > this.varianceY[0] * 2){
+        if (this.accumulateNonBreakableY - this.accumulateY + this.currentSet.varianceY[1] > this.currentSet.varianceY[0] * 2){
             this.canSpawnBreakable = true;
         }
         else{
@@ -176,4 +196,4 @@ class PlatformSpawner extends Component{
 
 }
 
-export default PlatformSpawner;
+export default EnvironmentSpawner;

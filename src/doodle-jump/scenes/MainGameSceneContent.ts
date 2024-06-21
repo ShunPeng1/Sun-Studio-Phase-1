@@ -16,12 +16,12 @@ import Rigidbody from "../../engine/components/physics/Rigidbody";
 import InitialForce from "../movement/InitialForce";
 import JumpPlatformIgnorance from "../player/JumpPlatformIgnorance";
 import PlayerEquipment from "../player/PlayerEquipment";
-import PlatformSpawner from "../platforms/PlatformSpawner";
-import PlatformSpawnInfo from "../platforms/PlatformSpawnInfo";
+import EnvironmentSpawner from "../spawners/EnvironmentSpawner";
+import PlatformSpawnInfo from "../spawners/PlatformSpawnInfo";
 import MaxFollowerMovement from "../movement/MaxFollowerMovement";
 import CameraRenderer from "../../engine/components/renderers/CameraRenderer";
 import XBoundTeleportation from "../movement/XBoundTeleportation";
-import PlatformDestroyer from "../platforms/PlatformDestroyer";
+import EnvironmentDestroyer from "../spawners/EnvironmentDestroyer";
 import Shape from "../../engine/webgl/shapes/Shape";
 import ScoreTracking from "../scores/ScoreTracking";
 import TextRenderer from "../../engine/components/renderers/TextRenderer";
@@ -29,16 +29,18 @@ import TextWriter from "../scores/TextWriter";
 import ScoreManager from "../ScoreManager";
 import DoodleJumpSceneContent from "./DoodleJumpSceneContent";
 import PlayerGameOverContact from "../player/PlayerGameOverContact";
-import PlatformItemSpawnInfo from "../platform-items/PlatformItemSpawnInfo";
 import Spring from "../platform-items/Spring";
 import JetpackCollectible from "../platform-items/JetpackCollectible";
 import HatCollectible from "../platform-items/HatCollectible";
 import SpringAnimator from "../animators/SpringAnimator";
 import PlayerShoot from "../player/PlayerShoot";
-import Monster from "../monsters/Monster";
+import Monster from "../obstacles/Monster";
 import PlayerMovementController from "../player/PlayerMovementController";
 import DoodleJumpSceneCollection from "./DoodleJumpSceneCollection";
 import BatAnimator from "../animators/BatAnimator";
+import PlatformItemSpawnInfo from "../spawners/PlatformItemSpawnInfo";
+import SpawnSet from "../spawners/SpawnSet";
+import ObstacleSpawnInfo from "../spawners/ObstacleSpawnInfo";
 
 class MainGameSceneContent extends DoodleJumpSceneContent{
     
@@ -361,21 +363,32 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         sceneGameObjects.push(batMonster);
 
 
+        // Spawn Set
+        let testSpawnSet = new SpawnSet(1, 60, -20, 20, [-20,20], [4,14], [ 
+            new PlatformSpawnInfo(greenPlatform, 10, false, true),
+            new PlatformSpawnInfo(brownPlatform, 3, true, false),
+            new PlatformSpawnInfo(bluePlatform, 3, false, true),
+            new PlatformSpawnInfo(whitePlatform, 1, false, false)
+            ], [
+            new ObstacleSpawnInfo(purpleMonster, 3),
+            new ObstacleSpawnInfo(redMonster, 1),
+            new ObstacleSpawnInfo(blueMonster, 1),
+            new ObstacleSpawnInfo(batMonster, 1)
+            ], 10, [
+                new PlatformItemSpawnInfo(spring, 6,[-0.2,0.2], 0.8),
+                new PlatformItemSpawnInfo(jetpack, 2,[-0.2,0.2], 2),
+                new PlatformItemSpawnInfo(hat, 1,[-0.2,0.2], 1.8)
+            ], 80
+        );
+
 
         // Add Spawner
         let spawner = new GameObject('Spawner');
         sceneGameObjects.push(spawner);
 
-        spawner.addComponent(new PlatformSpawner([
-            new PlatformSpawnInfo(greenPlatform, 10, false, true),
-            new PlatformSpawnInfo(brownPlatform, 3, true, false),
-            new PlatformSpawnInfo(bluePlatform, 3, false, true),
-            new PlatformSpawnInfo(whitePlatform, 1, false, false)
-        ], 60, [-20,20], [4,14], [
-            new PlatformItemSpawnInfo(spring, 6,[-0.2,0.2], 0.8),
-            new PlatformItemSpawnInfo(jetpack, 2,[-0.2,0.2], 2),
-            new PlatformItemSpawnInfo(hat, 1,[-0.2,0.2], 1.8)
-        ], 80));
+        spawner.addComponent(new EnvironmentSpawner([
+            testSpawnSet
+        ], 60));
         spawner.addComponent(new MaxFollowerMovement(playerGameObject, false, true, false));
         spawner.transform.position[1] = -30;
         
@@ -386,7 +399,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
 
         let destroyerFollwerMovement = new MaxFollowerMovement(playerGameObject, false, true, false);
         destroyer.addComponent(new BoxCollider(true, 0,-133, 1000, 200, DoodleJumpSceneCollection.DESTROYER_LAYER));
-        destroyer.addComponent(new PlatformDestroyer());
+        destroyer.addComponent(new EnvironmentDestroyer());
         destroyer.addComponent(destroyerFollwerMovement);
         destroyer.addComponent(new ScoreTracking(destroyerFollwerMovement, 18));
         destroyer.addComponent(new PlayerGameOverContact());

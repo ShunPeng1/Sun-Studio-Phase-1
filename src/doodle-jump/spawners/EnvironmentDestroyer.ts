@@ -1,17 +1,19 @@
 import Collider from "../../engine/components/physics/Collider";
 import Component from "../../engine/components/Component";
-import Platform from "./Platform";
+import Platform from "../platforms/Platform";
+import PlatformItem from "../platform-items/PlatformItem";
+import Obstacle from "../obstacles/Obstacle";
 
-class PlatformDestroyer extends Component{
+class EnvironmentDestroyer extends Component{
     private boundDestroyPlatform: (event: Collider) => void;
 
     constructor(){
         super();
-        this.boundDestroyPlatform = this.destroyPlatform.bind(this);
+        this.boundDestroyPlatform = this.destroyEnvironment.bind(this);
     }
 
     public clone(): Component {
-        return new PlatformDestroyer();
+        return new EnvironmentDestroyer();
     }
 
     public awake(): void {
@@ -21,8 +23,16 @@ class PlatformDestroyer extends Component{
         collider.subcribeToCollisionStay(this.boundDestroyPlatform);
     }
 
-    private destroyPlatform(other : Collider) : void {
+    private destroyEnvironment(other : Collider) : void {
         if (other.gameObject.getComponent<Platform>(Platform)) {
+            other.gameObject.destroy();
+        }
+
+        if (other.gameObject.getComponent<PlatformItem>(PlatformItem)) {
+            other.gameObject.destroy();
+        }
+
+        if (other.gameObject.getComponent<Obstacle>(Obstacle)) {
             other.gameObject.destroy();
         }
     }
@@ -35,4 +45,4 @@ class PlatformDestroyer extends Component{
     }
 }
 
-export default PlatformDestroyer;
+export default EnvironmentDestroyer;

@@ -21,13 +21,13 @@ import HatWearableAnimator from "../animators/HatWearableAnimator";
 import JetpackWearableAnimator from "../animators/JetpackWearableAnimator";
 import PlayerTrunk from "../player/PlayerTrunk";
 import ForwardMovement from "../movement/ForwardMovement";
-import TimeoutSelfDestruction from "../monsters/TimeoutSelfDestruction";
+import TimeoutSelfDestruction from "../obstacles/TimeoutSelfDestruction";
 import PlayerFeet from "../player/PlayerFeet";
 import PlayerAnimator from "../animators/PlayerAnimator";
 import Player from "../player/Player";
 import StarAnimator from "../animators/StarAnimator";
 import DoodleJumpSceneCollection from "./DoodleJumpSceneCollection";
-import Bullet from "../monsters/Bullet";
+import Bullet from "../obstacles/Bullet";
 
 abstract class DoodleJumpSceneContent implements ISceneContent{
 
