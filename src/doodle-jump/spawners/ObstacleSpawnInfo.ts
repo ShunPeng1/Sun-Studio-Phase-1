@@ -1,4 +1,5 @@
 import GameObject from "../../engine/gameobjects/GameObject";
+import Scene from "../../engine/scenes/Scene";
 
 class ObstacleSpawnInfo {
 
@@ -12,6 +13,11 @@ class ObstacleSpawnInfo {
 
     }
 
+
+    public cloneObstacle(scene : Scene) : GameObject{
+        this.obstaclePrefab.setScene(scene);
+        return this.obstaclePrefab.clone();
+    }
 }
 
 export default ObstacleSpawnInfo;

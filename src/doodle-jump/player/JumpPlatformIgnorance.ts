@@ -26,18 +26,25 @@ class JumpPlatformIgnorance extends Component{
         this.rigidbody = this.gameObject.getComponent<Rigidbody>(Rigidbody)!;
         this.physicsManager = PhysicManager.getInstance();
         this.collider = this.gameObject.getComponent<Collider>(Collider)!;
-        this.checkDirection();
-     
+        
         
         this.enablePlayerToItemLayer();
         this.enablePlayerToMonsterLayer();
-        this.enablePlayerToPlatformLayer();
+        this.disablePlayerToPlatformLayer();
+     
+    }
+
+    public start(): void {
+        
+        this.checkDirection();
     }
 
     public fixedUpdate(time: number, deltaTime: number): void {
         if (!this.isEnable) {
             return;
         }
+
+    
 
         if (this.checkDirection()) {
             if (this.isFalling) {
@@ -48,6 +55,7 @@ class JumpPlatformIgnorance extends Component{
                 this.disablePlayerToPlatformLayer();
             }
         }
+
     }
 
     private checkDirection(): boolean {

@@ -360,8 +360,6 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
         
         batMonster.addComponent(new WayPointMovement(7, false));
 
-        sceneGameObjects.push(batMonster);
-
 
         // Spawn Set
         let testSpawnSet = new SpawnSet(1, 60, -20, 20, [-20,20], [4,14], [ 
@@ -369,7 +367,7 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
             new PlatformSpawnInfo(brownPlatform, 3, true, false),
             new PlatformSpawnInfo(bluePlatform, 3, false, true),
             new PlatformSpawnInfo(whitePlatform, 1, false, false)
-            ], [
+            ], 200,[
             new ObstacleSpawnInfo(purpleMonster, 3),
             new ObstacleSpawnInfo(redMonster, 1),
             new ObstacleSpawnInfo(blueMonster, 1),

@@ -9,6 +9,7 @@ import Collider from "../../engine/components/physics/Collider";
 import BoxCollider from "../../engine/components/physics/BoxCollider";
 import BounceUpPlatform from "../platforms/BounceUpPlatform";
 import JumpPlatformIgnorance from "../player/JumpPlatformIgnorance";
+import DoodleJumpSceneCollection from "./DoodleJumpSceneCollection";
 
 class MenuSceneContent extends DoodleJumpSceneContent{
 
@@ -62,7 +63,7 @@ class MenuSceneContent extends DoodleJumpSceneContent{
         vec3.set(greenPlatform.transform.position, -15, -20, 0);
         vec3.set(greenPlatform.transform.scale, 4, 2, 1);
 
-        greenPlatform.addComponent(new BoxCollider(false, 0, 1, 2, 1));
+        greenPlatform.addComponent(new BoxCollider(false, 0, 1, 2, 1, DoodleJumpSceneCollection.PLATFORM_LAYER));
         greenPlatform.addComponent(new BounceUpPlatform(4000));
         let platformImageElements = this.imageLoader.getImageElements(this.PLATFORM0_URL);
         greenPlatform.addComponent(new MeshRenderer(this.quad, platformImageElements, this.vectorArtTextureInfo));

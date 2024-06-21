@@ -13,6 +13,7 @@ class SpawnSet{
     public varianceY : vec2;
 
     public platformSpawnInfos: PlatformSpawnInfo[];
+    public platformSpawnChance: number;
     public totalNonBreakableChanceCount : number = 0;
     public totalPlatformChanceCount : number = 0;
     
@@ -25,7 +26,7 @@ class SpawnSet{
     public baseNoItemChance : number;
 
 
-    constructor(setChance : number, setDuration : number, minHeight: number, maxHeight: number, varianceX : vec2, varianceY : vec2, PlatformSpawnInfos: PlatformSpawnInfo[], ObstacleSpawnInfos: ObstacleSpawnInfo[], obstacleSpawnChance: number, platformItemSpawnInfos : PlatformItemSpawnInfo[], baseNoItemChance : number) {
+    constructor(setChance : number, setDuration : number, minHeight: number, maxHeight: number, varianceX : vec2, varianceY : vec2, platformSpawnInfos: PlatformSpawnInfo[], platformSpawnChance : number, obstacleSpawnInfos: ObstacleSpawnInfo[], obstacleSpawnChance: number, platformItemSpawnInfos : PlatformItemSpawnInfo[], baseNoItemChance : number) {
         this.setChance = setChance;
         this.setDuration = setDuration;
         
@@ -34,8 +35,10 @@ class SpawnSet{
         this.varianceX = varianceX;
         this.varianceY = varianceY;
 
-        this.platformSpawnInfos = PlatformSpawnInfos;
-        this.obstacleSpawnInfos = ObstacleSpawnInfos;
+        this.platformSpawnInfos = platformSpawnInfos;
+        this.platformSpawnChance = platformSpawnChance;
+        
+        this.obstacleSpawnInfos = obstacleSpawnInfos;
         this.obstacleSpawnChance = obstacleSpawnChance;
 
         this.platformItemSpawnInfos = platformItemSpawnInfos;
