@@ -1,4 +1,4 @@
-import WayPointMovement from "../../doodle-jump/movement/WayPointMovement";
+import WayPointMovement from "../../doodle-jump/way-points/WayPointMovement";
 import Component from "../components/Component";
 import Transform from "../components/Transform";
 import Scene from "../scenes/Scene";

@@ -8,8 +8,8 @@ import BoxCollider from "../../engine/components/physics/BoxCollider";
 import BounceUpPlatform from "../platforms/BounceUpPlatform";
 import MeshRenderer from "../../engine/components/renderers/MeshRenderer";
 import WoodenPlatform from "../platforms/WoodenPlatform";
-import WayPointMovement from "../movement/WayPointMovement";
-import PlatformWayPoint from "../platforms/PlatformWayPoint";
+import WayPointMovement from "../way-points/WayPointMovement";
+import WayPoint from "../way-points/WayPoint";
 import WoodenPlatformAnimator from "../animators/WoodenPlatformAnimator";
 import CloudPlatform from "../platforms/CloudPlatform";
 import Rigidbody from "../../engine/components/physics/Rigidbody";
@@ -145,8 +145,8 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
             new GameObject("Waypoint 0").transform,
             new GameObject("Waypoint 1").transform
         ];
-        wayPoints[0].gameObject.addComponent(new PlatformWayPoint([ -18, 0, 1]));
-        wayPoints[1].gameObject.addComponent(new PlatformWayPoint([ 18, 0 ,1]));
+        wayPoints[0].gameObject.addComponent(new WayPoint([ -20, 0, 1], true, false, false));
+        wayPoints[1].gameObject.addComponent(new WayPoint([ 20, 0 ,1], true, false, false));
         wayPoints[0].setParent(bluePlatform.transform);
         wayPoints[1].setParent(bluePlatform.transform);
 
@@ -224,14 +224,27 @@ class MainGameSceneContent extends DoodleJumpSceneContent{
 
 
         // Add Monster
-        let purpleMonster = new GameObject("Monster");
-        vec3.set(purpleMonster.transform.position, 0, 10, 1);
-        vec3.set(purpleMonster.transform.scale, 4, 4, 1);
-        purpleMonster.addComponent(new BoxCollider(true, 0, 2, 2, 1, DoodleJumpSceneCollection.MONSTER_LAYER));
+        let purpleMonster = new GameObject("Purple Monster");
+        vec3.set(purpleMonster.transform.position, -18, 10, 1);
+        vec3.set(purpleMonster.transform.scale, 4, 6, 1);
+        purpleMonster.addComponent(new BoxCollider(true, 0, -4, 2, 1, DoodleJumpSceneCollection.MONSTER_LAYER));
         purpleMonster.addComponent(new Monster());
         
         let purpleMonsterImageElements = this.imageLoader.getImageElements(this.PURPLE_MONSTER_URL);
         purpleMonster.addComponent(new MeshRenderer(this.quad, purpleMonsterImageElements, this.vectorArtTextureInfo));
+
+        let purpleMonsterWayPoints = [
+            new GameObject("Waypoint 0").transform,
+            new GameObject("Waypoint 1").transform
+        ];
+        purpleMonsterWayPoints[0].gameObject.addComponent(new WayPoint([ 3, 0, 1], false, false, false));
+        purpleMonsterWayPoints[1].gameObject.addComponent(new WayPoint([ -3, 0 ,1], false, false, false));
+        purpleMonsterWayPoints[0].setParent(purpleMonster.transform);
+        purpleMonsterWayPoints[1].setParent(purpleMonster.transform);
+
+        purpleMonster.addComponent(new WayPointMovement(4, false));
+
+        
 
         sceneGameObjects.push(purpleMonster);
 

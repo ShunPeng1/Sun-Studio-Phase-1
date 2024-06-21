@@ -27,6 +27,7 @@ import PlayerAnimator from "../animators/playerAnimator";
 import Player from "../player/Player";
 import StarAnimator from "../animators/StarAnimator";
 import DoodleJumpSceneCollection from "./DoodleJumpSceneCollection";
+import Bullet from "../monsters/Bullet";
 
 abstract class DoodleJumpSceneContent implements ISceneContent{
 
@@ -279,6 +280,8 @@ abstract class DoodleJumpSceneContent implements ISceneContent{
         bulletPrefab.addComponent(new MeshRenderer(this.quad, bulletImageElements, this.vectorArtTextureInfo));
         bulletPrefab.addComponent(new ForwardMovement(200));
         bulletPrefab.addComponent(new TimeoutSelfDestruction(1));
+        bulletPrefab.addComponent(new BoxCollider(false, 0, 0, 1, 0.5, DoodleJumpSceneCollection.BULLET_LAYER));
+        bulletPrefab.addComponent(new Bullet());
 
         
         // Combine all player parts
