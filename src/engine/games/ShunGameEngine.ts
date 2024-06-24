@@ -54,7 +54,7 @@ class ShunGameEngine {
         this.stateMachine = new BaseStateMachine.Builder().build();
         this.initialGameState = new InitialGameState();
         this.startGameState = new StartGameState();
-        this.fixedUpdateGameState = new FixedUpdateGameState();
+        this.fixedUpdateGameState = new FixedUpdateGameState(1/60);
         this.updateGameState = new UpdateGameState();
         this.lateUpdateGameState = new LateUpdateGameState();
         this.renderGameState = new RenderGameState();
